@@ -1,0 +1,223 @@
+{%- comment -%}
+  Editorial feature row — three photo cards, built 2026-08-21.
+
+  Reference: `iimages to use/SCREEN.png`, the urbanstems.com 3-up ("Subscribe &
+  Save · Same-Day Delivery · Designed to Impress") — full-bleed portrait photo,
+  then a centred heading, a short paragraph, and one underlined text link out.
+  urbanstems.com is one of the three sites the owner listed in
+  `examples/example websites.txt`. The *pattern* is borrowed; the photography,
+  the copy and the destinations are ours.
+
+  Each card is a DESTINATION, not a claim — every one links somewhere real
+  (delivery page, about page, bouquets collection). That is deliberately a
+  different job from the `florista-value-props` icon row, which states three
+  reasons and links nowhere. The two still overlap on "delivery" and on
+  "arranged by hand"; flagged for the owner in docs/design-log.md rather than
+  resolved by silently deleting a brick that was decided in an earlier session.
+
+  Copy holds only facts already settled in CLAUDE.md. Card 1 stopped naming
+  the cutoff and the areas on 2026-09-12 (the owner's brief: say the care, not the
+  time); it is now a handle-with-care line chosen by the owner from the
+  mayan-copy-writer agent's options. Cards 2 and 3 unchanged. No invented
+  differentiators, per seo-geo-haifa.
+
+  Photos (from `iimages to use/`, cropped 4:5):
+    Delivery guy.jpg     → feature-delivery-*  a real Haifa street, bay and
+                           port cranes visible behind the rider. Checked at
+                           full resolution for the generated-image tells that
+                           got `bike delivery.jpg` rejected last session:
+                           licence plates, badges and signage all render as
+                           real text here.
+    florist working.jpg  → feature-florist-*   cropped to the hands, secateurs
+                           and wine-coloured roses — a 6336×2688 frame has no
+                           usable 4:5 centre, so this is a tight crop, not a
+                           resize.
+    LIving room.jpg      → feature-home-*      sage cushions, ivory walls, wine
+                           dahlias. Closest thing in the set to the palette.
+{%- endcomment -%}
+
+{{ 'florista-features.css' | asset_url | stylesheet_tag }}
+
+<section class="feat-section">
+  <div class="feat-inner">
+    <h2 class="visually-hidden">למה פלוריסטה</h2>
+
+    <ul class="feat-grid" role="list">
+      <li class="feat-card">
+        <div class="feat-media">
+          <picture>
+            <source
+              type="image/webp"
+              srcset="
+                {{ 'feature-delivery-480.webp' | asset_url }} 480w,
+                {{ 'feature-delivery-768.webp' | asset_url }} 768w,
+                {{ 'feature-delivery-1024.webp' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+            >
+            <img
+              src="{{ 'feature-delivery-768.jpg' | asset_url }}"
+              srcset="
+                {{ 'feature-delivery-480.jpg' | asset_url }} 480w,
+                {{ 'feature-delivery-768.jpg' | asset_url }} 768w,
+                {{ 'feature-delivery-1024.jpg' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+              {%- comment -%}
+                This alt asserted two things the photograph does not support: that the rider is
+                a Florista courier, and that the street is in Haifa. The image is stock. Alt
+                text is a description, not a caption we get to write — claiming a stock photo
+                depicts our own delivery is the kind of small untruth the helpful-content
+                guidance is about, and it is on the delivery feature specifically.
+
+                Narrowed to what is actually in the frame. **The real fix is the owner's photograph**
+                — flagged in docs/_gsc/seo-audit-consolidated-2026-08-30.md §G3; replacing the
+                asset makes the original alt true and it should go back. 2026-08-30.
+              {%- endcomment -%}
+              alt="שליח על אופניים עם זר פרחים בתיק המשלוחים"
+              width="1843"
+              height="2304"
+              loading="lazy"
+            >
+          </picture>
+        </div>
+        <h3 class="feat-title">{{ section.settings.title_1 | default: 'עד הדלת, באותו יום' }}</h3>
+        <p class="feat-text">
+          {{-
+            section.settings.text_1
+            | default: 'כל משלוח נארז בתשומת לב לפרטים ונשלח בעדינות, כדי שיגיע ליעד כמו שהשולח התכוון.'
+          -}}
+        </p>
+        <a class="feat-link" href="{{ section.settings.url_1 | default: '/pages/delivery' }}">
+          {{- section.settings.link_1 | default: 'אזורי המשלוח' -}}
+        </a>
+      </li>
+
+      <li class="feat-card">
+        <div class="feat-media">
+          <picture>
+            <source
+              type="image/webp"
+              srcset="
+                {{ 'feature-florist-480.webp' | asset_url }} 480w,
+                {{ 'feature-florist-768.webp' | asset_url }} 768w,
+                {{ 'feature-florist-1024.webp' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+            >
+            <img
+              src="{{ 'feature-florist-768.jpg' | asset_url }}"
+              srcset="
+                {{ 'feature-florist-480.jpg' | asset_url }} 480w,
+                {{ 'feature-florist-768.jpg' | asset_url }} 768w,
+                {{ 'feature-florist-1024.jpg' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+              alt="ידיים מסדרות זר ורדים על שולחן העבודה בחנות הפרחים"
+              width="2150"
+              height="2688"
+              loading="lazy"
+            >
+          </picture>
+        </div>
+        <h3 class="feat-title">{{ section.settings.title_2 | default: 'כל זר נשזר באהבה' }}</h3>
+        <p class="feat-text">
+          {{-
+            section.settings.text_2
+            | default: 'הזרים מורכבים בחנות הפרחים שלנו בחיפה, בלב שכונת נווה שאנן, פרח אחרי פרח, לפי המקרה והבקשה שלכם.'
+          -}}
+        </p>
+        <a class="feat-link" href="{{ section.settings.url_2 | default: '/pages/about' }}">
+          {{- section.settings.link_2 | default: 'הסיפור שלנו' -}}
+        </a>
+      </li>
+
+      <li class="feat-card">
+        <div class="feat-media">
+          <picture>
+            <source
+              type="image/webp"
+              srcset="
+                {{ 'feature-home-480.webp' | asset_url }} 480w,
+                {{ 'feature-home-768.webp' | asset_url }} 768w,
+                {{ 'feature-home-1024.webp' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+            >
+            <img
+              src="{{ 'feature-home-768.jpg' | asset_url }}"
+              srcset="
+                {{ 'feature-home-480.jpg' | asset_url }} 480w,
+                {{ 'feature-home-768.jpg' | asset_url }} 768w,
+                {{ 'feature-home-1024.jpg' | asset_url }} 1024w
+              "
+              sizes="(min-width: 768px) 31vw, 100vw"
+              alt="זר פרחים באגרטל על שולחן סלון מואר"
+              width="1500"
+              height="1875"
+              loading="lazy"
+            >
+          </picture>
+        </div>
+        <h3 class="feat-title">{{ section.settings.title_3 | default: 'הזר שמחכה בבית' }}</h3>
+        <p class="feat-text">
+          {{-
+            section.settings.text_3
+            | default: 'לימי הולדת, לאירועים או בלי שום סיבה מיוחדת — זר שנבחר לפי מה שרציתם להגיד.'
+          -}}
+        </p>
+        <a class="feat-link" href="{{ section.settings.url_3 | default: '/collections/bouquets' }}">
+          {{- section.settings.link_3 | default: 'לכל הזרים' -}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista features",
+  "settings": [
+    {
+      "type": "header",
+      "content": "כרטיס 1 — משלוח"
+    },
+    { "type": "text", "id": "title_1", "label": "כותרת", "default": "עד הדלת, באותו יום" },
+    {
+      "type": "textarea",
+      "id": "text_1",
+      "label": "טקסט",
+      "default": "כל משלוח נארז בתשומת לב לפרטים ונשלח בעדינות, כדי שיגיע ליעד כמו שהשולח התכוון."
+    },
+    { "type": "text", "id": "link_1", "label": "טקסט הקישור", "default": "אזורי המשלוח" },
+    { "type": "url", "id": "url_1", "label": "כתובת הקישור", "info": "אם נשאר ריק, הקישור מוביל אל /pages/delivery" },
+    {
+      "type": "header",
+      "content": "כרטיס 2 — החנות"
+    },
+    { "type": "text", "id": "title_2", "label": "כותרת", "default": "כל זר נשזר באהבה" },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "טקסט",
+      "default": "הזרים מורכבים בחנות הפרחים שלנו בחיפה, בלב שכונת נווה שאנן, פרח אחרי פרח, לפי המקרה והבקשה שלכם."
+    },
+    { "type": "text", "id": "link_2", "label": "טקסט הקישור", "default": "הסיפור שלנו" },
+    { "type": "url", "id": "url_2", "label": "כתובת הקישור", "info": "אם נשאר ריק, הקישור מוביל אל /pages/about" },
+    {
+      "type": "header",
+      "content": "כרטיס 3 — הזר"
+    },
+    { "type": "text", "id": "title_3", "label": "כותרת", "default": "הזר שמחכה בבית" },
+    {
+      "type": "textarea",
+      "id": "text_3",
+      "label": "טקסט",
+      "default": "לימי הולדת, לאירועים או בלי שום סיבה מיוחדת — זר שנבחר לפי מה שרציתם להגיד."
+    },
+    { "type": "text", "id": "link_3", "label": "טקסט הקישור", "default": "לכל הזרים" },
+    { "type": "url", "id": "url_3", "label": "כתובת הקישור", "info": "אם נשאר ריק, הקישור מוביל אל /collections/bouquets" }
+  ],
+  "presets": [{ "name": "Florista features" }]
+}
+{% endschema %}

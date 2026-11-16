@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "florista-product",
+      "settings": {
+        "delivery_note": "משלוח באותו יום בהזמנה עד 17:00, בימים א׳–ה׳",
+        "cta_label": "הוספה לסל"
+      }
+    },
+    "cross_sell": {
+      "type": "florista-cross-sell",
+      "settings": {
+        "heading": "השלימו את הקנייה שלכם"
+      }
+    }
+  },
+  "order": ["main", "cross_sell"]
+}

@@ -1,0 +1,110 @@
+{%- comment -%}
+  Florista variant picker — one control per product option, for ANY product
+  that has real options. The owner, 2026-09-07: "make it so i can do product
+  varints for all itmes in the shop if i wish".
+
+  What it replaces. The product page had no chooser at all. The form posted a
+  hidden `id` pinned to the first available variant, and the only option UI in
+  the whole theme was a hardcoded special case for digit balloons:
+
+      {% if product.options contains 'כמה ספרות' %}
+
+  Any other option name fell through that `if` and drew nothing, so adding a
+  size in the admin created a variant no customer could reach. This snippet
+  asks the general question — does this product have options — instead.
+
+  Renders nothing at all when:
+    · the product has only Shopify's default Title/"Default Title" option.
+      Every single-variant product on the store is therefore byte-for-byte
+      unchanged, which is all of them today except the balloons; or
+    · it is a digit-balloon product. Those keep their age box: typing 67 is
+      better than picking from a list of five, and florista-age-picker.js
+      already owns the price there. Two scripts owning one number is how a
+      stale price ships.
+
+  Pills rather than a dropdown, decided on mobile first. Two or three sizes is
+  the common case; a pill row shows every choice, and its availability, with
+  no tap. Long value lists simply wrap.
+
+  On the radio names: with no add-on ticked, florista-atc.js posts
+  `new FormData(form)` straight to /cart/add.js, so every named field in this
+  form is sent. `fp-option-*` cannot collide with `id`, `quantity`,
+  `properties[…]` or `selling_plan`, so the cart API ignores it.
+
+  No-JS: the radios are inert but the hidden `id` still holds a real, available
+  variant, so the form degrades to exactly today's behaviour rather than
+  breaking. The chosen variant is applied by JS only.
+{%- endcomment -%}
+
+{%- liquid
+  assign fvp_show = true
+  if product.has_only_default_variant
+    assign fvp_show = false
+  endif
+  if product.options contains 'כמה ספרות'
+    assign fvp_show = false
+  endif
+-%}
+
+{%- if fvp_show -%}
+  {%- capture fvp_variants -%}
+    [
+    {%- for v in product.variants -%}
+      {
+        "id": {{ v.id }},
+        "options": {{ v.options | json }},
+        "price": {{ v.price | json }},
+        "priceText": {{ v.price | money | json }},
+        {%- if v.compare_at_price and v.compare_at_price > v.price -%}
+          "compareAtText": {{ v.compare_at_price | money | json }},
+        {%- else -%}
+          "compareAtText": null,
+        {%- endif -%}
+        "available": {{ v.available | json }},
+        {%- comment -%} Per-variant photo, 2026-09-23: a colour option (the orchid in
+            לבן / סגול / צהוב) is meaningless if the picture stays on the first colour.
+            Same widths as the main <img> in florista-product.liquid, so the swapped
+            srcset is the one the browser already sized for. Null when the variant has
+            no image of its own; the JS then leaves the picture alone. {%- endcomment -%}
+        {%- if v.featured_media -%}
+          {%- assign fvp_widths = '375,550,750,1100,1400' | split: ',' -%}
+          {%- capture fvp_srcset -%}
+            {%- for w in fvp_widths -%}
+              {%- assign wn = w | plus: 0 -%}
+              {{ v.featured_media | image_url: width: wn }} {{ w }}w{%- unless forloop.last -%}, {%- endunless -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          "image": { "src": {{ v.featured_media | image_url: width: 1400 | json }}, "srcset": {{ fvp_srcset | strip | json }}, "alt": {{ v.featured_media.alt | json }} }
+        {%- else -%}
+          "image": null
+        {%- endif -%}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+    ]
+  {%- endcapture -%}
+
+  <div class="fp-variants" data-variant-picker data-variants="{{ fvp_variants | strip | escape }}">
+    {%- for option in product.options_with_values -%}
+      <fieldset class="fp-variant-group" data-option-index="{{ forloop.index0 }}">
+        <legend class="fp-variant-legend">{{ option.name }}</legend>
+        <div class="fp-variant-values">
+          {%- for value in option.values -%}
+            {%- assign fvp_id = 'fp-opt-' | append: section.id | append: '-' | append: forloop.parentloop.index | append: '-' | append: forloop.index -%}
+            <input
+              class="fp-variant-radio visually-hidden"
+              type="radio"
+              id="{{ fvp_id }}"
+              name="fp-option-{{ section.id }}-{{ forloop.parentloop.index }}"
+              value="{{ value | escape }}"
+              {% if option.selected_value == value %}checked{% endif %}
+            >
+            <label class="fp-variant-pill" for="{{ fvp_id }}">{{ value }}</label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- endfor -%}
+    <p class="fp-variant-sold-out" data-variant-soldout hidden>הצירוף הזה אזל מהמלאי</p>
+  </div>
+
+  <script src="{{ 'florista-variant-picker.js' | asset_url }}" defer></script>
+{%- endif -%}

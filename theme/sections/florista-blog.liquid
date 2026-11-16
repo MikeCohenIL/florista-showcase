@@ -1,0 +1,117 @@
+{%- comment -%}
+  Florista blog index (פלוריסטה בלוג) — the six migrated Wix posts and
+  whatever comes after them. docs/design-log.md, 2026-08-24.
+
+  A quiet listing: cover photo, title, excerpt, date. The whole card links
+  to the article. No tags UI, no author lines — one shop, one voice.
+
+  Mobile: 1 column. ≥768px: 2. ≥1024px: 3.
+{%- endcomment -%}
+
+{{ 'florista-blog.css' | asset_url | stylesheet_tag }}
+
+<section class="fb-section">
+  <div class="fb-inner">
+
+    <header class="fb-head">
+      <h1 class="fb-title">{{ blog.title }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <p class="fb-intro">{{ section.settings.intro }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- paginate blog.articles by 12 -%}
+      {%- if blog.articles.size > 0 -%}
+        <ul class="fb-grid" role="list">
+          {%- for article in blog.articles -%}
+            <li class="fb-card">
+              <a class="fb-link" href="{{ article.url }}">
+                <div class="fb-media">
+                  {%- if article.image -%}
+                    {{
+                      article.image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '400, 600, 900',
+                        sizes: '(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw',
+                        loading: 'lazy',
+                        class: 'fb-img',
+                        alt: article.image.alt | default: article.title
+                    }}
+                  {%- else -%}
+                    <div class="fb-media-placeholder" aria-hidden="true"></div>
+                  {%- endif -%}
+                </div>
+                <div class="fb-body">
+                  <h2 class="fb-card-title">{{ article.title }}</h2>
+                  {%- assign excerpt = article.excerpt_or_content | strip_html | truncate: 140 -%}
+                  <p class="fb-excerpt">{{ excerpt }}</p>
+                  <time class="fb-date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                    <bdi>{{ article.published_at | date: '%d/%m/%Y' }}</bdi>
+                  </time>
+                </div>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="fb-pager" aria-label="עמודי בלוג">
+            {%- if paginate.previous -%}
+              <a class="fb-pager-link" href="{{ paginate.previous.url }}" rel="prev">הקודם</a>
+            {%- else -%}
+              <span class="fb-pager-link is-disabled" aria-hidden="true">הקודם</span>
+            {%- endif -%}
+            <span class="fb-pager-status">עמוד {{ paginate.current_page }} מתוך {{ paginate.pages }}</span>
+            {%- if paginate.next -%}
+              <a class="fb-pager-link" href="{{ paginate.next.url }}" rel="next">הבא</a>
+            {%- else -%}
+              <span class="fb-pager-link is-disabled" aria-hidden="true">הבא</span>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- else -%}
+        <p class="fb-empty">עוד אין כאן פוסטים — אבל יש פרחים. <a href="{{ routes.all_products_collection_url }}">לזרים שלנו</a>.</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ shop.name | json }},
+        "item": {{ request.origin | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ blog.title | json }},
+        "item": {{ request.origin | append: blog.url | json }}
+      }
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Florista blog",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "intro",
+      "label": "Intro line under the title",
+      "default": "טיפים, מדריכים והשראה מחנות הפרחים שלנו בחיפה"
+    }
+  ],
+  "presets": [{ "name": "Florista blog" }]
+}
+{% endschema %}

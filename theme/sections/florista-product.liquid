@@ -1,0 +1,240 @@
+{%- comment -%}
+  Florista product page — docs/design-log.md, 2026-08-22.
+  Mobile order: photo → name → description → price → delivery note →
+  add-on rows → button.
+  Desktop: photo visually inline-end (left in RTL), info inline-start (right).
+  Editable in the theme editor: the delivery note and the button label.
+{%- endcomment -%}
+
+{{ 'florista-product.css' | asset_url | stylesheet_tag }}
+{{ 'florista-ribbon.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-atc.js' | asset_url }}" defer></script>
+
+{%- assign delivery_note = section.settings.delivery_note -%}
+{%- assign cta_label = section.settings.cta_label | default: 'הוספה לסל' -%}
+
+<section class="fp-section">
+  <div class="fp-inner">
+    <div class="fp-grid">
+
+      {%- comment -%}
+        `packshot` marks a product photographed as a cutout on the ivory
+        ground — the bottles, balloons and chocolate boxes — as opposed to
+        the flower photography, which is meant to be cropped to the frame.
+        The tag is set in the admin; the styling it selects is in the CSS.
+      {%- endcomment -%}
+      <figure class="fp-media{% if product.tags contains 'packshot' %} is-packshot{% endif %}">
+        {%- render 'florista-ribbon', product: product -%}
+        {%- if product.featured_media -%}
+          <picture>
+            {{
+              product.featured_media
+              | image_url: width: 1400
+              | image_tag:
+                widths: '375, 550, 750, 1100, 1400',
+                sizes: '(min-width: 750px) 45vw, 100vw',
+                loading: 'eager',
+                fetchpriority: 'high',
+                alt: product.featured_media.alt
+            }}
+          </picture>
+        {%- else -%}
+          <div class="fp-media-placeholder"></div>
+        {%- endif -%}
+
+        {%- assign extra_media = product.media | where: 'media_type', 'image' -%}
+        {%- if extra_media.size > 1 -%}
+          <ul class="fp-thumbs">
+            {%- for media in extra_media -%}
+              {%- unless media.id == product.featured_media.id -%}
+                <li>
+                  {{
+                    media
+                    | image_url: width: 204
+                    | image_tag: widths: '68, 136, 204', sizes: '68px', loading: 'lazy', alt: media.alt
+                  }}
+                </li>
+              {%- endunless -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </figure>
+
+      <div class="fp-info">
+        <h1 class="fp-title">{{ product.title }}</h1>
+
+        {%- comment -%} Description sits between the name and the price — the owner,
+            2026-08-28. It used to trail the whole buy box, below the button,
+            where the thing that actually sells the bouquet was the last thing
+            anyone read. {%- endcomment -%}
+        {%- if product.description != blank -%}
+          <div class="fp-description">{{ product.description }}</div>
+        {%- endif -%}
+
+        {%- comment -%} `variant:` is passed on purpose. Without it the snippet
+            prints `product.price`, which is the CHEAPEST variant and need not
+            be the one the picker has checked — the page would paint the lowest
+            price and then have the JS correct it. Collection cards omit it,
+            where the minimum is the right "from" price. {%- endcomment -%}
+        {% render 'florista-price',
+             product: product,
+             variant: product.selected_or_first_available_variant,
+             class: 'fp-price' %}
+
+        {%- if delivery_note != blank -%}
+          <p class="fp-delivery">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7v5l3 2"></path>
+            </svg>
+            <span>{{ delivery_note }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- comment -%} fx-atc: florista-atc.js posts this to /cart/add.js and
+            stays on the page (the owner, 2026-08-23) — no jump to the cart. {%- endcomment -%}
+        {%- form 'product', product, class: 'fp-form fx-atc' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+          {%- comment -%} Age picker — the owner, 2026-08-25: on digit-balloon products
+              (option "כמה ספרות") the customer types the age being celebrated.
+              Each digit of the age is one balloon; the variants are priced per
+              digit count, so the JS maps digits → variant and updates the price.
+              The age itself travels on the line item as properties[גיל].
+              No-JS fallback: the field still submits as a property and the
+              first (one-digit) variant is added. {%- endcomment -%}
+          {%- if product.options contains 'כמה ספרות' -%}
+            {%- capture age_variants_json -%}
+              [{%- for v in product.variants -%}{"id":{{ v.id }},"price":{{ v.price | money | json }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+            {%- endcapture -%}
+            <div class="fp-age" data-age-picker data-variants="{{ age_variants_json | strip | escape }}">
+              <label class="fp-age-label" for="AgeInput-{{ section.id }}">איזה גיל חוגגים?</label>
+              <input
+                id="AgeInput-{{ section.id }}"
+                class="fp-age-input"
+                name="properties[גיל]"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="3"
+                pattern="[1-9][0-9]{0,2}"
+                placeholder="למשל 67"
+                required
+              >
+              <p class="fp-age-note">כל ספרה בגיל היא בלון · <bdi>{{ product.variants.first.price | money }}</bdi> לספרה</p>
+            </div>
+            <script src="{{ 'florista-age-picker.js' | asset_url }}" defer></script>
+          {%- endif -%}
+
+          {%- comment -%} Every other multi-option product — the owner, 2026-09-07.
+              Renders nothing for single-variant products and nothing for the
+              digit balloons above, so this is inert on every product that
+              existed before it. {%- endcomment -%}
+          {%- render 'florista-variant-picker', product: product, section: section -%}
+
+          {%- comment -%} Buy-box add-ons — the owner, 2026-08-28. Sits between the
+              delivery note and the button because that is where the "is a
+              bouquet enough?" question gets asked. Renders nothing when no
+              add-on resolves. {%- endcomment -%}
+          {%- render 'florista-addons', product: product, section: section -%}
+
+          <button type="submit" name="add" class="fp-submit" aria-live="polite"
+            data-base-price="{{ product.selected_or_first_available_variant.price }}"
+            data-money-format="{{ shop.money_format | strip_html | escape }}"
+            {% unless product.available %}disabled{% endunless %}>
+            {%- if product.available -%}{{ cta_label }}{%- else -%}אזל מהמלאי{%- endif -%}
+          </button>
+          <p class="fx-atc-error" role="alert" hidden></p>
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{%- comment -%}
+  `collection` is only populated when the product is reached through a
+  `/collections/{handle}/products/{handle}` URL — most internal links use that
+  shape, but a direct or shared product link does not. The breadcrumb degrades
+  to Home > Product rather than guessing a collection that wasn't in the URL.
+{%- endcomment -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ shop.name | json }},
+        "item": {{ request.origin | json }}
+      }
+      {%- if collection -%}
+        ,{
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ collection.title | json }},
+          "item": {{ request.origin | append: collection.url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ product.title | json }},
+          "item": {{ request.origin | append: product.url | json }}
+        }
+      {%- else -%}
+        ,{
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ product.title | json }},
+          "item": {{ request.origin | append: product.url | json }}
+        }
+      {%- endif -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "מוצר — פלוריסטה",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "delivery_note",
+      "label": "הערת משלוח",
+      "default": "משלוח באותו יום בהזמנה עד 17:00, בימים א׳–ה׳",
+      "info": "מוצג מעל כפתור ההוספה לסל. חייב לשקף את כללי המשלוח בפועל."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "טקסט הכפתור",
+      "default": "הוספה לסל"
+    },
+    {
+      "type": "header",
+      "content": "תוספות למתנה"
+    },
+    {
+      "type": "text",
+      "id": "addons_heading",
+      "label": "כותרת התוספות",
+      "default": "להשלמת המתנה"
+    },
+    {
+      "type": "product_list",
+      "id": "addon_products",
+      "label": "תוספות",
+      "limit": 3,
+      "info": "עד שלוש תוספות. אם לא נבחרה אף אחת, נבחרות אוטומטית שתי תוספות מתוך יינות, בלונים ושוקולדים — לא מהקטגוריה של המוצר עצמו, לא ביותר מ‑40% ממחירו, ולמוצר של יום הולדת מותאם בלון יום הולדת. כל מוצר מקבל צירוף קבוע משלו. מוצר עם יותר מגרסה אחת (למשל בלוני ספרות) לא יוצג — אין בשורה מקום לבחירה."
+    }
+  ],
+  "presets": [{ "name": "מוצר — פלוריסטה" }]
+}
+{% endschema %}

@@ -1,0 +1,104 @@
+{%- comment -%}
+  Florista blog article — docs/design-log.md, 2026-08-24.
+
+  A reading page: title, date, cover, then the article body on a 68ch
+  measure. The body HTML comes from the Shopify admin (migrated from Wix,
+  Hebrew lightly cleaned) — the design here owns spacing, type and image
+  treatment, never the words.
+
+  Ends with a back-to-blog link and next/previous article links when they
+  exist. BlogPosting JSON-LD at the bottom.
+{%- endcomment -%}
+
+{{ 'florista-blog.css' | asset_url | stylesheet_tag }}
+
+<article class="fa-section">
+  <div class="fa-inner">
+
+    <header class="fa-head">
+      <a class="fa-crumb" href="{{ blog.url }}">{{ blog.title }}</a>
+      <h1 class="fa-title">{{ article.title }}</h1>
+      <time class="fa-date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+        <bdi>{{ article.published_at | date: '%d/%m/%Y' }}</bdi>
+      </time>
+    </header>
+
+    {%- if article.image -%}
+      <div class="fa-cover">
+        {{
+          article.image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '600, 900, 1200, 1600',
+            sizes: '(min-width: 768px) 68rem, 100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'fa-cover-img',
+            alt: article.image.alt | default: article.title
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="fa-content">
+      {{ article.content }}
+    </div>
+
+    <footer class="fa-foot">
+      <a class="fa-back" href="{{ blog.url }}">→ לכל הפוסטים</a>
+
+      {%- if blog.next_article or blog.previous_article -%}
+        <nav class="fa-siblings" aria-label="פוסטים נוספים">
+          {%- if blog.next_article -%}
+            <a class="fa-sibling" href="{{ blog.next_article.url }}">
+              <span class="fa-sibling-label">הפוסט הבא</span>
+              <span class="fa-sibling-title">{{ blog.next_article.title }}</span>
+            </a>
+          {%- endif -%}
+          {%- if blog.previous_article -%}
+            <a class="fa-sibling" href="{{ blog.previous_article.url }}">
+              <span class="fa-sibling-label">הפוסט הקודם</span>
+              <span class="fa-sibling-title">{{ blog.previous_article.title }}</span>
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    </footer>
+
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ article.title | json }},
+    {%- if article.image -%}
+      "image": [{{ article.image | image_url: width: 1600 | prepend: 'https:' | json }}],
+    {%- endif -%}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+    {%- comment -%}
+      These were two inline `Organization` nodes named with the Latin `shop.name` ("Florista"),
+      which is the same "two disagreeing entities, one Latin one Hebrew" defect that the merge
+      in theme.liquid removed on 2026-08-30 — just left behind on the blog, where browser QA
+      could not see it because no article is published yet. Each of the six planned posts would
+      have carried it.
+
+      Referencing the business by `@id` instead of re-declaring it means there is exactly one
+      business node on the site and the blog points at it, rather than asserting a third and
+      fourth entity with a different name. 2026-08-30.
+    {%- endcomment -%}
+    "author": { "@id": {{ request.origin | append: '/#business' | json }} },
+    "publisher": { "@id": {{ request.origin | append: '/#business' | json }} },
+    "mainEntityOfPage": {{ request.origin | append: article.url | json }},
+    "inLanguage": "he"
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Florista article",
+  "tag": "section",
+  "settings": [],
+  "presets": [{ "name": "Florista article" }]
+}
+{% endschema %}

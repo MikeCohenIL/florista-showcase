@@ -1,0 +1,116 @@
+{
+  "sections": {
+    "florista_hero": {
+      "type": "florista-hero",
+      "settings": {
+        "eyebrow": "קולקציית סתיו חדשה",
+        "title": "סתיו פורח בפלוריסטה",
+        "subtitle": "זרים חדשים בגוונים החמים של העונה",
+        "cta_label": "לזרי הסתיו",
+        "cta_url": "/collections/fall",
+        "cta_skin": "fall"
+      }
+    },
+    "florista_categories": {
+      "type": "florista-categories",
+      "disabled": true,
+      "settings": {}
+    },
+    "florista_bestsellers": {
+      "type": "florista-bestsellers",
+      "settings": {
+        "heading": "המומלצים שלנו",
+        "collection": "best-sellers",
+        "page_size": 4,
+        "max_products": 16
+      }
+    },
+    "florista_features": {
+      "type": "florista-features",
+      "settings": {
+        "title_1": "עד הדלת, באותו יום",
+        "text_1": "כל משלוח נארז בתשומת לב לפרטים ונשלח בעדינות, כדי שיגיע ליעד כמו שהשולח התכוון.",
+        "link_1": "אזורי המשלוח",
+        "url_1": "",
+        "title_2": "כל זר נשזר באהבה",
+        "text_2": "הזרים מורכבים בחנות הפרחים שלנו בחיפה, בלב שכונת נווה שאנן, פרח אחרי פרח, לפי המקרה והבקשה שלכם.",
+        "link_2": "הסיפור שלנו",
+        "url_2": "",
+        "title_3": "הזר שמחכה בבית",
+        "text_3": "לימי הולדת, לאירועים או בלי שום סיבה מיוחדת — זר שנבחר לפי מה שרציתם להגיד.",
+        "link_3": "לכל הזרים",
+        "url_3": ""
+      }
+    },
+    "florista_seo_copy": {
+      "type": "florista-seo-copy",
+      "settings": {}
+    },
+    "florista_mission": {
+      "type": "florista-mission",
+      "settings": {}
+    },
+    "florista_instagram": {
+      "type": "florista-instagram",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6"
+      ],
+      "settings": {
+        "heading": "#florista",
+        "profile_url": ""
+      }
+    }
+  },
+  "order": [
+    "florista_hero",
+    "florista_categories",
+    "florista_bestsellers",
+    "florista_features",
+    "florista_seo_copy",
+    "florista_mission",
+    "florista_instagram"
+  ]
+}

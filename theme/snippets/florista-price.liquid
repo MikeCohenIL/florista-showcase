@@ -1,0 +1,53 @@
+{%- comment -%}
+  Product price, with the compare-at ("was") price struck through when the
+  product has one. Used by the collection card, the product page, the homepage
+  best-sellers row and the cart cross-sell — one snippet so a sale looks the
+  same everywhere.
+
+    {% render 'florista-price', product: product, class: 'fc-price' %}
+
+  Renders <p class="{{ class }}">…</p>. When there is no compare-at price the
+  markup is exactly what each surface printed before (a single <bdi>), so
+  nothing else changes. When there is one, the sale price reads first (the
+  right-hand side in RTL) and the old price follows it, smaller, grey and
+  struck through — the owner, 2026-09-06: "it should be X and now its Y with some
+  line over the X". Screen readers hear "מחיר מבצע ₪189.99, במקום ₪229.99".
+
+  `product.price` / `product.compare_at_price` are the product-level minimums,
+  the same fields the surfaces already used; the first <bdi> stays the live
+  price so florista-age-picker.js (`.fp-price bdi`) keeps working.
+{%- endcomment -%}
+{%- comment -%}
+  Pass `variant:` on a page that has ONE variant in view — the product page,
+  where the picker has a specific one checked. `product.price` is the CHEAPEST
+  variant, so on a multi-variant product the page would paint the lowest price
+  and then have the JS correct it. Omit `variant:` on the collection card, the
+  best-sellers row and the cross-sell, where the product-level minimum is the
+  right "from" price to show for a product that has several.
+{%- endcomment -%}
+{%- liquid
+  if variant
+    assign f_now = variant.price
+    assign f_was = variant.compare_at_price
+  else
+    assign f_now = product.price
+    assign f_was = product.compare_at_price
+  endif
+  assign f_sale = false
+  if f_was != blank and f_was > f_now
+    assign f_sale = true
+  endif
+-%}
+{%- comment -%}
+  ", במקום " sits INSIDE the <s>, and the leading "מחיר מבצע " carries a class.
+  Both so that florista-variant-picker.js can hide the whole sale idea in one
+  go. When the shopper picks a variant with no compare-at price, hiding only
+  the struck number leaves the two labels behind, and a screen reader announces
+  "מחיר מבצע 249.99 ₪, במקום" — a sale, at one price, compared to nothing.
+  Sighted users never saw it, which is exactly why it would have survived.
+{%- endcomment -%}
+{%- if f_sale -%}
+  <p class="{{ class }} f-price--sale"><span class="visually-hidden f-price-saleword">מחיר מבצע </span><bdi class="f-price-now">{{ f_now | money }}</bdi><s class="f-price-was"><span class="visually-hidden">, במקום </span><bdi>{{ f_was | money }}</bdi></s></p>
+{%- else -%}
+  <p class="{{ class }}"><bdi>{{ f_now | money }}</bdi></p>
+{%- endif -%}

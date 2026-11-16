@@ -1,0 +1,70 @@
+{%- comment -%}
+  Category tiles — site-structure.md §8.3: four tiles, each with a "לרכישה" CTA.
+  Built 2026-08-20 as part of the boho-boutique homepage pass (the owner: "go full,
+  don't stop to ask"). Structure follows the UrbanStems reference in examples/ —
+  a horizontal row of rounded photo cards with a label below, scroll-snap on
+  mobile instead of a cramped 4-up grid, a real grid once there is room.
+
+  Images are the owner's own photography (supplied 2026-08-23, replacing the
+  original Unsplash placeholders), processed to 900×1125 at
+  theme/assets/home-cat-*.{jpg,webp}. Full-resolution sources are kept in
+  docs/brand/home-cat-sources/.
+
+  "דקור" is used as the Hebrew display name for the decor category. That gap
+  was open in status.md ("decor needs a Hebrew display name") — דקור is the
+  everyday Hebrew loanword for it, used here as a placeholder still open for
+  the owner to override, not a new decision closed on his behalf.
+{%- endcomment -%}
+
+{{ 'florista-categories.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign items = 'bouquets|זרי פרחים|home-cat-bouquets|/collections/bouquets,box-arrangements|סידורים בקופסה|home-cat-box|/collections/box-arrangements,basket-arrangements|סידורים בסלסלה|home-cat-basket|/collections/basket-arrangements,decor|דקור|home-cat-decor|/collections/decor' | split: ','
+-%}
+
+<section class="cg-section">
+  <div class="cg-inner">
+    <h2 class="cg-heading">קטגוריות</h2>
+
+    <ul class="cg-row">
+      {%- for item in items -%}
+        {%- assign parts = item | split: '|' -%}
+        {%- assign label = parts[1] -%}
+        {%- assign image = parts[2] -%}
+        {%- assign url = parts[3] -%}
+        {%- comment -%}
+          `decor` does not exist as a collection, so this tile was a live 404 from the first
+          content band on the homepage. Rather than decide what belongs there — that is the owner's
+          call, and the GSC data shows no demand for `דקור` either way — a tile whose collection
+          is missing is simply not rendered. Create the collection and the tile returns by
+          itself; no code change needed. Guarded 2026-08-30.
+        {%- endcomment -%}
+        {%- if collections[parts[0]].id == blank -%}{%- continue -%}{%- endif -%}
+        <li class="cg-tile">
+          <a class="cg-link" href="{{ url }}">
+            <picture>
+              <source type="image/webp" srcset="{{ image | append: '.webp' | asset_url }}">
+              <img
+                class="cg-img"
+                src="{{ image | append: '.jpg' | asset_url }}"
+                alt=""
+                width="900"
+                height="1125"
+                loading="lazy"
+              >
+            </picture>
+            <span class="cg-label">{{ label }}</span>
+            <span class="cg-cta">לרכישה</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista categories",
+  "presets": [{ "name": "Florista categories" }]
+}
+{% endschema %}

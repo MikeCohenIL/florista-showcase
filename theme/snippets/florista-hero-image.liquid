@@ -1,0 +1,192 @@
+{%- comment -%}
+  The homepage hero image, in one place — 2026-09-12.
+
+  Lighthouse (mobile, 2026-09-12) put the hero photo's LCP at 3.4 s, and 70% of that was
+  the browser *waiting to find out the image exists*: the <img> sits ~70 KB into a 110 KB
+  page, behind a 59 KB <head> that is mostly Shopify's injected scripts, so the request
+  could not start until two thirds of the HTML had arrived. A <link rel="preload"> in <head>
+  lets the browser fetch it alongside the fonts instead.
+
+  A preload only helps if it names *exactly* the URL the <img> will pick, and the hero is
+  swapped for every promotion — so the image, its srcset ladder and its sizes are decided
+  here, once, and rendered in two modes:
+
+    {% render 'florista-hero-image', mode: 'preload' %}   in <head> (layout, index only)
+    {% render 'florista-hero-image', mode: 'picture' %}   in sections/florista-hero.liquid
+
+  The image itself comes from theme settings ("פלוריסטה — באנר ראשי" → hero_image), not a
+  section setting, because a section's settings are not readable from the layout's <head>.
+  Empty setting = the committed seasonal ladder, so a fresh push renders without editor
+  setup, per the editable-content / coded-design split. Since 2026-09-23 that ladder is the
+  fall photo (hero-fall-*, master docs/brand/photography/hero-fall-2026.jpg, 5504×3072); the
+  Rosh Hashana pair (hero-rosh2-*) stays in assets for revert.
+
+  Uploaded images are served by Shopify's image CDN, which picks WebP/AVIF from the Accept
+  header and never upscales — so the ladder skips any width larger than the upload, and adds
+  the native width as the top rung when it is not already one. `sizes` is 100vw on both
+  modes.
+
+  2026-09-24: phones get their OWN picture. A wide 16:9 photo forced into a 9:17 phone frame
+  showed a third of itself (the owner: "i dont like how the hero came out on mobile"), so the hero
+  now carries a second, portrait image below the phone breakpoint (767px, the same line the
+  hero CSS uses for its mobile layout). Same mechanics as the wide one: a theme setting
+  (`hero_image_phone`) with a committed fallback ladder (hero-fall-phone-*, 9:16, master in
+  docs/brand/photography/hero-fall-2026-phone.jpg; the phone hero frame is 9:16 too, so the
+  whole picture shows), a <source media> in the <picture>, and a
+  <link rel="preload" media> in <head> so each device preloads only its own file. An empty
+  phone setting with a set desktop setting falls back to the desktop upload on phones, as
+  before — the phone picture is an addition, never a requirement.
+{%- endcomment -%}
+
+{%- liquid
+  assign ladder = '640,960,1280,1920,2560' | split: ','
+  assign sizes = '100vw'
+  assign image = settings.hero_image
+  assign fallback_alt = 'זר סתיו של ורדים אדומים וכתומים וחרציות קרם באגרטל פרחוני על שולחן עץ, לצידו כוס תה מהבילה באור בוקר'
+  assign phone_media = '(max-width: 767px)'
+  assign desktop_media = '(min-width: 768px)'
+  assign phone_ladder = '480,720,1080,1440' | split: ','
+  assign phone_image = settings.hero_image_phone
+  assign phone_srcset = ''
+  assign phone_webp_srcset = ''
+  assign phone_jpg_srcset = ''
+  if phone_image != blank
+    assign phone_top_rung = 0
+    for w in phone_ladder
+      assign wn = w | plus: 0
+      if wn > phone_image.width
+        break
+      endif
+      assign url = phone_image | image_url: width: wn
+      unless forloop.first
+        assign phone_srcset = phone_srcset | append: ', '
+      endunless
+      assign phone_srcset = phone_srcset | append: url | append: ' ' | append: w | append: 'w'
+      assign phone_top_rung = wn
+    endfor
+    if phone_image.width < 1440 and phone_image.width != phone_top_rung
+      assign url = phone_image | image_url: width: phone_image.width
+      if phone_srcset != ''
+        assign phone_srcset = phone_srcset | append: ', '
+      endif
+      assign phone_srcset = phone_srcset | append: url | append: ' ' | append: phone_image.width | append: 'w'
+    endif
+  elsif image == blank
+    for w in phone_ladder
+      assign webp_url = 'hero-fall-phone-' | append: w | append: '.webp' | asset_url
+      assign jpg_url = 'hero-fall-phone-' | append: w | append: '.jpg' | asset_url
+      unless forloop.first
+        assign phone_webp_srcset = phone_webp_srcset | append: ', '
+        assign phone_jpg_srcset = phone_jpg_srcset | append: ', '
+      endunless
+      assign phone_webp_srcset = phone_webp_srcset | append: webp_url | append: ' ' | append: w | append: 'w'
+      assign phone_jpg_srcset = phone_jpg_srcset | append: jpg_url | append: ' ' | append: w | append: 'w'
+    endfor
+  endif
+  # has_phone: a phone-specific file exists (uploaded, or the coded fallback pair). When the
+  # desktop image is an upload and no phone upload is set, phones use the desktop upload.
+  assign has_phone = false
+  if phone_srcset != '' or phone_webp_srcset != ''
+    assign has_phone = true
+  endif
+
+  if image != blank
+    assign alt = settings.hero_image_alt | default: image.alt | default: fallback_alt
+    assign srcset = ''
+    assign top_rung = 0
+    for w in ladder
+      assign wn = w | plus: 0
+      if wn > image.width
+        break
+      endif
+      assign url = image | image_url: width: wn
+      unless forloop.first
+        assign srcset = srcset | append: ', '
+      endunless
+      assign srcset = srcset | append: url | append: ' ' | append: w | append: 'w'
+      assign top_rung = wn
+    endfor
+    if image.width < 2560 and image.width != top_rung
+      assign url = image | image_url: width: image.width
+      if srcset != ''
+        assign srcset = srcset | append: ', '
+      endif
+      assign srcset = srcset | append: url | append: ' ' | append: image.width | append: 'w'
+    endif
+    assign src = image | image_url: width: 1280
+  else
+    assign webp_srcset = ''
+    assign jpg_srcset = ''
+    for w in ladder
+      assign webp_url = 'hero-fall-' | append: w | append: '.webp' | asset_url
+      assign jpg_url = 'hero-fall-' | append: w | append: '.jpg' | asset_url
+      unless forloop.first
+        assign webp_srcset = webp_srcset | append: ', '
+        assign jpg_srcset = jpg_srcset | append: ', '
+      endunless
+      assign webp_srcset = webp_srcset | append: webp_url | append: ' ' | append: w | append: 'w'
+      assign jpg_srcset = jpg_srcset | append: jpg_url | append: ' ' | append: w | append: 'w'
+    endfor
+  endif
+-%}
+
+{%- if mode == 'preload' -%}
+  {%- comment -%}
+    theme-check-disable matches the font preloads in theme.liquid: Theme Check's
+    `preload_tag` filter has no imagesrcset/imagesizes, and a responsive preload
+    without them would fetch the wrong rung.
+  {%- endcomment -%}
+  {% comment %}theme-check-disable AssetPreload{% endcomment %}
+  {%- if has_phone -%}
+    {%- if phone_srcset != '' -%}
+      <link rel="preload" as="image" media="{{ phone_media }}" imagesrcset="{{ phone_srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+    {%- else -%}
+      <link rel="preload" as="image" media="{{ phone_media }}" type="image/webp" imagesrcset="{{ phone_webp_srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+    {%- endif -%}
+    {%- if image != blank -%}
+      <link rel="preload" as="image" media="{{ desktop_media }}" imagesrcset="{{ srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+    {%- else -%}
+      <link rel="preload" as="image" media="{{ desktop_media }}" type="image/webp" imagesrcset="{{ webp_srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+    {%- endif -%}
+  {%- elsif image != blank -%}
+    <link rel="preload" as="image" imagesrcset="{{ srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+  {%- else -%}
+    <link rel="preload" as="image" type="image/webp" imagesrcset="{{ webp_srcset }}" imagesizes="{{ sizes }}" fetchpriority="high">
+  {%- endif -%}
+  {% comment %}theme-check-enable AssetPreload{% endcomment %}
+{%- elsif mode == 'picture' -%}
+  <picture class="hero-media">
+    {%- comment -%} Phone source first: the browser takes the first <source> whose media
+        matches, so the portrait file wins below 768px and is ignored above it. {%- endcomment -%}
+    {%- if phone_srcset != '' -%}
+      <source media="{{ phone_media }}" srcset="{{ phone_srcset }}" sizes="{{ sizes }}">
+    {%- elsif phone_webp_srcset != '' -%}
+      <source media="{{ phone_media }}" type="image/webp" srcset="{{ phone_webp_srcset }}" sizes="{{ sizes }}">
+      <source media="{{ phone_media }}" srcset="{{ phone_jpg_srcset }}" sizes="{{ sizes }}">
+    {%- endif -%}
+    {%- if image != blank -%}
+      <img
+        class="hero-img"
+        src="{{ src }}"
+        srcset="{{ srcset }}"
+        sizes="{{ sizes }}"
+        alt="{{ alt | escape }}"
+        width="{{ image.width }}"
+        height="{{ image.height }}"
+        fetchpriority="high"
+      >
+    {%- else -%}
+      <source type="image/webp" srcset="{{ webp_srcset }}" sizes="{{ sizes }}">
+      <img
+        class="hero-img"
+        src="{{ 'hero-fall-1280.jpg' | asset_url }}"
+        srcset="{{ jpg_srcset }}"
+        sizes="{{ sizes }}"
+        alt="{{ fallback_alt }}"
+        width="5504"
+        height="3072"
+        fetchpriority="high"
+      >
+    {%- endif -%}
+  </picture>
+{%- endif -%}

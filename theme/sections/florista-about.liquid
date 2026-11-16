@@ -1,0 +1,124 @@
+{%- comment -%}
+  Florista about page — docs/design-log.md, 2026-08-22.
+
+  Ludmila's story from the old Wix /aboutus, kept verbatim, re-set as a
+  vertical timeline that reveals as you scroll. The signature element is
+  the "stem": a sage spine with wine dots that bloom open per era, and
+  each era named in very large, very light Heebo — the variable font the
+  brand already owns, used at a weight the old site never touched.
+
+  Content is editable: every era is a section block (theme editor), and
+  the defaults below carry the real copy so a fresh install renders the
+  full story with zero setup. The photo falls back to the bundled asset
+  pulled from the old site.
+
+  Motion is a progressive enhancement: the JS arms the hidden states by
+  setting .fa-armed on the section, so without JS everything is simply
+  visible. prefers-reduced-motion gets no transforms at all.
+{%- endcomment -%}
+
+{{ 'florista-about.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-about.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign page_title = section.settings.title | default: 'אודות פלוריסטה'
+  assign phone = section.settings.phone | default: '054-2270287'
+  assign phone_href = phone | remove: '-' | remove: ' '
+-%}
+
+<section class="fa-section">
+  <div class="fa-inner">
+
+    <header class="fa-hero">
+      <p class="fa-eyebrow">פלוריסטה · חנות פרחים בחיפה</p>
+      <h1 class="fa-title">{{ page_title }}</h1>
+    </header>
+
+    <div class="fa-intro" data-reveal>
+      <div class="fa-intro-media">
+        {%- if section.settings.image -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              widths: '400, 600, 800, 1200',
+              sizes: '(min-width: 768px) 45vw, 92vw',
+              class: 'fa-photo',
+              alt: section.settings.image.alt | default: 'לודמילה קיפרושקין שוזרת זר בחנות הפרחים פלוריסטה'
+          }}
+        {%- else -%}
+          <img
+            class="fa-photo"
+            src="{{ 'florista-about-ludmila.jpg' | asset_url }}"
+            width="1200" height="800"
+            loading="eager"
+            alt="לודמילה קיפרושקין שוזרת זר בחנות הפרחים פלוריסטה">
+        {%- endif -%}
+      </div>
+      <div class="fa-intro-text">
+        <h2 class="fa-intro-heading">{{ section.settings.intro_heading | default: 'מי אני?' }}</h2>
+        <p class="fa-lead">{{ section.settings.intro_lead | default: 'שמי לודמילה קיפרושקין ואני בעלת המותג הפרחוני "פלוריסטה".' }}</p>
+        <p>{{ section.settings.intro_text | default: 'בחרתי להקים את המותג "פלוריסטה" מתוך אהבה אמיתית למקצוע ומתוך רצון לתת סטנדרט שירות חדש בתחום הפרחים – להפיק יצירות פרחוניות וצבעוניות, מפרחים שהם תמיד טריים, תמיד רעננים ומגיעים במשלוח, תמיד בזמן.' }}</p>
+      </div>
+    </div>
+
+    <ol class="fa-timeline" role="list">
+      {%- for block in section.blocks -%}
+        <li class="fa-stop" data-reveal {{ block.shopify_attributes }}>
+          {%- comment -%}
+            Guarded 2026-08-30 — see the note in florista-bestsellers. Clearing this block's
+            `era` field rendered an empty <h2></h2>; the sibling `heading` two lines below was
+            already guarded correctly, which is what made this an oversight rather than a
+            pattern.
+          {%- endcomment -%}
+          {%- if block.settings.era != blank -%}
+            <h2 class="fa-era">{{ block.settings.era }}</h2>
+          {%- endif -%}
+          <div class="fa-card">
+            {%- if block.settings.heading != blank -%}
+              <h3 class="fa-card-heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            <p class="fa-card-text">{{ block.settings.text }}</p>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    <footer class="fa-outro" data-reveal>
+      <p class="fa-outro-text">{{ section.settings.outro_text | default: 'אני מזמינה אתכם ליצור איתי קשר ולתת לי הזדמנות לשמח אתכם בעזרת יצירות הפרחים של "פלוריסטה".' }}</p>
+      <div class="fa-outro-actions">
+        <a class="fa-cta" href="tel:{{ phone_href }}">להזמנות: {{ phone }}</a>
+        <a class="fa-cta fa-cta--ghost" href="{{ routes.all_products_collection_url }}">לחנות הפרחים</a>
+      </div>
+    </footer>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista about",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Page title", "default": "אודות פלוריסטה" },
+    { "type": "image_picker", "id": "image", "label": "Photo (falls back to the bundled one)" },
+    { "type": "text", "id": "intro_heading", "label": "Intro heading", "default": "מי אני?" },
+    { "type": "textarea", "id": "intro_lead", "label": "Intro lead line" },
+    { "type": "textarea", "id": "intro_text", "label": "Intro paragraph" },
+    { "type": "textarea", "id": "outro_text", "label": "Closing line" },
+    { "type": "text", "id": "phone", "label": "Phone", "default": "054-2270287" }
+  ],
+  "blocks": [
+    {
+      "type": "stop",
+      "name": "Timeline era",
+      "settings": [
+        { "type": "text", "id": "era", "label": "Era label (the big light text)" },
+        { "type": "text", "id": "heading", "label": "Heading inside the card (optional)" },
+        { "type": "textarea", "id": "text", "label": "Story text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Florista about" }]
+}
+{% endschema %}

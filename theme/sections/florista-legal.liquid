@@ -1,0 +1,91 @@
+{%- comment -%}
+  Florista legal document — built 2026-08-21 for /pages/privacy-policy, and reusable for the
+  terms of use and the accessibility statement when those are written. See docs/design-log.md.
+
+  2026-09-05: /pages/privacy-policy is GONE. The owner wants one policy page on the site, and that is
+  Shopify's own slot at /policies/privacy-policy (Settings → Policies) — the one checkout and
+  the cookie banner link to, which no theme page can replace. The page was deleted and its URL
+  redirects there. This section stays for the terms of use and the accessibility statement.
+
+  the owner asked for a privacy policy page shaped like zer4u.co.il's, in Florista's design, with
+  readability as the only goal — explicitly not a showpiece. So this section carries no
+  photography, no brand-coloured band and no hero: a legal document is read, not browsed, and
+  every decoration would be one more thing between the reader and the clause they came for.
+
+  Content/design split, per the standing rule that every element has editable content in the
+  admin and coded design in the repo:
+
+    - The DESIGN is here and in florista-legal.css — measure, rules between clauses, the tinted
+      contents card, the closing contact block.
+    - The TEXT is the Shopify page body, edited in the admin by the owner or a lawyer without a
+      deploy. The authored source is kept in docs/legal/privacy-policy.he.html so the version
+      that is live is also in git.
+    - The FALLBACK below covers the case Shopify guarantees will happen: the template is
+      assigned to a page whose body has not been pasted in yet. It says so rather than
+      rendering an empty page under a heading.
+
+  The heading levels are load-bearing, not styling. The page title is the only h1; every
+  numbered clause in the content is an h2 with an id, and the contents list at the top links to
+  those ids. That is what makes a 15-clause document usable on a 375px phone.
+{%- endcomment -%}
+
+{{ 'florista-legal.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign updated = section.settings.updated_label
+  assign intro = section.settings.intro
+-%}
+
+<section class="fl-legal">
+  <div class="fl-legal-inner">
+    <h1 class="fl-legal-title">{{ page.title | escape }}</h1>
+
+    {%- if updated != blank -%}
+      <p class="fl-legal-updated">{{ updated }}</p>
+    {%- endif -%}
+
+    {%- if intro != blank -%}
+      <p class="fl-legal-intro">{{ intro }}</p>
+    {%- endif -%}
+
+    <div class="fl-legal-body">
+      {%- comment -%}
+        The empty state used to print Shopify admin instructions — "יש להוסיף אותו בממשק הניהול
+        של Shopify, תחת Content ← Pages ← …" — to customers, on an indexable legal page. A note
+        to the shop owner does not belong in the storefront: it is confusing to a customer,
+        embarrassing on a legal page specifically, and indexable. It is now an HTML comment,
+        which the owner still sees in the page source while nobody else does, and the visible empty
+        state says nothing at all rather than saying the wrong thing. Fixed 2026-08-30.
+      {%- endcomment -%}
+      {%- if page.content != blank -%}
+        {{ page.content }}
+      {%- else -%}
+        <!-- Florista: this page has no content yet. Add it in Shopify admin under
+             Content → Pages → {{ page.title | escape }}. -->
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista legal",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "updated_label",
+      "label": "שורת עדכון אחרון",
+      "default": "עודכן לאחרונה: 21 באוגוסט 2026",
+      "info": "יש לעדכן בכל שינוי מהותי במסמך. השאירו ריק כדי להסתיר את השורה."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "משפט פתיחה (אופציונלי)",
+      "info": "מוצג בגדול מתחת לכותרת, לפני גוף המסמך."
+    }
+  ],
+  "presets": [{ "name": "Florista legal" }]
+}
+{% endschema %}

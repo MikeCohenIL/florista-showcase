@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Florista category tiles — docs/design-log.md, 2026-08-20.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.cg-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-10);
+}
+
+.cg-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+.cg-heading {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-xl);
+}
+
+.cg-row {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  /* Mobile: horizontal scroll-snap rather than squeezing four tiles into one
+     viewport. Full-bleed past the section's own inline padding so the row
+     reaches the screen edge and the next card peeks in as a scroll hint. */
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  margin-inline: calc(var(--page-inline-padding) * -1);
+  padding-inline: var(--page-inline-padding);
+  padding-block-end: var(--space-2); /* room for the scrollbar on desktop browsers that show one */
+  -webkit-overflow-scrolling: touch;
+}
+
+.cg-tile {
+  flex: 0 0 auto;
+  inline-size: 62vw;
+  max-inline-size: 260px;
+  scroll-snap-align: start;
+}
+
+.cg-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.cg-link picture {
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-subtle); /* while the image loads */
+}
+
+.cg-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.cg-link:hover .cg-img {
+  transform: scale(1.04);
+}
+
+.cg-label {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heading);
+}
+
+.cg-cta {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-action);
+}
+
+.cg-link:hover .cg-cta,
+.cg-link:focus-visible .cg-cta {
+  color: var(--color-action-hover);
+  text-decoration: underline;
+}
+
+.cg-link:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cg-img {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop — a real four-up grid, no scroll.
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 768px) {
+  /* Was `grid-template-columns: repeat(4, 1fr)`, which hard-coded the tile count
+     into the layout. When a tile is not rendered — the section now skips any
+     category whose collection does not exist — the fourth column stayed and left
+     a ~304px band of empty ivory down the row. In RTL the tiles pack to the right,
+     so the hole was on the left and read as a broken section rather than a
+     deliberate one.
+
+     Flex with `flex: 1 1 0` divides the row by however many tiles actually
+     rendered, so three fill it as evenly as four. Found by browser QA at 1280 on
+     2026-08-30; mobile was unaffected because the row is a scroller there. */
+  .cg-row {
+    display: flex;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .cg-tile {
+    flex: 1 1 0;
+    inline-size: auto;
+    max-inline-size: none;
+  }
+
+  .cg-heading {
+    font-size: var(--text-2xl);
+  }
+}

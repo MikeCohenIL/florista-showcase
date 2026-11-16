@@ -1,0 +1,531 @@
+/* ==========================================================================
+   Florista header
+   --------------------------------------------------------------------------
+   Rebuilt in Liquid from docs/design-log.md. Every number here was decided,
+   most of them measured — see the log before changing one.
+
+   NO PHYSICAL PROPERTIES. The Hydrogen build had a stylelint rule that failed
+   the build on `left`/`right`; it did not survive the stack switch and nothing
+   replaces it, so this file holds the line by hand. Use inline-start/end.
+   ========================================================================== */
+
+/* Shopify wraps every section in its own auto-height `.shopify-section` div.
+   That wrapper is the header's containing block — and since it shrink-wraps
+   to exactly 72px (the header's own height), `position: sticky` on
+   `.florista-header` itself has zero room to hold: the containing block ends
+   the instant the element does, so it behaves exactly like `position: static`
+   and scrolls away. Caught in the browser, not from reading the CSS — it
+   computed as `position: sticky` yet `getBoundingClientRect().top` tracked
+   scrollY 1:1 the whole way down.
+
+   The fix is to make the WRAPPER sticky instead: its own containing block is
+   `<body>`, which is thousands of pixels tall, so it has all the room it
+   needs. `:has()` scopes this to the header's wrapper specifically — both the
+   announcement bar and the header share the group class
+   `shopify-section-group-header-group`, and the announcement bar must stay
+   in normal flow (it should scroll away, not pin). */
+.shopify-section-group-header-group:has(.florista-header) {
+  position: sticky;
+  inset-block-start: 0;
+  /* Above page content while sticky. The Hydrogen build shipped this at 1 and
+     the bar slid under the page. */
+  z-index: 20;
+}
+
+.florista-header {
+  /* 1fr auto 1fr centres the logo against the VIEWPORT rather than against
+     whichever neighbour happens to be wider. Exactly one of the burger and the
+     nav is ever displayed, so there are always three grid items and no wrapper
+     element is needed. */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+
+  block-size: var(--header-height); /* 72px */
+
+  background-color: var(--color-bg);
+
+  /* Full-bleed background, contents stopped at --container-max. On a 1440px
+     screen that is 80px of margin each side. */
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Liquid glass past 8px of scroll. At rest the bar is opaque.
+   -------------------------------------------------------------------------- */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .florista-header {
+    transition: background-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .florista-header.is-scrolled {
+    /* saturate() is not decoration — blur alone turns the colour behind it grey. */
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(18px) saturate(180%);
+    background-color: color-mix(in srgb, var(--color-bg) 72%, transparent);
+    box-shadow: 0 1px 12px rgb(0 0 0 / 6%);
+  }
+}
+
+/* Without backdrop-filter the bar stays opaque and gets a hairline instead of
+   going see-through, which is the failure mode that actually looks broken. */
+.florista-header.is-scrolled {
+  border-block-end: 1px solid var(--color-border-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .florista-header {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Icon buttons — burger, phone, bag, drawer close
+   -------------------------------------------------------------------------- */
+.fh-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  /* 44px is the touch floor and applies to standalone controls at every width. */
+  min-inline-size: 44px;
+  min-block-size: 44px;
+
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fh-icon-btn:hover {
+  color: var(--color-action);
+}
+
+/* --------------------------------------------------------------------------
+   Burger — inline-start, hidden once the nav goes inline
+   -------------------------------------------------------------------------- */
+.fh-burger {
+  justify-self: start;
+}
+
+/* --------------------------------------------------------------------------
+   Logo — the mark alone, 72px wide, at every width
+   -------------------------------------------------------------------------- */
+.fh-logo {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+}
+
+/* `display` sits on the anchor, not on `.fh-logo img`. A class + element
+   selector outranks a bare class, which is exactly how the Hydrogen build ended
+   up rendering the lotus twice — a media query could never hide it. */
+.fh-logo img {
+  inline-size: 72px;
+  block-size: auto;
+}
+
+/* --------------------------------------------------------------------------
+   CTA group — inline-end. DOM order phone → bag, so the bar reads
+   bag · phone from the left edge in RTL.
+   -------------------------------------------------------------------------- */
+.fh-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  justify-self: end;
+}
+
+/* The number is hidden below 900px. Measured: at 768px it leaves 8px of slack
+   in the bar, at 900px it leaves 140px (the flat nav starts at 1088px now, so
+   through 900–1087 the number shares the bar with the burger, not the nav —
+   see the breakpoint note at the nav media queries). */
+.fh-phone-number {
+  display: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.fh-phone {
+  padding-inline: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Bag + count pill
+   -------------------------------------------------------------------------- */
+.fh-bag {
+  position: relative;
+}
+
+.fh-bag-count {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
+
+  min-inline-size: 18px;
+  padding-inline: 5px;
+
+  background-color: var(--color-action);
+  color: var(--color-text-on-brand);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-heading);
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop nav — hidden until 768px
+   -------------------------------------------------------------------------- */
+/* `align-self: stretch` + a full-height list make the nav span the whole 72px
+   bar. Without them the list is only as tall as its 44px links and sits
+   centred, so the dropdown — anchored to its parent `li` — opened 14px INSIDE
+   the bar instead of hanging off its bottom edge (measured: panel top 94,
+   bar bottom 108). Nothing moves visually for the plain links; they stay 44px
+   and centred, so the current-page underline sits where it always did. */
+.fh-nav {
+  display: none;
+  align-self: stretch;
+  justify-self: start;
+  min-inline-size: 0;
+}
+
+.fh-nav-list {
+  display: flex;
+  align-items: center;
+  block-size: 100%;
+  gap: var(--space-6); /* 24px */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fh-nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px; /* nav links measured 27px and were flagged in QA */
+
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+  white-space: nowrap;
+
+  border-block-end: 2px solid transparent;
+}
+
+.fh-nav-link:hover {
+  color: var(--color-action);
+}
+
+/* Current page is marked three ways — colour, weight AND a rule — so the state
+   is never carried by colour alone. */
+.fh-nav-link.is-current {
+  color: var(--color-action);
+  font-weight: 600;
+  border-block-end-color: var(--color-action);
+}
+
+/* --------------------------------------------------------------------------
+   Dropdown group — «מוצרים נלווים» (2026-08-29). One level, JS-driven.
+   -------------------------------------------------------------------------- */
+/* The li stretches to the full 72px bar so the pointer never crosses a dead
+   gap between the trigger and the panel — leaving the li is what closes the
+   dropdown, and a gap would close it on the way down to the links. */
+.fh-nav-parent {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
+/* Button reset on top of .fh-nav-link. This rule must sit AFTER .fh-nav-link:
+   `border: 0` wipes the link's transparent underline rule at equal specificity,
+   so the underline is re-declared here and source order decides the rest. */
+.fh-nav-toggle {
+  gap: var(--space-1);
+  padding: 0;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.fh-nav-toggle .fh-chevron {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.fh-nav-parent.is-open .fh-nav-toggle .fh-chevron {
+  transform: rotate(180deg);
+}
+
+/* The panel is NOT a card — the owner, 2026-08-29: "it should look like part of the
+   navbar, same colors". Same ivory as the bar, flush with its bottom edge, no
+   border, no radius, no shadow; the links style exactly like bar links. The
+   negative inline offset cancels the links' own padding so their text sits on
+   the parent label's axis. */
+.fh-dropdown {
+  display: none;
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: calc(-1 * var(--space-3));
+  z-index: 1;
+
+  min-inline-size: max-content;
+  margin: 0;
+  /* The inline reset is load-bearing: The base theme's base `ul` carries a 4rem
+     padding-inline-start, which in RTL pushed every child link 40px left of
+     the parent label. Writing `padding-block` alone left it standing. */
+  padding: var(--space-1) 0 var(--space-2);
+  list-style: none;
+
+  background-color: var(--color-bg);
+}
+
+.fh-nav-parent.is-open .fh-dropdown {
+  display: block;
+}
+
+.fh-dropdown-link {
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--space-3);
+
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fh-dropdown-link:hover {
+  color: var(--color-action);
+}
+
+/* Same three-way current mark the bar links carry — never colour alone. */
+.fh-dropdown-link[aria-current='page'] {
+  color: var(--color-action);
+  font-weight: 600;
+}
+
+/* The base theme's *:focus-visible ring is a 2px offset outline PLUS a double halo
+   box-shadow — a heavy box around a quiet nav row (the owner: "some sort of
+   stroke", 2026-08-29, on the sheet's accordion). Keyboard focus must stay
+   visible, so the ring is replaced, not removed: a slim inset brand ring,
+   no halo. */
+.fh-nav-toggle:focus-visible,
+.fh-drawer-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* Base rule first, media query after. Same specificity means source order wins,
+   and the Hydrogen build shipped these the wrong way round — the burger showed
+   on desktop for a day. Do not move this block above .fh-icon-btn.
+
+   Breakpoint history: the flat nav appeared at 768px while it held five links.
+   Adding חתונות (2026-08-26, the owner's ask) made it six — a 455px list at the
+   24px gap. The logo is centred by the symmetric 1fr|auto|1fr grid, so each
+   side track is (bar − logo)/2; the nav has min-inline-size: 0 and its nowrap
+   list overflows the track toward the centre, sliding UNDER the logo image —
+   at 900px «חתונות» sat behind the lotus (caught only by looking:
+   qa-weddings-900/960-header.png; the scroll-width audit saw nothing). Six
+   links + centred logo + phone number genuinely need ≈1090px, so the burger
+   now runs to 1088px. Compressing gaps/type to force an earlier fit was
+   rejected as cramped — if the owner prefers the flat bar back at ~900, the price
+   is either a compact mid-band style or dropping/shortening a link. If a
+   seventh link ever lands, re-measure.
+
+   2026-08-29: re-measured. «ימי הולדת» left the menu and «מוצרים נלווים» (+ its
+   14px chevron) took its place — a longer label, so the six-item list grew by
+   ≈55px. The symmetric grid doubles that against the bar, hence 1088 → 1200.
+   Shortening the label in the bar (the בקופסה precedent) was considered and
+   parked — «נלווים» alone reads odd; raise with the owner if 1200 feels late. */
+@media screen and (min-width: 1200px) {
+  .fh-burger {
+    display: none;
+  }
+
+  .fh-nav {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .fh-phone-number {
+    display: inline;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Overlay + drawer
+   -------------------------------------------------------------------------- */
+/* The base theme's base.css carries `a:empty, ul:empty, div:empty, section:empty, … {
+   display: none }`. An overlay is legitimately an empty div, so the base theme hides it
+   permanently — the sheet opens with no dimming and, worse, no tap-outside-to-
+   close target. Caught in the browser; it passes Theme Check silently.
+
+   The selector has to be `div.fh-overlay` (0,1,1) to match `div:empty` (0,1,1);
+   a bare `.fh-overlay` is (0,1,0) and loses. With specificity tied, this file
+   loading after base.css is what decides it.
+
+   The [hidden] rule below is then mandatory: once the class is qualified it
+   also outranks the UA's `[hidden] { display: none }` (0,1,0), so without it
+   the overlay would never hide again. */
+div.fh-overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background-color: rgb(0 0 0 / 40%);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+div.fh-overlay[hidden] {
+  display: none;
+}
+
+.fh-overlay.is-open {
+  opacity: 1;
+}
+
+.fh-drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0; /* the same edge the burger is on */
+  z-index: 31;
+
+  display: flex;
+  flex-direction: column;
+
+  inline-size: min(86vw, 360px);
+  max-inline-size: 100%;
+  padding: var(--space-4);
+
+  background-color: var(--color-bg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  /* translateX is physical and has no logical form. --flip-x is -1 in RTL, and
+     the sheet must sit off-screen past the INLINE-START edge when closed:
+       RTL  -100% × -1 = +100%  → off to the right  ✓
+       LTR  -100% ×  1 = -100%  → off to the left   ✓ */
+  transform: translateX(calc(-100% * var(--flip-x)));
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.fh-drawer.is-open {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fh-drawer,
+  .fh-overlay {
+    transition: none;
+  }
+}
+
+.fh-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--space-4);
+}
+
+.fh-drawer-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heading);
+}
+
+.fh-drawer-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Every row is a 44px target. A mis-tap in a nav sheet sends someone to the
+   wrong collection. */
+.fh-drawer-link {
+  display: flex;
+  align-items: center;
+  min-block-size: 44px;
+
+  color: var(--color-text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+}
+
+.fh-drawer-link:hover,
+.fh-drawer-link[aria-current='page'] {
+  color: var(--color-action);
+}
+
+.fh-drawer-link--secondary {
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-body);
+}
+
+/* --------------------------------------------------------------------------
+   Accordion group in the sheet — «מוצרים נלווים» (2026-08-29)
+   -------------------------------------------------------------------------- */
+/* Button reset on top of .fh-drawer-link; chevron pushed to the far edge so
+   the whole 44px row is the tap target, not just the word. */
+.fh-drawer-toggle {
+  inline-size: 100%;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.fh-drawer-toggle .fh-chevron {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.fh-drawer-toggle[aria-expanded='true'] .fh-chevron {
+  transform: rotate(180deg);
+}
+
+/* Children indent one step under their group; rows keep the full 44px target. */
+.fh-drawer-sub {
+  margin: 0;
+  padding: 0;
+  padding-inline-start: var(--space-4);
+  list-style: none;
+}
+
+.fh-drawer-rule {
+  block-size: 1px;
+  margin-block: var(--space-3);
+  border: 0;
+  background-color: var(--color-border-subtle);
+}
+
+.fh-drawer-phone {
+  margin-block-start: auto;
+  padding-block-start: var(--space-4);
+
+  color: var(--color-action);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+}

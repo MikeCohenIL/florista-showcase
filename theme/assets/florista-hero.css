@@ -1,0 +1,223 @@
+/* ==========================================================================
+   Florista hero
+   --------------------------------------------------------------------------
+   Full-bleed photo, full screen, title + one CTA directly on the photo —
+   restyled 2026-08-20, boho-boutique pass. See docs/design-log.md for why
+   the glass panel from the first build is gone.
+
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only. The
+   scrim gradient is the one exception worth flagging: it runs block-start to
+   block-end (bottom to top), which does not invert between LTR and RTL, so
+   `to top` is not a hidden physical-direction bug here.
+   ========================================================================== */
+
+.hero-full {
+  position: relative;
+  overflow: hidden;
+
+  /* "The entire screen." svh is the dynamic viewport unit — vh is wrong here,
+     it is measured before mobile browser chrome collapses and leaves a gap
+     at the bottom of the very surface this rule is trying to fill. */
+  min-block-size: 100vh; /* fallback for the handful of browsers without svh */
+  min-block-size: 100svh; /* must come second — the later declaration wins, so svh needs to be last */
+}
+
+/* Phones: not full screen (2026-09-24). The frame takes the phone photo's own 9:16 shape,
+   so the whole picture shows, edge to edge and top to bottom, and `cover` crops nothing.
+   the owner's words after a 4:5 try modelled on the UrbanStems hero: "the entire picture is not
+   visable" — the whole arrangement matters more than the reference's cut-off bouquet.
+   Desktop keeps the full-height wide photo above. */
+@media screen and (max-width: 767px) {
+  .hero-full {
+    min-block-size: auto;
+    aspect-ratio: 9 / 16;
+  }
+}
+
+.hero-media,
+.hero-img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.hero-img {
+  object-fit: cover;
+  /* Phones get their own photo (2026-09-24, snippets/florista-hero-image.liquid): the
+     9:16 portrait render, shown whole in a 9:16 frame, so this position is moot on
+     phones; desktop keeps its own bias below. */
+  object-position: 50% center;
+}
+
+/* --------------------------------------------------------------------------
+   No scrim. Until 2026-09-23 a radial ink vignette (58% at the centre, 72% on
+   phones) sat over the whole photo so white type could go anywhere. The owner:
+   "i hate the fact you make it darker … look how bright and colorful is the
+   original". The photo is now untouched; the type is ink and is placed over
+   the photo's own light areas instead. If a future photo has no quiet light
+   area, the answer is a different photo or a different layout, not the
+   vignette back.
+   -------------------------------------------------------------------------- */
+
+.hero-content {
+  position: absolute;
+  inset-inline-start: 0;
+  /* Top of the frame on phones (2026-09-23): the wall is above the flowers, so
+     the text lives there and the bouquet stays whole underneath. Desktop moves
+     it back to the vertical centre of the wall, below. */
+  inset-block-start: 0;
+  /* 64px. The owner asked for the block lower than the 40px it started at ("the
+     text feels to up"). The photo's calm wall is the top ~37% of the 9:16 frame;
+     the block fills it and the button meets the flower tips. */
+  padding-block-start: var(--space-16);
+  inline-size: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+
+  padding-inline: var(--page-inline-padding);
+}
+
+/* Eyebrow — a short campaign label above the headline ("קולקציית סתיו חדשה"), added
+   2026-09-23 from the owner's fall reference. The eyebrow that was removed in August carried the
+   address, which the footer already says; this one names the campaign, which nothing else on
+   the page does. Small, tracked, and empty by default — the section hides it when the
+   setting is blank, so non-campaign heroes look exactly as before. */
+.hero-eyebrow {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-ui);
+  letter-spacing: 0.06em;
+  color: var(--color-ink);
+}
+
+.hero-title {
+  margin: 0;
+  font-size: var(--text-display);
+  line-height: var(--leading-heading);
+  font-weight: var(--weight-heading);
+  /* Ink, not white, since 2026-09-23: the type sits on the photo's bright wall
+     with nothing shading it, and dark-on-light needs no shadow. */
+  color: var(--color-ink);
+  max-inline-size: 11ch;
+}
+
+/* The one supporting line. Deliberately not display scale — it exists so the
+   h1 can stay three words and still hold its size at 320px, which it cannot do
+   if the season and the same-day promise are crammed into the heading itself.
+   Same shadow as the title for the same reason: the vignette cannot be trusted
+   to be dark wherever the responsive crop puts this line. */
+.hero-subtitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  font-weight: var(--weight-body);
+  color: var(--color-ink);
+  max-inline-size: 24ch;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-block-size: 52px;
+  padding-inline: var(--space-8);
+  margin-block-start: var(--space-2);
+  border-radius: var(--radius-pill);
+
+  /* Solid fill, not the outgoing white pill — the owner flagged the CTA as "not
+     that visible", and the real cause was contrast: white on this photo's
+     light sand nearly vanished. A saturated wine fill holds up against sand,
+     water and photo alike, and does not depend on which crop the scrim's
+     vignette happens to be darkest over. */
+  background-color: var(--color-action);
+  color: var(--color-text-on-brand);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-ui);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+
+  transition: background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.hero-cta:hover {
+  background-color: var(--color-action-hover);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 30%);
+}
+
+.hero-cta:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+/* Seasonal skin, Rosh Hashana 2026 — honey instead of wine, chosen by the owner
+   2026-08-25 (revised same day from dark gold to "liquid honey", the colour
+   of the jar in the photo — his call, from a three-swatch comparison). Honey
+   is light, so the label flips to ink via its own token. Applied via a
+   section setting so the theme editor can turn the season off without a
+   deploy; everything else about the pill (size, radius, shadow) is shared. */
+.hero-cta--festive {
+  background-color: var(--color-action-festive);
+  color: var(--color-text-on-festive);
+}
+
+.hero-cta--festive:hover {
+  background-color: var(--color-action-festive-hover);
+}
+
+/* Fall 2026 skin — cinnamon instead of wine or honey, 2026-09-23. The owner asked for "fall
+   vibes" on the button; rust-orange picks up the tea and the orange roses in the photo.
+   It is dark enough to keep the white label, so no text-token flip like honey needs. */
+.hero-cta--fall {
+  background-color: var(--color-action-fall);
+  color: var(--color-text-on-fall);
+}
+
+.hero-cta--fall:hover {
+  background-color: var(--color-action-fall-hover);
+}
+
+/* --------------------------------------------------------------------------
+   Desktop — content narrows to one side (physical right, RTL inline-start)
+   instead of running full-width, so the crop needs its own breakpoint here:
+   bias right, toward the calm sand, away from the busy wine/bouquet cluster
+   the text would otherwise sit on top of.
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 768px) {
+  .hero-content {
+    inline-size: min(58%, 640px);
+    padding-inline: var(--space-10);
+    /* Back to the vertical centre: on desktop the whole right half is wall. */
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    padding-block-start: 0;
+  }
+
+  .hero-title {
+    /* 14ch was sized for the two-word headline. "קיץ פורח בחיפה" is exactly 14
+       characters, which lands on the wrap boundary and breaks unpredictably
+       between font-metric rounding modes — 16ch kept the decision explicit.
+       2026-09-23: "סתיו פורח בפלוריסטה" is 19, so 20ch, for the same reason;
+       the 640px column takes it on one line at 48px with room to spare. */
+    max-inline-size: 20ch;
+  }
+
+  /* 24ch is a mobile measure. Left at that on desktop the line broke in two
+     inside a 640px column while the headline above it sat on one — which read
+     as the sentence not fitting rather than as a choice. 36ch clears the
+     35-character holiday greeting in one line (was 34ch, sized for the
+     31-character summer line, which it still clears). */
+  .hero-subtitle {
+    max-inline-size: 36ch;
+  }
+
+  .hero-img {
+    object-position: 78% center;
+  }
+}

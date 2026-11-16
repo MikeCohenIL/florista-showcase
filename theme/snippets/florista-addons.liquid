@@ -1,0 +1,314 @@
+{%- comment -%}
+  Florista buy-box add-on rows — the owner chose "checkbox rows", 2026-08-28.
+  Selection made smarter 2026-08-30. See docs/design-log.md.
+
+  Two tappable rows sitting between the delivery note and the add button,
+  inside the product form: photo · name · price · checkbox. Ticking a row adds
+  that product to the cart as its OWN line item alongside the bouquet
+  (florista-atc.js posts an items[] array), and the button's running total
+  follows. It is not a line item property — the florist has to pick a real
+  bottle off a real shelf.
+
+  WHICH PRODUCTS APPEAR, in priority order:
+
+    1. the three theme-editor pickers, in order, when set — an absolute
+       override, nothing below runs;
+    2. otherwise the two rows are chosen from three source collections —
+       `drinks`, `balloons`, `chocolate` — by the rules below.
+
+  The rules, and why each exists:
+
+    · NEVER THE CATEGORY THE PRODUCT ALREADY IS. A wine page offering another
+      wine is noise; a chocolate bar offering a chocolate bar is worse. The
+      product's own category drops out of the running, leaving two of three.
+    · OCCASION MATCH. When the product reads as a birthday item — it sits in
+      `birthday`, or its title/type says so — the balloon row is restricted to
+      balloons whose title carries the occasion (יום הולדת / Happy Birthday).
+      The balloon titles already name their occasion in plain Hebrew, so this
+      needs no tagging pass. If the restriction leaves nothing, it is dropped
+      rather than shown empty.
+    · PRICE SANITY. An add-on costing more than 40% of the product is a big ask
+      standing next to the add button — a 74.99 bottle beside a 159.99 bouquet
+      reads as a second purchase, not a finishing touch. Over-cap add-ons are
+      dropped, unless dropping them empties the pool, in which case the cap is
+      ignored rather than the row lost.
+    · ROTATION. What survives is indexed by `product.id | modulo: size`, so
+      different products show different add-ons — but the SAME product always
+      shows the same pair. Deterministic on purpose: it is cache-safe, it does
+      not flicker between visits, and it can be reasoned about when the owner asks
+      why a given page shows a given bottle. Liquid has no `rand` anyway.
+
+  Skipped throughout: the product being viewed (never offer itself), anything
+  unavailable, and any product with more than one variant — a multi-variant
+  add-on would need a choice this row has no room to ask for (the digit
+  balloons are the live example: they need an age).
+
+  Renders nothing at all when that leaves no rows. Starts `hidden` and is
+  unhidden by florista-atc.js, so a no-JS visitor is never shown a checkbox
+  that cannot do anything.
+{%- endcomment -%}
+
+{%- comment -%}
+  One `product_list` rather than three `product` settings: a section schema
+  accepts the `product` type only ONCE, and three of them make the whole
+  section fail to upload ("setting product type can only be inserted once in
+  the settings"). Theme Check does not catch it — the theme dev server does,
+  by refusing the file. Found 2026-08-28.
+{%- endcomment -%}
+{%- assign addon_handles = '' -%}
+{%- for picked in section.settings.addon_products -%}
+  {%- assign addon_handles = addon_handles | append: picked.handle | append: ',' -%}
+{%- endfor -%}
+
+{%- if addon_handles == blank -%}
+
+  {%- comment -%}
+    The product's own collection handles, comma-fenced on both ends so a
+    `contains ',balloons,'` test cannot half-match a longer handle.
+  {%- endcomment -%}
+  {%- assign own_cols = ',' -%}
+  {%- for c in product.collections -%}
+    {%- assign own_cols = own_cols | append: c.handle | append: ',' -%}
+  {%- endfor -%}
+
+  {%- comment -%}
+    Occasion. Only birthday is detectable today: `birthday` is the one
+    occasion collection in the catalog, and `rosh-hashana` holds the seasonal
+    chocolate bars — which are add-ons themselves, not products that need one.
+    Add a case here when a real occasion collection (love, get-well, sympathy)
+    exists to key off.
+  {%- endcomment -%}
+  {%- assign balloon_key = '' -%}
+  {%- if own_cols contains ',birthday,' -%}
+    {%- assign balloon_key = 'יום הולדת' -%}
+  {%- endif -%}
+  {%- if product.type contains 'יום הולדת' or product.title contains 'יום הולדת' -%}
+    {%- assign balloon_key = 'יום הולדת' -%}
+  {%- endif -%}
+
+  {%- comment -%} 40% of the product price, in cents, same units as p.price. {%- endcomment -%}
+  {%- assign price_cap = product.price | times: 40 | divided_by: 100 -%}
+
+  {%- assign cat_handles = 'drinks,balloons,chocolate' | split: ',' -%}
+
+  {%- comment -%}
+    One pass per source collection, building four candidate strings, then
+    keeping the best that is not blank: occasion+affordable, then occasion,
+    then affordable, then everything. Written with flags and `assign` rather
+    than `break`/`continue` inside a `capture` — control-flow keywords are not
+    trustworthy there, which is how the balloon row silently vanished on
+    2026-08-28.
+
+    The segments are joined with a pipe and the bundle is closed with `END`,
+    because Liquid's `split` DROPS a trailing empty segment: without the
+    sentinel an empty third collection would shorten the array and slide the
+    indexes under `pools[2]`.
+  {%- endcomment -%}
+  {%- assign pool_bundle = '' -%}
+  {%- for ch in cat_handles -%}
+    {%- assign p_all = '' -%}
+    {%- assign p_match = '' -%}
+    {%- assign p_afford = '' -%}
+    {%- assign p_match_afford = '' -%}
+
+    {%- for p in collections[ch].products -%}
+      {%- if p.available and p.handle != product.handle and p.variants.size == 1 -%}
+        {%- assign p_all = p_all | append: p.handle | append: ',' -%}
+
+        {%- assign is_afford = false -%}
+        {%- if p.price <= price_cap -%}
+          {%- assign is_afford = true -%}
+        {%- endif -%}
+
+        {%- assign is_match = false -%}
+        {%- if balloon_key != blank and ch == 'balloons' -%}
+          {%- if p.title contains balloon_key or p.title contains 'Happy Birthday' -%}
+            {%- assign is_match = true -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if is_afford -%}
+          {%- assign p_afford = p_afford | append: p.handle | append: ',' -%}
+        {%- endif -%}
+        {%- if is_match -%}
+          {%- assign p_match = p_match | append: p.handle | append: ',' -%}
+        {%- endif -%}
+        {%- if is_match and is_afford -%}
+          {%- assign p_match_afford = p_match_afford | append: p.handle | append: ',' -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- assign p_best = p_all -%}
+    {%- if p_afford != blank -%}
+      {%- assign p_best = p_afford -%}
+    {%- endif -%}
+    {%- if p_match != blank -%}
+      {%- assign p_best = p_match -%}
+    {%- endif -%}
+    {%- if p_match_afford != blank -%}
+      {%- assign p_best = p_match_afford -%}
+    {%- endif -%}
+
+    {%- assign pool_bundle = pool_bundle | append: p_best | append: '~' -%}
+  {%- endfor -%}
+  {%- assign pools = pool_bundle | append: 'END' | split: '~' -%}
+
+  {%- comment -%}
+    Which categories are still in the running: not the one the product itself
+    belongs to, and not one whose pool came back empty. Stores the INDEX into
+    `pools`, not the handle, so the pool can be read back without a lookup.
+  {%- endcomment -%}
+  {%- assign cats = '' -%}
+  {%- for ch in cat_handles -%}
+    {%- assign needle = ',' | append: ch | append: ',' -%}
+    {%- assign usable = true -%}
+    {%- if own_cols contains needle -%}
+      {%- assign usable = false -%}
+    {%- endif -%}
+    {%- if pools[forloop.index0] == blank -%}
+      {%- assign usable = false -%}
+    {%- endif -%}
+    {%- if usable -%}
+      {%- assign cats = cats | append: forloop.index0 | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign cat_idx = cats | split: ',' -%}
+
+  {%- if cat_idx.size > 0 -%}
+    {%- comment -%}
+      Rotate WHICH pair of categories is shown as well as which item inside
+      each, so two neighbouring products do not just differ by bottle.
+      `plus: 0` forces the split's string back to a number — Liquid will not
+      index an array with '0'.
+
+      But an occasion match is the strongest signal there is, so when one fired
+      the balloon category is PINNED to the first row instead of being left to
+      the rotation. Without the pin a birthday product can rotate onto
+      wine+chocolate and the matched balloon never appears — which is the whole
+      point of matching. Caught in QA on 2026-08-30: two of the twelve birthday
+      products showed no balloon at all. Index 1 is `balloons` in `cat_handles`.
+    {%- endcomment -%}
+    {%- assign pinned = false -%}
+    {%- if balloon_key != blank and cats contains '1,' -%}
+      {%- assign pinned = true -%}
+    {%- endif -%}
+
+    {%- if pinned -%}
+      {%- assign idx_a = 1 -%}
+      {%- comment -%} The second row rotates over whatever category is left. {%- endcomment -%}
+      {%- assign rest = '' -%}
+      {%- for i in cat_idx -%}
+        {%- unless i == '1' -%}
+          {%- assign rest = rest | append: i | append: ',' -%}
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- assign rest_idx = rest | split: ',' -%}
+      {%- assign idx_b = 1 -%}
+      {%- if rest_idx.size > 0 -%}
+        {%- assign off_b = product.id | modulo: rest_idx.size -%}
+        {%- assign idx_b = rest_idx[off_b] | plus: 0 -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- assign off_a = product.id | modulo: cat_idx.size -%}
+      {%- assign off_b = off_a | plus: 1 | modulo: cat_idx.size -%}
+      {%- assign idx_a = cat_idx[off_a] | plus: 0 -%}
+      {%- assign idx_b = cat_idx[off_b] | plus: 0 -%}
+    {%- endif -%}
+
+    {%- assign pool_a = pools[idx_a] | split: ',' -%}
+    {%- assign pool_b = pools[idx_b] | split: ',' -%}
+
+    {%- assign pick_a = product.id | modulo: pool_a.size -%}
+    {%- assign pick_b = product.id | modulo: pool_b.size -%}
+    {%- comment -%}
+      Only one category survived (a balloon page with no wine and no chocolate,
+      say) — both rows come from the same pool, so the second row has to step
+      one along or the same product renders twice.
+    {%- endcomment -%}
+    {%- if idx_a == idx_b -%}
+      {%- assign pick_b = pick_a | plus: 1 | modulo: pool_b.size -%}
+    {%- endif -%}
+
+    {%- assign handle_a = pool_a[pick_a] -%}
+    {%- assign handle_b = pool_b[pick_b] -%}
+    {%- if handle_b == handle_a -%}
+      {%- assign handle_b = '' -%}
+    {%- endif -%}
+
+    {%- capture addon_handles -%}{{ handle_a }},{{ handle_b }}{%- endcapture -%}
+    {%- assign addon_handles = addon_handles | strip -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign addon_list = addon_handles | split: ',' -%}
+
+{%- capture addon_rows -%}
+  {%- for handle in addon_list -%}
+    {%- assign addon = all_products[handle] -%}
+    {%- comment -%}
+      Nested `if` rather than `continue` for the same reason as the `break`
+      above — control-flow keywords are not trustworthy inside a capture.
+    {%- endcomment -%}
+    {%- if addon != blank
+      and addon.handle != product.handle
+      and addon.available
+      and addon.variants.size == 1
+    -%}
+    {%- assign addon_variant = addon.selected_or_first_available_variant -%}
+    {%- assign addon_alt = addon.featured_media.alt | default: addon.title -%}
+    <li class="fp-addon">
+      <label class="fp-addon-row" for="Addon-{{ section.id }}-{{ addon_variant.id }}">
+        {%- if addon.featured_media -%}
+          {{
+            addon.featured_media
+            | image_url: width: 168
+            | image_tag:
+              widths: '56, 112, 168',
+              sizes: '56px',
+              loading: 'lazy',
+              class: 'fp-addon-thumb',
+              alt: addon_alt
+          }}
+        {%- else -%}
+          <span class="fp-addon-thumb fp-addon-thumb--empty" aria-hidden="true"></span>
+        {%- endif -%}
+
+        <span class="fp-addon-text">
+          <span class="fp-addon-name">{{ addon.title }}</span>
+          {%- if addon.type != blank -%}
+            <span class="fp-addon-type">{{ addon.type }}</span>
+          {%- endif -%}
+        </span>
+
+        <span class="fp-addon-price"><bdi>{{ addon_variant.price | money }}</bdi></span>
+
+        {%- comment -%}
+          Deliberately has no `name`: it must never reach Shopify as a form
+          field. florista-atc.js reads the data- attributes and builds the
+          items[] array itself, so a product with no add-ons ticked posts
+          exactly the FormData it posted before this brick existed.
+        {%- endcomment -%}
+        <input
+          type="checkbox"
+          class="fp-addon-check"
+          id="Addon-{{ section.id }}-{{ addon_variant.id }}"
+          data-addon-id="{{ addon_variant.id }}"
+          data-addon-price="{{ addon_variant.price }}"
+          data-addon-title="{{ addon.title | escape }}"
+        >
+      </label>
+    </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if addon_rows contains '<li' -%}
+  {%- assign addons_heading = section.settings.addons_heading | default: 'להשלמת המתנה' -%}
+  <div class="fp-addons" data-addons role="group" aria-labelledby="AddonsHead-{{ section.id }}" hidden>
+    <p class="fp-addons-head" id="AddonsHead-{{ section.id }}">{{ addons_heading }}</p>
+    <ul class="fp-addons-list" role="list">
+      {{ addon_rows }}
+    </ul>
+  </div>
+{%- endif -%}

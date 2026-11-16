@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "hero": {
+      "type": "florista-events-hero",
+      "settings": {}
+    },
+    "story": {
+      "type": "florista-events-story",
+      "settings": {}
+    },
+    "services": {
+      "type": "florista-events-services",
+      "settings": {}
+    },
+    "gallery": {
+      "type": "florista-events-gallery",
+      "settings": {}
+    },
+    "lead": {
+      "type": "florista-events-lead",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "story", "services", "gallery", "lead"]
+}

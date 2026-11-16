@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Florista editorial feature row — docs/design-log.md, 2026-08-21.
+   Three photo cards: portrait photo, centred heading, short paragraph, one
+   underlined text link out.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.feat-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-12);
+}
+
+.feat-inner {
+  max-inline-size: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--page-inline-padding);
+}
+
+.feat-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-12);
+}
+
+.feat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.feat-media {
+  inline-size: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-block-end: var(--space-6);
+}
+
+.feat-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.feat-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+}
+
+.feat-text {
+  margin: 0 0 var(--space-5);
+  max-inline-size: 42ch;
+  color: var(--color-text-secondary);
+  line-height: var(--leading-body);
+}
+
+/* Pushed to the bottom of the card so the three links sit on one line at
+   desktop even when the paragraphs run to different heights. */
+.feat-link {
+  margin-block-start: auto;
+
+  /* Standalone CTA links, not links inside a paragraph — so they carry the
+     full 44px minimum tap target. Padding alone left them at 40px; caught in
+     the browser audit, not by reading the CSS. */
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-action);
+  text-decoration: underline;
+  text-underline-offset: 0.4em;
+  text-decoration-thickness: 1px;
+
+  /* The reference sets these links in spaced uppercase. Hebrew has no case and
+     letter-spacing hurts its legibility, so the emphasis is carried by weight
+     and the offset underline instead. */
+  padding-block: var(--space-2);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.feat-link:hover {
+  color: var(--color-action-hover);
+  text-decoration-thickness: 2px;
+}
+
+@media screen and (min-width: 768px) {
+  .feat-section {
+    padding-block: var(--space-16);
+  }
+
+  .feat-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
+  }
+}

@@ -1,0 +1,162 @@
+{%- comment -%}
+  Florista collection / catalog page — docs/design-log.md, 2026-08-22.
+
+  Deliberately clean, per the owner (2026-08-22 revision): a grid of product
+  photographs — photo, name, price — where the whole card links to the
+  product page. No category-chip row, no add-to-cart on the card, and no
+  search UI of any kind on catalog pages. The only control is one small
+  sort <select>.
+
+  Sort labels are written here in Hebrew rather than taken from
+  `collection.sort_options`, so the wording stays this section's decision
+  even though `locales/he.json` now exists.
+
+  Mobile: 2 columns. ≥768px: 3. ≥1024px: 4.
+{%- endcomment -%}
+
+{{ 'florista-collection.css' | asset_url | stylesheet_tag }}
+{{ 'florista-ribbon.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-collection.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  # /collections/all has no merchant-set title — Shopify supplies one from the
+  # locale file. The catch-all collection gets its Hebrew name here so the
+  # title stays a design decision, not a locale string.
+  assign page_title = collection.title
+  if collection.handle == 'all' or collection.handle == blank
+    assign page_title = section.settings.all_title | default: 'כל הפרחים'
+  endif
+-%}
+
+<section class="fc-section">
+  <div class="fc-inner">
+
+    <header class="fc-head">
+      <h1 class="fc-title">{{ page_title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="fc-desc">{{ collection.description }}</div>
+      {%- endif -%}
+    </header>
+
+    <div class="fc-toolbar">
+      <p class="fc-count">
+        {%- if collection.products_count == 1 -%}
+          מוצר אחד
+        {%- else -%}
+          {{ collection.products_count }} מוצרים
+        {%- endif -%}
+      </p>
+
+      {%- if section.settings.show_sort -%}
+        <form class="fc-sort" method="get" action="{{ collection.url }}">
+          <label class="fc-sort-label" for="fc-sort-{{ section.id }}">מיון</label>
+          <select class="fc-sort-select" id="fc-sort-{{ section.id }}" name="sort_by" data-sort>
+            <option value="manual" {% if current_sort == 'manual' %}selected{% endif %}>מומלץ</option>
+            <option value="best-selling" {% if current_sort == 'best-selling' %}selected{% endif %}>הנמכרים ביותר</option>
+            <option value="price-ascending" {% if current_sort == 'price-ascending' %}selected{% endif %}>מחיר: מהנמוך לגבוה</option>
+            <option value="price-descending" {% if current_sort == 'price-descending' %}selected{% endif %}>מחיר: מהגבוה לנמוך</option>
+            <option value="created-descending" {% if current_sort == 'created-descending' %}selected{% endif %}>החדשים ביותר</option>
+          </select>
+          <noscript><button type="submit" class="fc-sort-go">החל</button></noscript>
+        </form>
+      {%- endif -%}
+    </div>
+
+    {%- paginate collection.products by 24 -%}
+      {%- if collection.products.size > 0 -%}
+        <ul class="fc-grid" role="list">
+          {%- for product in collection.products -%}
+            <li class="fc-card{% if product.tags contains 'packshot' %} is-packshot{% endif %}">
+              <a class="fc-link" href="{{ product.url }}">
+                <div class="fc-media">
+                  {%- render 'florista-ribbon', product: product -%}
+                  {%- if product.featured_media -%}
+                    {{
+                      product.featured_media
+                      | image_url: width: 800
+                      | image_tag:
+                        widths: '200, 300, 400, 600, 800',
+                        sizes: '(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw',
+                        loading: 'lazy',
+                        class: 'fc-img',
+                        alt: product.title
+                    }}
+                  {%- else -%}
+                    <div class="fc-media-placeholder"></div>
+                  {%- endif -%}
+                </div>
+                <h2 class="fc-name">{{ product.title }}</h2>
+                {% render 'florista-price', product: product, class: 'fc-price' %}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="fc-pager" aria-label="עמודי מוצרים">
+            {%- if paginate.previous -%}
+              <a class="fc-pager-link" href="{{ paginate.previous.url }}" rel="prev">הקודם</a>
+            {%- else -%}
+              <span class="fc-pager-link is-disabled" aria-hidden="true">הקודם</span>
+            {%- endif -%}
+            <span class="fc-pager-status">עמוד {{ paginate.current_page }} מתוך {{ paginate.pages }}</span>
+            {%- if paginate.next -%}
+              <a class="fc-pager-link" href="{{ paginate.next.url }}" rel="next">הבא</a>
+            {%- else -%}
+              <span class="fc-pager-link is-disabled" aria-hidden="true">הבא</span>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- else -%}
+        <p class="fc-empty">אין כרגע מוצרים בקטגוריה הזו. אפשר לעבור לקטגוריה אחרת, או להתקשר אלינו ונרכיב זר במיוחד עבורכם.</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ shop.name | json }},
+        "item": {{ request.origin | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ collection.title | json }},
+        "item": {{ request.origin | append: collection.url | json }}
+      }
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Florista collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "all_title",
+      "label": "Title for /collections/all",
+      "default": "כל הפרחים"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort control",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "Florista collection" }]
+}
+{% endschema %}

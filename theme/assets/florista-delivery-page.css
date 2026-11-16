@@ -1,0 +1,176 @@
+/* ==========================================================================
+   Florista delivery page — /pages/delivery. docs/design-log.md, 2026-08-28.
+
+   One job: answer "do you deliver to me, and what does it cost" in one
+   screen on a phone. Same quiet document treatment as florista-legal.css —
+   no hero, no photography; the fee table is the page.
+
+   Mobile-first at 375px, verified at 320px. Desktop is the same column,
+   centred — nothing reflows, the measure just breathes more.
+
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.fdp {
+  background-color: var(--color-bg);
+  padding-block: var(--space-10) var(--space-16);
+}
+
+.fdp-inner {
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--page-inline-padding);
+}
+
+.fdp-title {
+  margin: 0;
+  font-size: var(--text-page-title);
+}
+
+.fdp-intro {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Fee table — two columns, area then fee. At 320px this is still two
+   comfortable columns; the fee column hugs its content so the area names
+   get every spare pixel.
+   -------------------------------------------------------------------------- */
+
+.fdp-table-heading {
+  margin: var(--space-10) 0 0;
+  font-size: var(--text-lg);
+}
+
+.fdp-table {
+  inline-size: 100%;
+  margin-block-start: var(--space-4);
+  border-collapse: collapse;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.fdp-table thead th {
+  padding-block: var(--space-2);
+  border-block-end: 2px solid var(--color-border-subtle);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text-secondary);
+  text-align: start;
+}
+
+.fdp-table tbody th,
+.fdp-table tbody td {
+  padding-block: var(--space-4);
+  border-block-end: 1px solid var(--color-border-subtle);
+  text-align: start;
+}
+
+.fdp-table tbody th {
+  font-weight: var(--weight-body);
+}
+
+.fdp-fee {
+  /* Hug the fee column so the area column takes the rest of the row. */
+  inline-size: 1%;
+  white-space: nowrap;
+  padding-inline-start: var(--space-6);
+  font-weight: var(--weight-heading);
+  color: var(--color-wine-900);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Same-day block — clock icon beside the text, on the wine-050 brand tint
+   (the same card treatment as the legal page's contents box) so the one
+   rule that creates urgency reads as a card, not another paragraph.
+   -------------------------------------------------------------------------- */
+
+.fdp-sameday {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-block-start: var(--space-8);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-brand-tint);
+}
+
+.fdp-sameday-icon {
+  flex: none;
+  inline-size: 28px;
+  block-size: 28px;
+  margin-block-start: 2px;
+  color: var(--color-sage-700);
+}
+
+.fdp-sameday-heading {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-heading);
+}
+
+.fdp-sameday-text p {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+/* --------------------------------------------------------------------------
+   Out-of-area line + CTA
+   -------------------------------------------------------------------------- */
+
+.fdp-outside {
+  margin-block-start: var(--space-8);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.fdp-phone {
+  /* Inline link, but still a finger target: the min height grows the tap
+     area without moving the text line. 44px exactly — padding alone came to
+     43.19px, caught by QA at all three widths on 2026-08-28. */
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  color: var(--color-action);
+  font-weight: var(--weight-ui);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.fdp-phone:hover {
+  color: var(--color-action-hover);
+}
+
+.fdp-cta-row {
+  margin-block-start: var(--space-8);
+}
+
+.fdp-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 48px;
+  padding-inline: var(--space-8);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.fdp-cta:hover {
+  background-color: var(--color-action-buy-hover);
+}
+
+@media screen and (min-width: 768px) {
+  .fdp {
+    padding-block: var(--space-12) var(--space-20);
+  }
+}

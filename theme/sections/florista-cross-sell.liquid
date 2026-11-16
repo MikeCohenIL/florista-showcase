@@ -1,0 +1,164 @@
+{%- comment -%}
+  השלימו את הקנייה שלכם — wine cross-sell slider under the product
+  (the owner, 2026-08-23, modelled on the old Wix site's מוצרים נלווים row).
+  Renders a collection — the theme-editor setting, falling back to
+  `drinks` — as an RTL scroll-snap track: swipe on mobile, arrow nudges
+  on desktop. Each card quick-adds via florista-atc.js, so the customer
+  never leaves the product page. The section renders NOTHING while the
+  collection is empty or unpublished — the 7 wines were still DRAFT on
+  2026-08-23 (activation was permission-blocked from this session; two
+  clicks in the admin fix it and the slider appears with no code change).
+
+  2026-09-23, the owner: "i want the vases there … mixed with the wines i want it
+  to be like 1 wine 1 vase 1 chocolate". The row now draws from THREE
+  collections and deals them round-robin — wine, vase, chocolate, wine, vase,
+  chocolate … — up to twelve cards, so the first screen on a phone already
+  shows one of each. Each source is a theme-editor setting with a coded
+  fallback (`drinks`, `vases`, `chocolate`); an empty or missing source is
+  simply skipped, so the row degrades to two kinds, or one, rather than
+  breaking. The product being viewed and anything unavailable are dropped
+  before dealing, so a gap in one source never leaves a hole in the rhythm.
+{%- endcomment -%}
+
+{{ 'florista-cross-sell.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-atc.js' | asset_url }}" defer></script>
+<script src="{{ 'florista-cross-sell.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign col_wine = section.settings.collection
+  if col_wine == blank
+    assign col_wine = collections['drinks']
+  endif
+  assign col_vase = section.settings.collection_vases
+  if col_vase == blank
+    assign col_vase = collections['vases']
+  endif
+  assign col_choc = section.settings.collection_chocolate
+  if col_choc == blank
+    assign col_choc = collections['chocolate']
+  endif
+  assign heading = section.settings.heading | default: 'השלימו את הקנייה שלכם'
+
+  # `where: 'available', true` drops sold-out items; the product being viewed is
+  # dropped at render time (it is only ever in one of the three pools).
+  assign wines = col_wine.products | where: 'available', true
+  assign vases = col_vase.products | where: 'available', true
+  assign chocs = col_choc.products | where: 'available', true
+
+  # Deal round-robin. Liquid cannot push a drop into an array, but `slice: i, 1`
+  # on an array yields a one-item array and `concat` joins arrays, so the
+  # ordered list is built as a chain of one-item slices. Four rounds of three.
+  assign ordered = '' | split: ','
+  for i in (0..3)
+    assign one = wines | slice: i, 1
+    assign ordered = ordered | concat: one
+    assign one = vases | slice: i, 1
+    assign ordered = ordered | concat: one
+    assign one = chocs | slice: i, 1
+    assign ordered = ordered | concat: one
+  endfor
+-%}
+
+{%- if ordered.size > 0 -%}
+  <section class="fxs-section" aria-label="{{ heading | escape }}">
+    <div class="fxs-inner">
+      <h2 class="fxs-heading">{{ heading }}</h2>
+      <div class="fxs-slider">
+        {%- comment -%} Site is pinned RTL: prev sits inline-start (right)
+            and points right, next sits inline-end (left) and points left.
+            The base chevron points left; prev flips it in CSS. {%- endcomment -%}
+        <button type="button" class="fxs-arrow fxs-arrow--prev" aria-label="הקודם" hidden>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"></path></svg>
+        </button>
+        <ul class="fxs-track">
+          {%- for p in ordered limit: 12 -%}
+            {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+            <li class="fxs-card">
+              {%- comment -%} The image link is decorative duplication of the
+                  title link — kept out of the tab order. {%- endcomment -%}
+              <a class="fxs-media" href="{{ p.url }}" tabindex="-1" aria-hidden="true">
+                {%- if p.featured_media -%}
+                  {%- comment -%}
+                    `alt: ''` was the right call for accessibility and the wrong one for image
+                    search, and the two do not actually conflict here: the whole link already
+                    carries `aria-hidden="true"` and `tabindex="-1"`, so a screen reader never
+                    reaches the image and cannot announce it twice, while Googlebot still reads
+                    the alt. Empty alt therefore bought no a11y benefit and cost the image its
+                    only description. Fixed 2026-08-30.
+                  {%- endcomment -%}
+                  {%- liquid
+                    assign xs_alt = p.featured_media.alt
+                    if xs_alt == blank
+                      assign xs_alt = p.title
+                    endif
+                  -%}
+                  {{
+                    p.featured_media
+                    | image_url: width: 480
+                    | image_tag:
+                      widths: '240, 360, 480',
+                      sizes: '(min-width: 750px) 220px, 60vw',
+                      loading: 'lazy',
+                      alt: xs_alt
+                  }}
+                {%- endif -%}
+              </a>
+              <h3 class="fxs-title"><a href="{{ p.url }}">{{ p.title }}</a></h3>
+              {% render 'florista-price', product: p, class: 'fxs-price' %}
+              {%- form 'product', p, class: 'fxs-form fx-atc' -%}
+                <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                <button type="submit" name="add" class="fxs-add" aria-live="polite">הוספה לסל</button>
+                <p class="fx-atc-error" role="alert" hidden></p>
+              {%- endform -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+        <button type="button" class="fxs-arrow fxs-arrow--next" aria-label="הבא" hidden>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"></path></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "השלמת קנייה — פלוריסטה",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "כותרת",
+      "default": "השלימו את הקנייה שלכם"
+    },
+    {
+      "type": "paragraph",
+      "content": "השורה מערבבת שלושה סוגים לפי הסדר: יין, אגרטל, שוקולד, יין, אגרטל, שוקולד… עד 12 כרטיסים."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "קולקציית היינות",
+      "info": "ריק = drinks"
+    },
+    {
+      "type": "collection",
+      "id": "collection_vases",
+      "label": "קולקציית האגרטלים",
+      "info": "ריק = vases"
+    },
+    {
+      "type": "collection",
+      "id": "collection_chocolate",
+      "label": "קולקציית השוקולד",
+      "info": "ריק = chocolate"
+    }
+  ],
+  "presets": [{ "name": "השלמת קנייה — פלוריסטה" }]
+}
+{% endschema %}

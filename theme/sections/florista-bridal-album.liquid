@@ -1,0 +1,156 @@
+{%- comment -%}
+  זרי כלה — the bridal album page. docs/design-log.md, 2026-08-28.
+
+  Not a collection: all 10 old bridal products were cut (11 lifetime sales,
+  PRODUCT-KEEP-REPORT.md §1) and the owner chose a lookbook + consultation page
+  instead. The eight bouquets are the ones the old Wix זרי-כלה page actually
+  displayed, shown from the retoned masters in assets (backgrounds matched to
+  the ivory page ground, same pipeline as keep-ivory/ — the panel "feels"
+  full-bleed because image ground == page ground, so the landscape masters
+  never get cropped into the flowers on a phone).
+
+  Scroll design ("אלבום כלות", chosen 2026-08-28): each bouquet is a
+  full-viewport panel pinned under the 72px sticky header; the next chapter
+  slides over it like turning an album page. The stacking comes from
+  height:230svh wrappers with -100svh end margins — pure CSS, no scroll JS.
+  JS only adds the reveal class; without JS everything renders visible.
+
+  Replaceable from the theme editor: add bouquet blocks and they render
+  INSTEAD of the bundled eight; zero blocks means the bundled set.
+{%- endcomment -%}
+
+{{ 'florista-bridal.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-bridal.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign heading = section.settings.heading | default: 'זרי הכלה של פלוריסטה'
+  assign kicker = section.settings.kicker | default: 'חיפה'
+  assign lead = section.settings.lead | default: 'כל זרי הכלה עוצבו בידי צוות השוזרות של פלוריסטה, כל פרט קטן בזר הכלה נלקח בחשבון בשבילך בכדי שאת תקבלי זר כלה בלתי נשכח.'
+  assign phone_display = settings.phone_display | default: '054-2270287'
+  assign phone_e164 = settings.phone_e164 | default: '+972542270287'
+  assign wa_digits = phone_e164 | remove: '+'
+
+  assign b_names = 'אמזונס,אפרודיטה,בלוסום,בריג׳יט,דיאנה,סאקורה,סינדרלה,קיילי' | split: ','
+  assign b_files = 'bridal-amazonas,bridal-aphrodite,bridal-blossom,bridal-brigitte,bridal-diana,bridal-sakura,bridal-cinderella,bridal-kylie' | split: ','
+  assign b_lines = 'ורדים לבנים ואקליפטוס סביב מרכז כהה ודרמטי,ורדי שמפניה זרועים פנינים לבנות,שושנים וקאלות עם סחלבים וורדי אלמוג,לבן קלאסי עטוף במסגרת עלים ירוקה,אלסטרומריה ולימוניום עם פקעות כותנה,דיאנתוס ורוד בענן פמפס אוורירי,לבן ותכלת עם גיבסנית ופנינים,ורדים וציפורנים בוורוד עז ופסטל' | split: ','
+-%}
+
+<div class="fba-album">
+  <section class="fba-chapter" style="z-index: 1;">
+    <div class="fba-panel fba-panel--hero is-in">
+      <p class="fba-kicker">{{ kicker }}</p>
+      <h1 class="fba-title">{{ heading }}</h1>
+      <p class="fba-lead">{{ lead }}</p>
+      {%- comment -%} span, not div: The base theme's base.css hides empty divs ({ div:empty }) {%- endcomment -%}
+      <span class="fba-cue" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.settings.image -%}
+        {%- liquid
+          assign block_alt = 'זר כלה'
+          if block.settings.name != blank
+            assign block_alt = block_alt | append: ' ' | append: block.settings.name
+          endif
+        -%}
+        <section class="fba-chapter" style="z-index: {{ forloop.index | plus: 1 }};" {{ block.shopify_attributes }}>
+          <div class="fba-panel fba-panel--split">
+            <figure class="fba-figure">
+              {{
+                block.settings.image
+                | image_url: width: 1400
+                | image_tag:
+                  widths: '800, 1400',
+                  sizes: '(min-width: 1024px) 44vw, 88vw',
+                  loading: 'lazy',
+                  alt: block_alt
+              }}
+            </figure>
+            <div class="fba-text">
+              <p class="fba-count"><bdi dir="ltr">{{ forloop.index }} / {{ section.blocks.size }}</bdi></p>
+              <h2 class="fba-name">{{ block.settings.name }}</h2>
+              {%- if block.settings.line != blank -%}
+                <p class="fba-line">{{ block.settings.line }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </section>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- for file in b_files -%}
+      {%- liquid
+        assign i = forloop.index0
+        assign name = b_names[i]
+        assign line = b_lines[i]
+        assign src_800 = file | append: '-800.webp' | asset_url
+        assign src_1400 = file | append: '-1400.webp' | asset_url
+      -%}
+      <section class="fba-chapter" style="z-index: {{ forloop.index | plus: 1 }};">
+        <div class="fba-panel fba-panel--split">
+          <figure class="fba-figure">
+            <img
+              src="{{ src_800 }}"
+              srcset="{{ src_800 }} 800w, {{ src_1400 }} 1400w"
+              sizes="(min-width: 1024px) 44vw, 88vw"
+              width="800" height="800"
+              loading="lazy"
+              alt="זר כלה {{ name }} – {{ line }}">
+          </figure>
+          <div class="fba-text">
+            <p class="fba-count"><bdi dir="ltr">{{ forloop.index }} / {{ b_files.size }}</bdi></p>
+            <h2 class="fba-name">{{ name }}</h2>
+            <p class="fba-line">{{ line }}</p>
+          </div>
+        </div>
+      </section>
+    {%- endfor -%}
+  {%- endif -%}
+
+  <section class="fba-cta" style="z-index: 12;">
+    <div class="fba-cta-inner">
+      <h2 class="fba-cta-heading">{{ section.settings.cta_heading | default: 'רוצה זר כלה משלך?' }}</h2>
+      <p class="fba-cta-sub">{{ section.settings.cta_sub | default: 'לודמילה שוזרת כל זר אישית — לפי השמלה, הסגנון והצבעים שלך. ספרי לנו על היום הגדול ונחזור אלייך.' }}</p>
+      <div class="fba-cta-actions">
+        <a class="fba-btn fba-btn--solid" href="https://wa.me/{{ wa_digits }}">שלחי לנו וואטסאפ</a>
+        <a class="fba-btn fba-btn--ghost" href="tel:{{ phone_e164 }}">התקשרי: <bdi>{{ phone_display }}</bdi></a>
+      </div>
+      <div class="fba-wed">
+        <p class="fba-wed-kicker">{{ section.settings.wed_kicker | default: 'מתחתנת בקרוב?' }}</p>
+        <p class="fba-wed-line">{{ section.settings.wed_line | default: 'רוצה לשמוע מה יש לפלוריסטה להציע?' }}</p>
+        <a class="fba-btn fba-btn--solid fba-wed-btn" href="/pages/weddings">{{ section.settings.wed_btn | default: 'לחצי כאן' }}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "זרי כלה — אלבום",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "שורת פתיח", "default": "חיפה" },
+    { "type": "text", "id": "heading", "label": "כותרת", "default": "זרי הכלה של פלוריסטה" },
+    { "type": "textarea", "id": "lead", "label": "פסקת פתיחה" },
+    { "type": "text", "id": "cta_heading", "label": "כותרת סיום", "default": "רוצה זר כלה משלך?" },
+    { "type": "textarea", "id": "cta_sub", "label": "טקסט סיום" },
+    { "type": "text", "id": "wed_kicker", "label": "באנר חתונה — כותרת", "default": "מתחתנת בקרוב?" },
+    { "type": "text", "id": "wed_line", "label": "באנר חתונה — טקסט" },
+    { "type": "text", "id": "wed_btn", "label": "באנר חתונה — כפתור", "default": "לחצי כאן" }
+  ],
+  "blocks": [
+    {
+      "type": "bouquet",
+      "name": "זר",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "תמונה" },
+        { "type": "text", "id": "name", "label": "שם הזר" },
+        { "type": "text", "id": "line", "label": "שורת תיאור" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "זרי כלה — אלבום" }]
+}
+{% endschema %}

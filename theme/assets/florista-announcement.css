@@ -1,0 +1,54 @@
+/* Florista announcement bar. Colours come in as inline custom properties from
+   the section settings, so the theme editor drives them without a Liquid-CSS
+   asset. Logical properties only — see florista-header.css. */
+
+.fa-bar {
+  display: block;
+  background-color: var(--fa-bg, var(--color-wine-500));
+  color: var(--fa-fg, var(--color-white));
+
+  padding-block: var(--space-2);
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  line-height: var(--leading-snug);
+  text-align: center;
+  text-decoration: none;
+}
+
+/* The text is a rich-text setting, so it arrives wrapped in <p>. Flatten it:
+   the bar is one line, not a paragraph with margins. Numerals inside the
+   Hebrew line (a time, a phone number) are an LTR run — the isolate keeps the
+   bidi algorithm from dragging a colon to the wrong side. */
+.fa-bar-text {
+  unicode-bidi: isolate;
+}
+.fa-bar-text p {
+  display: inline;
+  margin: 0;
+}
+
+/* A linked word inside the sentence — "הסביבה" → /pages/delivery. Inherits the
+   bar colour so the editor's text-colour setting still governs; the underline
+   is what says "this one is tappable" on a strip where nothing else is. It is
+   an inline text link, so it is exempt from the 44px tap-target rule, but the
+   bar's padding already gives it the full strip height to hit. */
+.fa-bar-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.fa-bar-text a:hover {
+  text-decoration-thickness: 2px;
+}
+.fa-bar-text a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  box-shadow: none; /* The base theme's global halo — see florista-header.css */
+  border-radius: 2px;
+}

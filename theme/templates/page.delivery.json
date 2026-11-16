@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "florista-delivery-page",
+      "blocks": {
+        "area-haifa": { "type": "area", "settings": { "area": "חיפה", "fee": "30" } },
+        "area-nesher": { "type": "area", "settings": { "area": "נשר", "fee": "35" } },
+        "area-krayot": { "type": "area", "settings": { "area": "קריות (כולל קרית חיים)", "fee": "50" } },
+        "area-tirat": { "type": "area", "settings": { "area": "טירת הכרמל", "fee": "50" } },
+        "area-atlit": { "type": "area", "settings": { "area": "עתלית", "fee": "65" } }
+      },
+      "block_order": ["area-haifa", "area-nesher", "area-krayot", "area-tirat", "area-atlit"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

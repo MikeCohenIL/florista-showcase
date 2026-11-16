@@ -1,0 +1,144 @@
+{%- comment -%}
+  Events page — lead form ("השאירו פרטים"). docs/design-log.md, 2026-08-23.
+
+  The old page ended with a Wix contact form; here it is a Shopify
+  {% form 'contact' %}, which emails the store's sender address — no app,
+  no backend. The section carries id="leave-details", the target of both
+  page CTAs; scroll-margin keeps the heading clear of the sticky header.
+
+  Shopify requires a valid contact[email] on this form type, so the email
+  field exists and is required even though the shop's habit is phone-first.
+  The event date is a masked DD/MM/YYYY field (see the comment at the input)
+  arriving in the notification email as a named line — nothing needs parsing
+  out of free text. Success copy reuses the old site's "פניתכם התקבלה".
+  There was an event-type select here; the owner cut it 2026-08-24 — the page
+  focuses on weddings.
+{%- endcomment -%}
+
+{{ 'florista-events.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-events.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign heading = section.settings.heading | default: 'רוצים שנעצב לכם את החתונה?'
+  assign sub = section.settings.sub | default: 'השאירו פרטים ולודמילה תחזור אליכם בהקדם'
+  assign phone = section.settings.phone | default: '054-2270287'
+  assign phone_href = phone | remove: '-' | remove: ' '
+-%}
+
+<section class="fev-section fev-lead fev-page" id="leave-details">
+  <div class="fev-inner">
+    {%- comment -%}
+      The card wrapper makes the form read as a wedding invitation — white,
+      soft radius-xl corners, a short wine rule on top (drawn as ::before,
+      no extra markup). Chosen by the owner 2026-08-28 over a photo band and an
+      editorial split.
+    {%- endcomment -%}
+    <div class="fev-lead-card">
+    <h2 class="fev-heading">{{ heading }}</h2>
+    <p class="fev-lead-sub">{{ sub }}</p>
+
+    {%- form 'contact', id: 'ContactForm', class: 'fev-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="fev-form-success" tabindex="-1" autofocus>
+          פניתכם התקבלה – נחזור אליכם בהקדם. תודה!
+        </p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <p class="fev-form-error" tabindex="-1" autofocus>
+            כתובת האימייל חסרה או אינה תקינה. בדקו אותה ושלחו שוב.
+          </p>
+        {%- endif -%}
+
+        <div class="fev-form-row">
+          <div class="fev-field">
+            <label class="fev-label" for="fev-name">שם מלא</label>
+            <input
+              class="fev-input"
+              type="text"
+              id="fev-name"
+              name="contact[name]"
+              autocomplete="name"
+              required
+              value="{{ form.name }}">
+          </div>
+          <div class="fev-field">
+            <label class="fev-label" for="fev-phone">טלפון</label>
+            <input
+              class="fev-input"
+              type="tel"
+              id="fev-phone"
+              name="contact[phone]"
+              autocomplete="tel"
+              inputmode="tel"
+              required
+              value="{{ form.phone }}">
+          </div>
+        </div>
+
+        <div class="fev-field">
+          <label class="fev-label" for="fev-email">אימייל</label>
+          <input
+            class="fev-input"
+            type="email"
+            id="fev-email"
+            name="contact[email]"
+            autocomplete="email"
+            required
+            value="{{ form.email }}">
+        </div>
+
+        <div class="fev-field">
+          <label class="fev-label" for="fev-date">תאריך האירוע (יום/חודש/שנה)</label>
+            {%- comment -%}
+              Not type="date": a native date input displays in the BROWSER's
+              locale (an en-US phone shows mm/dd/yyyy) and no attribute can
+              force it. The owner asked for DD/MM/YYYY, so this is a masked text
+              field — florista-events.js auto-inserts the slashes and sets a
+              Hebrew validity message. The date rides along in the inquiry
+              email; it drives no cutoff logic (that stays on product pages).
+            {%- endcomment -%}
+            <input
+              class="fev-input fev-date"
+              type="text"
+              id="fev-date"
+              name="contact[תאריך האירוע]"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="31/12/2026"
+              pattern="\d{2}/\d{2}/\d{4}"
+              maxlength="10">
+        </div>
+
+        <div class="fev-field">
+          <label class="fev-label" for="fev-body">כמה מילים על האירוע</label>
+          <textarea
+            class="fev-textarea"
+            id="fev-body"
+            name="contact[body]"
+            rows="4">{{ form.body }}</textarea>
+        </div>
+
+        <button class="fev-cta" type="submit">שליחת פרטים</button>
+
+        <p class="fev-form-alt">
+          מעדיפים לדבר?
+          <a href="tel:{{ phone_href }}">התקשרו: {{ phone }}</a>
+        </p>
+      {%- endif -%}
+    {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Events — lead form",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "כותרת", "default": "רוצים שנעצב לכם את החתונה?" },
+    { "type": "text", "id": "sub", "label": "שורת משנה", "default": "השאירו פרטים ולודמילה תחזור אליכם בהקדם" },
+    { "type": "text", "id": "phone", "label": "טלפון", "default": "054-2270287" }
+  ],
+  "presets": [{ "name": "Events — lead form" }]
+}
+{% endschema %}

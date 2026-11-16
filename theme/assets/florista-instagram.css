@@ -1,0 +1,87 @@
+/* ==========================================================================
+   Florista Instagram gallery — docs/design-log.md, 2026-08-20.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.ig-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-10);
+}
+
+.ig-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+.ig-heading {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-xl);
+  text-align: center;
+}
+
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ig-tile picture {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.ig-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .ig-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-3);
+  }
+
+  .ig-heading {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Tile link wrapper — the whole tile opens Instagram (2026-08-31 rework).
+   The aspect/overflow treatment moved from `picture` to the link so it also
+   applies to editor-picked images, which image_tag renders without <picture>. */
+.ig-link {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.ig-link picture {
+  display: block;
+  block-size: 100%;
+}
+
+/* Follow link under the grid — sage like every CTA, 44px minimum tap target */
+.ig-follow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  margin-block-start: var(--space-4);
+  color: var(--color-sage-700);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ig-follow:hover,
+.ig-follow:focus-visible {
+  text-decoration: underline;
+}

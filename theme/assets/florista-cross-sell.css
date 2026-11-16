@@ -1,0 +1,182 @@
+/* ==========================================================================
+   השלימו את הקנייה שלכם — cross-sell slider on the product page.
+   docs/design-log.md, 2026-08-23. NO PHYSICAL PROPERTIES — logical only;
+   the track is a native RTL scroll-snap strip, arrows are desktop-only.
+   ========================================================================== */
+
+.fxs-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-8) var(--space-12);
+}
+
+.fxs-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+.fxs-heading {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-xl);
+  line-height: var(--leading-heading);
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+}
+
+/* ---------- track ---------- */
+
+.fxs-slider { position: relative; }
+
+.fxs-track {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0 0 var(--space-2);
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.fxs-track::-webkit-scrollbar { display: none; }
+
+.fxs-card {
+  flex: 0 0 60%;
+  max-inline-size: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  scroll-snap-align: start;
+  text-align: center;
+}
+
+/* ---------- card ---------- */
+
+.fxs-media { display: block; }
+
+.fxs-media img {
+  display: block;
+  inline-size: 100%;
+  /* block-size auto, or the height ATTRIBUTE acts as a fixed height and
+     the aspect-ratio below never applies (it needs an auto axis) */
+  block-size: auto;
+  aspect-ratio: 1 / 1;
+  /* contain, not cover: the accessory packshots are tall (4:5) and a square
+     cover frame cuts the cork off the top of a bottle */
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  /* Ivory, not white. The packshots were re-shot onto the ivory page ground
+     on 2026-08-29; a white tile behind them draws a bright rectangle on the
+     ivory page, which is exactly what it used to do. */
+  background-color: var(--color-bg);
+}
+
+.fxs-title {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  font-weight: 500;
+}
+
+.fxs-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.fxs-title a:hover { color: var(--color-wine-500); }
+
+.fxs-title a:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fxs-price {
+  margin: 0;
+  font-size: var(--text-md);
+  color: var(--color-text-secondary);
+}
+
+.fxs-price bdi { unicode-bidi: isolate; }
+
+/* button pinned to the card foot so uneven titles don't stagger the row */
+.fxs-form { margin-block-start: auto; }
+
+.fxs-add {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.fxs-add:hover,
+.fxs-add:active { background-color: var(--color-action-buy-hover); }
+
+.fxs-add:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fxs-add.fx-busy { opacity: 0.7; cursor: progress; }
+
+.fxs-add.fx-added,
+.fxs-add.fx-added:hover { background-color: var(--color-success); }
+
+.fxs-form .fx-atc-error {
+  margin: var(--space-2) 0 0;
+  color: var(--color-error);
+  font-size: var(--text-xs);
+}
+
+/* ---------- arrows: desktop only ---------- */
+
+.fxs-arrow { display: none; }
+
+@media screen and (min-width: 750px) {
+  .fxs-card { flex-basis: 220px; }
+
+  .fxs-arrow {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    inset-block-start: calc(50% - 44px);
+    z-index: 1;
+    inline-size: 44px;
+    block-size: 44px;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background-color: var(--color-ivory);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .fxs-arrow[hidden] { display: none; }
+
+  .fxs-arrow--prev { inset-inline-start: calc(-1 * var(--space-2)); }
+  .fxs-arrow--next { inset-inline-end: calc(-1 * var(--space-2)); }
+
+  /* base chevron points left = the NEXT direction in RTL; prev flips it */
+  .fxs-arrow--prev svg { transform: scaleX(-1); }
+
+  .fxs-arrow:hover {
+    border-color: var(--color-sage-700);
+    color: var(--color-sage-700);
+  }
+
+  .fxs-arrow:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+}

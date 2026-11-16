@@ -1,0 +1,526 @@
+/* ==========================================================================
+   Florista product page — docs/design-log.md, 2026-08-22.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   Mobile order (chosen): photo → name/price → delivery note → button → description.
+   Desktop: photo on the INLINE-END side (visually left in RTL), info inline-start.
+   ========================================================================== */
+
+.fp-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-6) var(--space-12);
+}
+
+.fp-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+/* ---------- layout ---------- */
+
+.fp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+/* ---------- media ---------- */
+
+.fp-media {
+  position: relative; /* anchors the seasonal ribbon */
+  margin: 0;
+}
+
+.fp-media picture,
+.fp-media .fp-media-placeholder {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-subtle);
+}
+
+.fp-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* ---------- packshots ----------
+   Two kinds of picture live on this page. The flower photography is shot
+   3:2 and is *meant* to be cropped square — a bouquet fills a frame. The
+   accessory packshots (bottles, balloons, chocolate boxes) are 4:5 cutouts
+   standing on the ivory page ground, and cropping one square cuts the cork
+   off a bottle. So a packshot is contained, never covered.
+
+   The letterboxing this leaves is invisible: the bars are the same ivory as
+   the packshot's own ground. Which products are packshots is content, not
+   code — it is the `packshot` product tag, set in the admin.        */
+.fp-media.is-packshot picture,
+.fp-media.is-packshot .fp-thumbs img {
+  background-color: var(--color-bg);
+}
+
+.fp-media.is-packshot img {
+  object-fit: contain;
+}
+
+/* extra frames sit under the hero shot */
+.fp-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.fp-thumbs li {
+  inline-size: 68px;
+}
+
+.fp-thumbs img {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-subtle);
+}
+
+/* ---------- info column ---------- */
+
+.fp-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fp-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: var(--leading-heading);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.fp-price {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* price is a Latin/number run inside RTL text */
+.fp-price bdi {
+  unicode-bidi: isolate;
+}
+
+/* ---------- delivery note ---------- */
+
+.fp-delivery {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-brand-tint);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.fp-delivery svg {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  margin-block-start: 1px;
+  color: var(--color-wine-500);
+}
+
+/* ---------- age picker (digit balloons) ---------- */
+
+.fp-age {
+  display: grid;
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+}
+
+.fp-age-label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.fp-age-input {
+  inline-size: 100%;
+  max-inline-size: 16ch;
+  min-block-size: 48px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--text-md);
+}
+
+.fp-age-input:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fp-age-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.fp-age-note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* the per-digit price is a Latin/number run inside RTL text */
+.fp-age-note bdi {
+  unicode-bidi: isolate;
+}
+
+/* ---------- buy ---------- */
+
+.fp-form {
+  margin: 0;
+}
+
+.fp-submit {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  /* Sage, not wine, as of 2026-08-23 (the owner: add-to-cart "from our greens"). */
+  background-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+  font-family: inherit;
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.fp-submit:hover,
+.fp-submit:active { background-color: var(--color-action-buy-hover); }
+
+.fp-submit:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fp-submit[disabled] {
+  background-color: var(--color-grey-400);
+  cursor: not-allowed;
+}
+
+/* Ajax add-to-cart feedback (florista-atc.js): the button itself confirms,
+   the page stays put. Busy re-asserts the sage — the button is disabled
+   while the request runs, and the [disabled] grey must not flash. */
+.fp-submit.fx-busy {
+  background-color: var(--color-action-buy);
+  opacity: 0.7;
+  cursor: progress;
+}
+.fp-submit.fx-added,
+.fp-submit.fx-added:hover { background-color: var(--color-success); opacity: 1; }
+
+.fx-atc-error {
+  margin: var(--space-2) 0 0;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+/* ---------- description ---------- */
+
+.fp-description {
+  color: var(--color-text);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.fp-description > :first-child { margin-block-start: 0; }
+.fp-description > :last-child { margin-block-end: 0; }
+.fp-description p { margin-block: 0 var(--space-3); }
+.fp-description ul { margin-block: 0 var(--space-3); padding-inline-start: var(--space-5); }
+.fp-description li { margin-block-end: var(--space-1); }
+.fp-description em {
+  display: inline-block;
+  margin-block-start: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-style: normal;
+  line-height: var(--leading-snug);
+}
+
+/* ---------- desktop: photo visually on the left, info on the right ---------- */
+
+@media screen and (min-width: 750px) {
+  .fp-section { padding-block: var(--space-10) var(--space-16); }
+
+  .fp-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  /* DOM keeps photo first (so mobile stacks photo→info and the alt text
+     is announced first). Explicit columns flip the visual order: in RTL
+     column 1 is the right edge, so info sits right and the photo left. */
+  .fp-info  { grid-column: 1; grid-row: 1; }
+  .fp-media { grid-column: 2; grid-row: 1; }
+
+  .fp-info { gap: var(--space-5); }
+  .fp-title { font-size: var(--text-2xl); }
+  .fp-submit { inline-size: auto; min-inline-size: 260px; }
+}
+
+/* ---------- add-on rows: להשלמת המתנה (the owner, 2026-08-28) ----------
+   Between the delivery note and the buy button, inside the form. Ticking a
+   row adds that product as its own cart line alongside the bouquet, and the
+   button's running total follows (florista-atc.js). The block ships `hidden`
+   and is unhidden by that script — without JS the checkboxes could not do
+   anything, so they are not shown. */
+
+.fp-addons {
+  margin-block-end: var(--space-4);
+}
+
+.fp-addons-head {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+.fp-addons-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the whole row is the tap target, not just the box */
+.fp-addon-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: 64px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.fp-addon-thumb {
+  flex: none;
+  inline-size: 56px;
+  block-size: 56px;
+  border-radius: var(--radius);
+  /* contain, not cover: bottle shots are tall cutouts (same reason as the
+     cross-sell slider — cover decapitates them). Ivory, not white: a 4:5
+     packshot in this square leaves a bar of ground down each side, and on
+     white those bars were two bright slivers against the ivory row. */
+  object-fit: contain;
+  background-color: var(--color-bg);
+}
+
+.fp-addon-thumb--empty {
+  display: block;
+  background-color: var(--color-bg-subtle);
+}
+
+.fp-addon-text {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+/* long Hebrew balloon titles must never push the price or the box off the row */
+.fp-addon-name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-snug);
+}
+
+.fp-addon-type {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.fp-addon-price {
+  flex: none;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* the price is a Latin/number run inside RTL text */
+.fp-addon-price bdi {
+  unicode-bidi: isolate;
+}
+
+/* Descendant selector on purpose: The base theme's base.css sets
+   `input[type="checkbox"] { width: auto; margin-right: 0.5rem }`, which is
+   more specific than a bare class and silently won — the box rendered 13px
+   wide with a stray start-margin until this was raised. */
+.fp-addon-row .fp-addon-check {
+  flex: none;
+  inline-size: 22px;
+  block-size: 22px;
+  margin: 0;
+  accent-color: var(--color-action-buy);
+  cursor: pointer;
+}
+
+/* Selected: the row carries the state, not only the box. Background stays
+   ivory on purpose — the 2px sage border and the sage tick are the signal.
+   Where :has() is unsupported the accent-colour tick still shows it. */
+.fp-addon-row:has(.fp-addon-check:checked) {
+  border-color: var(--color-action-buy);
+  border-width: 2px;
+  padding: calc(var(--space-1) - 1px) calc(var(--space-3) - 1px);
+}
+
+.fp-addon-row:has(.fp-addon-check:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 320px: the thumb gives up the width, nothing wraps or scrolls */
+@media screen and (max-width: 379px) {
+  .fp-addon-row { gap: var(--space-2); }
+
+  .fp-addon-thumb {
+    inline-size: 48px;
+    block-size: 48px;
+  }
+
+  .fp-addon-price { font-size: var(--text-xs); }
+}
+
+/* Desktop adds a hover state; otherwise the rows are identical to mobile.
+   The width IS capped though: the info column runs ~580px while the buy
+   button is 260px, and full-width rows read wider than the CTA underneath
+   them. Caught by looking at 1280px, 2026-08-28. */
+@media screen and (min-width: 750px) {
+  .fp-addons { max-inline-size: 480px; }
+
+  .fp-addon-row:hover { background-color: var(--color-bg-brand-tint); }
+}
+
+/* ==========================================================================
+   Variant picker — snippets/florista-variant-picker.liquid. Renders only for
+   products with real options; single-variant pages are untouched. The owner asked
+   on 2026-09-07 to be able to add variants to any product in the shop.
+
+   Pills, decided on mobile first: two or three sizes is the common case and a
+   row of pills shows every choice, and whether it is in stock, without a tap.
+   The radio itself is visually hidden and the label is the control, so the
+   native keyboard behaviour (arrow keys move within a group) is kept.
+   ========================================================================== */
+
+/* The block-end margin is not decoration. `.fp-info` is the flex column that
+   spaces this page, but the picker sits INSIDE the form, where that gap does
+   not reach, so without this the "להשלמת המתנה" heading lands flush against
+   the last pill row. Matches the gap above the picker. */
+.fp-variants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+}
+
+.fp-variant-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fp-variant-legend {
+  padding: 0;
+  margin-block-end: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text-secondary);
+}
+
+.fp-variant-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.fp-variant-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px min target: this is the primary control on a phone. */
+  min-block-size: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill, 999px);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--text-md);
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.fp-variant-pill:hover {
+  border-color: var(--color-action-buy);
+}
+
+/* Sage, matching the buy button: this choice feeds that button. */
+.fp-variant-radio:checked + .fp-variant-pill {
+  border-color: var(--color-action-buy);
+  background-color: var(--color-action-buy);
+  color: var(--color-white);
+}
+
+.fp-variant-radio:focus-visible + .fp-variant-pill {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Struck, not hidden and not disabled: a shopper is entitled to press "large"
+   and be told it is gone, rather than find the control inert with no reason. */
+.fp-variant-pill--gone {
+  color: var(--color-text-muted);
+  border-style: dashed;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.fp-variant-radio:checked + .fp-variant-pill--gone {
+  background-color: var(--color-bg-subtle);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.fp-variant-sold-out {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-error);
+}

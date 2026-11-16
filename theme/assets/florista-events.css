@@ -1,0 +1,477 @@
+/* ==========================================================================
+   Florista events page (/pages/events) — docs/design-log.md, 2026-08-23.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   Designed at 375px, verified at 320px, then grown.
+
+   The hero crossfade is pure CSS (stacked images, one keyframe animation,
+   staggered delays) — no JS required. prefers-reduced-motion stops the
+   cycle and holds the first photo. Scroll reveals only exist under
+   .fev-armed, set by florista-events.js — no JS means a fully visible page.
+   ========================================================================== */
+
+/* The hero CTA and the mid-page CTA jump to #leave-details. Smooth only for
+   people who did not ask for reduced motion; this file loads only on the
+   events page, so the html rule cannot leak elsewhere. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------- shared shell ---------- */
+
+.fev-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+.fev-measure {
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+}
+
+/* ---------- hero: the crossfade ---------- */
+
+.fev-hero {
+  position: relative;
+  min-block-size: calc(100svh - var(--header-height));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background-color: var(--color-ink); /* behind the photos while they load */
+}
+
+.fev-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+/* The hero is the owner's real wedding footage (2026-08-24), muted and looping.
+   The poster is the clip's own first frame, so pre-play and reduced-motion
+   (paused by florista-events.js) both show a real frame, never a flash of a
+   different scene. */
+.fev-hero-video {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* Text sits on the photo — a bottom-weighted scrim keeps the contrast
+   honest over all three slides (measured against the lightest one). */
+.fev-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(30 20 25 / 0.8) 0%,
+    rgb(30 20 25 / 0.55) 45%,
+    rgb(30 20 25 / 0.25) 75%,
+    rgb(30 20 25 / 0.08) 100%
+  );
+}
+
+.fev-hero-content {
+  position: relative;
+  text-align: center;
+  padding-inline: var(--page-inline-padding);
+  padding-block: var(--space-12);
+  max-inline-size: 44ch;
+  /* insurance over the footage's brightest seconds (bride in white, backlit
+     bokeh) — a tight core shadow plus a wide soft one; invisible on the
+     dark scenes */
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.45),
+    0 2px 24px rgb(0 0 0 / 0.4);
+}
+
+.fev-hero-kicker {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  letter-spacing: 0.08em;
+  color: var(--color-white);
+}
+
+.fev-hero-display {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-display);
+  font-weight: 300; /* the display-only light end of the variable Heebo */
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-white);
+}
+
+/* Sage, not wine — the owner, 2026-08-24: "the wine doesn't feel like a good
+   CTA" here. Matches the add-to-cart buttons ("our greens"), so every
+   do-something button on the site now shares one family. */
+.fev-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 48px;
+  padding-inline: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--duration-base) var(--ease-out);
+}
+
+.fev-cta:hover {
+  background-color: var(--color-action-buy-hover);
+}
+
+.fev-cta:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+/* Over the photos a solid sage pill melts into the greenery (looked at it,
+   2026-08-24), so the hero instance flips to an ivory fill with sage-900
+   text (7.9:1) — the light pill separates from the darkened photo no matter
+   which slide is behind it. In-page CTAs stay solid sage on ivory/sand. */
+.fev-hero .fev-cta {
+  background-color: var(--color-ivory);
+  color: var(--color-sage-900);
+  text-shadow: none;
+}
+
+.fev-hero .fev-cta:hover {
+  background-color: var(--color-white);
+}
+
+/* The wine focus ring vanishes over the photo — use white there. */
+.fev-hero .fev-cta:focus-visible {
+  outline-color: var(--color-white);
+}
+
+.fev-hero-hint {
+  position: absolute;
+  inset-block-end: var(--space-4);
+  inset-inline: 0;
+  display: grid;
+  place-items: center;
+  color: var(--color-white);
+  opacity: 0.8;
+}
+
+.fev-hero-hint svg {
+  inline-size: 24px;
+  block-size: 24px;
+}
+
+/* ---------- shared section rhythm ---------- */
+
+.fev-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .fev-section {
+    padding-block: var(--space-16);
+  }
+}
+
+.fev-heading {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-2xl);
+  font-weight: 300; /* echoes the about page's big light era labels */
+  line-height: var(--leading-heading);
+  color: var(--color-sage-700);
+  text-align: center;
+}
+
+.fev-body p {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+}
+
+.fev-body p:last-child {
+  margin-block-end: 0;
+}
+
+/* ---------- Luda ---------- */
+
+.fev-luda {
+  margin-block-start: var(--space-10);
+  text-align: center;
+}
+
+.fev-luda-photo {
+  inline-size: 180px;
+  block-size: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-sand);
+}
+
+.fev-luda-name {
+  margin: var(--space-4) 0 var(--space-4);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-heading);
+  color: var(--color-wine-500);
+}
+
+.fev-luda .fev-body {
+  text-align: center;
+}
+
+/* ---------- services ---------- */
+
+.fev-pull {
+  margin: var(--space-8) auto 0;
+  max-inline-size: var(--measure);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-ui);
+  line-height: var(--leading-snug);
+  color: var(--color-wine-900);
+  text-align: center;
+}
+
+.fev-services-actions {
+  margin-block-start: var(--space-6);
+  text-align: center;
+}
+
+/* ---------- gallery ---------- */
+
+.fev-gallery-grid {
+  columns: 2;
+  column-gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .fev-gallery-grid {
+    columns: 3;
+    column-gap: var(--space-4);
+  }
+}
+
+.fev-gallery-item {
+  margin: 0 0 var(--space-3);
+  break-inside: avoid;
+}
+
+@media (min-width: 768px) {
+  .fev-gallery-item {
+    margin-block-end: var(--space-4);
+  }
+}
+
+.fev-gallery-item img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* ---------- lead form ---------- */
+
+.fev-lead {
+  background-color: var(--color-bg-subtle);
+  /* the anchor target: land with the heading clear of the sticky header */
+  scroll-margin-block-start: var(--header-height);
+  /* the owner, 2026-08-24: the sand band sat straight on the footer — give it
+     ivory air below so the form does not read as part of the footer. */
+  margin-block-end: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .fev-lead {
+    margin-block-end: var(--space-16);
+  }
+}
+
+/* The invitation card — the owner, 2026-08-28: heading, sub and form sit on a
+   white card floating on the sand band. Separation is tonal plus a
+   hairline border; no drop shadow (visual-design.md rules one out). */
+.fev-lead-card {
+  max-inline-size: 64rem;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-4);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+/* The short wine rule at the top of the card — a small identity moment,
+   which is where the palette allows the brand colour outside actions. */
+.fev-lead-card::before {
+  content: '';
+  display: block;
+  inline-size: 4.8rem;
+  block-size: 3px;
+  margin-inline: auto;
+  margin-block-end: var(--space-6);
+  background-color: var(--color-wine-500);
+  border-radius: var(--radius-pill);
+}
+
+@media (min-width: 768px) {
+  .fev-lead-card {
+    padding: var(--space-12) var(--space-8);
+  }
+}
+
+.fev-lead-sub {
+  margin: calc(-1 * var(--space-4)) 0 var(--space-8);
+  text-align: center;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+}
+
+.fev-form {
+  max-inline-size: 56ch;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.fev-field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.fev-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+}
+
+.fev-input,
+.fev-select,
+.fev-textarea {
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding-inline: var(--space-3);
+  padding-block: var(--space-2);
+  border: 1px solid var(--color-grey-500);
+  border-radius: var(--radius);
+  background-color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  color: var(--color-text);
+}
+
+.fev-textarea {
+  min-block-size: 120px;
+  resize: vertical;
+}
+
+.fev-input:focus-visible,
+.fev-select:focus-visible,
+.fev-textarea:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+/* Phone numbers, emails and dates are LTR data inside an RTL form. */
+.fev-input[type='tel'],
+.fev-input[type='email'],
+.fev-date {
+  direction: ltr;
+  text-align: end;
+}
+
+/* Side-by-side pair from tablet up; stacked on mobile. */
+@media (min-width: 768px) {
+  .fev-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+}
+
+.fev-form-row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.fev-form .fev-cta {
+  justify-self: center;
+  min-inline-size: 60%;
+}
+
+.fev-form-alt {
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  font-size: var(--text-md);
+  color: var(--color-text);
+}
+
+.fev-form-alt a {
+  color: var(--color-wine-500);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+}
+
+.fev-form-alt a:hover {
+  text-decoration: underline;
+}
+
+.fev-form-alt a:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+.fev-form-success {
+  max-inline-size: 56ch;
+  margin-inline: auto;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-align: center;
+}
+
+.fev-form-error {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  font-size: var(--text-md);
+}
+
+/* ---------- scroll reveal (armed by JS only) ---------- */
+
+.fev-armed [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.fev-armed [data-reveal].is-seen {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fev-armed [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

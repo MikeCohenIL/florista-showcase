@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Florista best sellers — docs/design-log.md, 2026-08-20.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.bs-section {
+  background-color: var(--color-bg-warm);
+  padding-block: var(--space-12);
+}
+
+.bs-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+.bs-heading {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-xl);
+}
+
+.bs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4) var(--space-3);
+  margin: 0 0 var(--space-8);
+  padding: 0;
+  list-style: none;
+}
+
+/* The whole card is the link — image, name and price. The image carries
+   alt="" because the name sits inside the same link; a described image here
+   would make a screen reader announce the product twice per card. */
+.bs-link {
+  position: relative; /* anchors the seasonal ribbon */
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.bs-link:hover .bs-name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.bs-card picture {
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-subtle);
+  margin-block-end: var(--space-2);
+}
+
+.bs-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.bs-name {
+  margin: 0;
+  font-size: var(--text-md);
+}
+
+.bs-price {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  color: var(--color-action);
+}
+
+/* The count line exists for the aria-live announcement after "load more", not
+   for the eye — the design has no visible counter. Clipped, not display:none,
+   because a hidden element is not announced. */
+.bs-count {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.bs-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
+
+  min-block-size: 48px;
+  padding-inline: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: none;
+
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.bs-more:hover:not([disabled]) {
+  border-color: var(--color-action);
+  color: var(--color-action);
+}
+
+/* `display: flex` above beats the UA rule for [hidden]; say it explicitly. */
+.bs-more[hidden] {
+  display: none;
+}
+
+/* Disabled is the empty state only — there is genuinely nothing to load. */
+.bs-more[disabled] {
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 768px) {
+  .bs-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+  }
+
+  .bs-heading {
+    font-size: var(--text-2xl);
+  }
+}

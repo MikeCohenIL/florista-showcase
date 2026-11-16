@@ -1,0 +1,342 @@
+{%- comment -%}
+  Florista header — rebuilt in Liquid from the decisions in docs/design-log.md.
+
+  This is NOT a fresh design. Every value here was settled with the owner on 2026-08-19 and the
+  reasoning is in the log; the Hydrogen React version was lost in the stack switch, not the
+  decisions. Read the log before changing anything below.
+
+  Bar reads, left edge to right edge:   [bag] [phone] ......... (logo) ......... nav / burger
+  In RTL the inline-START edge is the RIGHT one, so DOM order is nav/burger → logo → phone+bag.
+
+  Settled:
+  - Mark only, at every width. No wordmark — it lives in the footer instead.
+  - 72px bar, 72px-wide mark, logo optically centred via a 1fr auto 1fr grid.
+  - The flat five, inline from 768px, burger below that.
+  - Short labels in the bar (בקופסה / בסלסלה); full names in the sheet and every aria-label.
+  - Bag icon with a wine count pill that vanishes at zero. No "Sign in", no "Search".
+  - Burger and the sheet both on the inline-start edge, so the sheet enters from the side
+    the button is on.
+
+  Deliberately settings-free. The base theme would happily expose all of this in the theme editor, but
+  the header is designed in the log, not in an admin form — keeping it out of the editor stops
+  the design drifting to a second source of truth.
+{%- endcomment -%}
+
+{%- comment -%}
+  Stays a linked stylesheet. Inlining it with `inline_asset_content` was tried on 2026-09-05
+  (to take it off the render-blocking path) and Shopify refused: the file is over the filter's
+  size limit, and the storefront emitted an HTML comment instead of the CSS — an unstyled
+  header. The announcement bar, which is small, is inlined; this one is not.
+{%- endcomment -%}
+{{ 'florista-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-header.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  # --------------------------------------------------------------------------
+  # The nav comes from the Shopify admin: Online Store → Navigation → Main menu.
+  # the owner edits it there, like any other theme, and the bar and the sheet both follow.
+  #
+  # The fallback is not decoration. The Hydrogen build shipped a header that read the admin
+  # menu directly, and when that menu was empty the ENTIRE mobile sheet vanished — no nav, no
+  # way out. So an empty or missing menu falls back to the five §11 collections rather than
+  # rendering nothing.
+  #
+  # Both sources are normalised into one set of parallel arrays so the markup below is written
+  # once instead of being duplicated per source.
+  #
+  # One level of nesting is supported (added 2026-08-29, the owner's ask — «מוצרים נלווים»):
+  # `subs` is a third parallel array where each entry is either empty (a plain link) or the
+  # item's children encoded as  title^url@title^url .  A parent with children renders as a
+  # hover/click dropdown in the bar and a tap-to-open accordion in the sheet; its own URL is
+  # ignored ('#' in the admin menu), because there is no page for the group itself.
+  # --------------------------------------------------------------------------
+  assign menu = linklists[section.settings.menu]
+  assign titles = ''
+  assign urls = ''
+  assign subs = ''
+
+  if menu.links.size > 0
+    for link in menu.links
+      assign titles = titles | append: link.title | append: '|'
+      assign urls = urls | append: link.url | append: '|'
+      if link.links.size > 0
+        for child in link.links
+          assign subs = subs | append: child.title | append: '^' | append: child.url | append: '@'
+        endfor
+      endif
+      assign subs = subs | append: '|'
+    endfor
+  else
+    # 2026-09-23, the owner: «צמחים» joins the bar as its own item and «אגרטלים» joins the
+    # מוצרים נלווים dropdown — mirrored here from the admin menu, where the live nav is edited.
+    assign titles = 'זרי פרחים|סידורים בקופסה|סידורים בסלסלה|צמחים|מוצרים נלווים|זרי כלה|חתונות|'
+    assign urls = '/collections/bouquets|/collections/box-arrangements|/collections/basket-arrangements|/collections/plants|#|/pages/bridal|/pages/weddings|'
+    assign subs = '||||בלונים^/collections/balloons@שוקולדים^/collections/chocolate@יינות^/collections/drinks@אגרטלים^/collections/vases|||'
+  endif
+
+  assign titles = titles | split: '|'
+  assign urls = urls | split: '|'
+  assign subs = subs | split: '|'
+
+  # Short labels for the bar only. `סידורים בקופסה` and `סידורים בסלסלה` read as the same link
+  # at a glance and, more importantly, the centred-logo grid gives the nav roughly half the bar
+  # — the long labels measure 491px against a ~320px track at 768px and would break out of it.
+  # Anything not in this map keeps its full title, so a new menu item just works.
+  assign short_keys = 'box-arrangements,basket-arrangements' | split: ','
+  assign short_vals = 'בקופסה,בסלסלה' | split: ','
+
+  assign sec_urls = '/pages/delivery,/pages/about,/blogs/flora' | split: ','
+  assign sec_labels = 'משלוחים,אודותינו,בלוג' | split: ','
+
+  # One source for the phone, shared with the footer when that brick lands. A phone number that
+  # drifts between two surfaces is a real bug, not a cosmetic one.
+  assign phone_display = settings.phone_display | default: '054-2270287'
+  assign phone_e164 = settings.phone_e164 | default: '+972542270287'
+-%}
+
+<header class="florista-header" data-florista-header>
+  {%- comment -%} Inline-start (right in RTL): burger below 768px, the flat five above it. {%- endcomment -%}
+  <button
+    type="button"
+    class="fh-icon-btn fh-burger"
+    aria-label="תפריט"
+    aria-expanded="false"
+    aria-controls="fh-drawer"
+    data-fh-open
+  >
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+      <path d="M3 6h18M3 12h18M3 18h18"/>
+    </svg>
+  </button>
+
+  <nav class="fh-nav" aria-label="ניווט ראשי">
+    <ul class="fh-nav-list">
+      {%- for url in urls -%}
+        {%- liquid
+          assign full = titles[forloop.index0]
+          assign sub = subs[forloop.index0]
+
+          # Short label if this URL is one of the two that collide, otherwise the full title.
+          assign short = full
+          for key in short_keys
+            if url contains key
+              assign short = short_vals[forloop.index0]
+              break
+            endif
+          endfor
+
+          assign is_current = false
+          if request.path == url
+            assign is_current = true
+          endif
+        -%}
+        {%- if sub == blank -%}
+          <li>
+            {%- comment -%}
+              aria-label carries the FULL name even when the bar shows the short one, so a screen
+              reader never hears the ambiguous version.
+            {%- endcomment -%}
+            <a
+              class="fh-nav-link{% if is_current %} is-current{% endif %}"
+              href="{{ url }}"
+              aria-label="{{ full }}"
+              {% if is_current %}aria-current="page"{% endif %}
+            >{{ short }}</a>
+          </li>
+        {%- else -%}
+          {%- liquid
+            # A group. The trigger is a BUTTON, not a link — the parent has no page of its own,
+            # so there is nothing to navigate to and a link would lie to the browser (and to
+            # ctrl-click, and to the status bar). Open/close lives in florista-header.js.
+            assign pairs = sub | split: '@'
+
+            # The parent shows as current when the visitor is on one of its children, so the
+            # bar never loses the "you are here" mark just because the page sits in a dropdown.
+            for pair in pairs
+              assign parts = pair | split: '^'
+              if request.path == parts[1]
+                assign is_current = true
+              endif
+            endfor
+
+            assign panel_id = 'fh-dropdown-' | append: forloop.index0
+          -%}
+          <li class="fh-nav-parent{% if is_current %} is-current-parent{% endif %}" data-fh-dropdown>
+            <button
+              type="button"
+              class="fh-nav-link fh-nav-toggle{% if is_current %} is-current{% endif %}"
+              aria-expanded="false"
+              aria-controls="{{ panel_id }}"
+            >
+              {{ full }}
+              <svg class="fh-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <ul class="fh-dropdown" id="{{ panel_id }}">
+              {%- for pair in pairs -%}
+                {%- assign parts = pair | split: '^' -%}
+                <li>
+                  <a
+                    class="fh-dropdown-link"
+                    href="{{ parts[1] }}"
+                    {% if request.path == parts[1] %}aria-current="page"{% endif %}
+                  >{{ parts[0] }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </nav>
+
+  {%- comment -%} Centre: the mark alone. One image in this bar, and only one. {%- endcomment -%}
+  {%- comment -%}
+    The logo's alt was empty, which left the sitewide link to the homepage with no anchor text
+    at all — `aria-label` is not a documented source of anchor text for Google, only an
+    accessible name. One attribute, on every page on the site. Fixed 2026-08-30.
+  {%- endcomment -%}
+  <a class="fh-logo" href="{{ routes.root_url }}">
+    <img
+      src="{{ 'florista-mark.svg' | asset_url }}"
+      alt="פלוריסטה — חנות פרחים בחיפה"
+      width="72"
+      height="51"
+      fetchpriority="high"
+    >
+  </a>
+
+  {%- comment -%}
+    Inline-end (left in RTL). DOM order phone → bag puts the bag on the outside, so the bar
+    reads bag · phone from the left edge, as decided.
+  {%- endcomment -%}
+  <div class="fh-cta">
+    <a class="fh-icon-btn fh-phone" href="tel:{{ phone_e164 }}" aria-label="להזמנות, {{ phone_display }}">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      {%- comment -%}
+        dir="ltr" is load-bearing: a hyphenated number inside an RTL line gets reordered by the
+        bidi algorithm and renders back to front. tabular-nums stops the digits shifting.
+      {%- endcomment -%}
+      <span class="fh-phone-number" dir="ltr">{{ phone_display }}</span>
+    </a>
+
+    <a class="fh-icon-btn fh-bag" href="{{ routes.cart_url }}" aria-label="סל הקניות, {{ cart.item_count }} פריטים">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <path d="M3 6h18"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      {%- comment -%} The pill vanishes at zero so the group keeps one width empty or full. {%- endcomment -%}
+      {%- if cart.item_count > 0 -%}
+        <span class="fh-bag-count" aria-hidden="true">{{ cart.item_count }}</span>
+      {%- endif -%}
+    </a>
+  </div>
+</header>
+
+{%- comment -%} Full-height sheet. Enters from the inline-start edge — the same side as the burger. {%- endcomment -%}
+<div class="fh-overlay" data-fh-overlay hidden></div>
+
+<div
+  class="fh-drawer"
+  id="fh-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="תפריט"
+  hidden
+  data-fh-drawer
+>
+  <div class="fh-drawer-head">
+    <span class="fh-drawer-title">תפריט</span>
+    <button type="button" class="fh-icon-btn" aria-label="סגירת התפריט" data-fh-close>
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <nav aria-label="ניווט ראשי בתפריט">
+    <ul class="fh-drawer-list">
+      {%- for url in urls -%}
+        {%- assign sub = subs[forloop.index0] -%}
+        {%- if sub == blank -%}
+          <li>
+            {%- comment -%} The sheet always carries the FULL name, never the short bar label. {%- endcomment -%}
+            <a class="fh-drawer-link" href="{{ url }}"{% if request.path == url %} aria-current="page"{% endif %}>
+              {{ titles[forloop.index0] }}
+            </a>
+          </li>
+        {%- else -%}
+          {%- comment -%}
+            A group folds as an accordion — hover does not exist here, so a tap on the row
+            opens it and a second tap closes it. The toggle is in florista-header.js.
+          {%- endcomment -%}
+          {%- liquid
+            assign pairs = sub | split: '@'
+            assign acc_id = 'fh-acc-' | append: forloop.index0
+          -%}
+          <li>
+            <button
+              type="button"
+              class="fh-drawer-link fh-drawer-toggle"
+              aria-expanded="false"
+              aria-controls="{{ acc_id }}"
+              data-fh-accordion
+            >
+              {{ titles[forloop.index0] }}
+              <svg class="fh-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            <ul class="fh-drawer-sub" id="{{ acc_id }}" hidden>
+              {%- for pair in pairs -%}
+                {%- assign parts = pair | split: '^' -%}
+                <li>
+                  <a
+                    class="fh-drawer-link fh-drawer-sublink"
+                    href="{{ parts[1] }}"
+                    {% if request.path == parts[1] %}aria-current="page"{% endif %}
+                  >{{ parts[0] }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <hr class="fh-drawer-rule">
+
+    <ul class="fh-drawer-list">
+      {%- for url in sec_urls -%}
+        <li>
+          <a class="fh-drawer-link fh-drawer-link--secondary" href="{{ url }}"{% if request.path == url %} aria-current="page"{% endif %}>
+            {{ sec_labels[forloop.index0] }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+
+  <a class="fh-drawer-phone" href="tel:{{ phone_e164 }}">
+    להזמנות: <span dir="ltr">{{ phone_display }}</span>
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "Florista header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "תפריט ניווט",
+      "default": "main-menu",
+      "info": "נערך תחת חנות מקוונת ← ניווט. אם התפריט ריק, יוצגו חמש הקטגוריות כברירת מחדל."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+{%- comment -%}
+  Seasonal product ribbon.
+
+  Content lives in the admin, design lives here — the same split as `packshot`.
+  A product earns the ribbon by being IN A COLLECTION, not by carrying a tag:
+  the owner's rule is "every product in the ראש השנה collection", and membership is
+  the thing he actually manages. A tag would be a second list to keep in sync,
+  and the day it drifts from the collection is the day the wrong product wears
+  a holiday badge.
+
+  Both the collection it watches and the words it shows are theme settings, so
+  the ribbon can be retargeted at the next holiday without touching Liquid.
+
+  Accepts:
+    product — the product object (required)
+
+  Usage:
+    {% render 'florista-ribbon', product: product %}
+
+  Must be placed inside a positioned box — `.fc-media`, `.fp-media`, `.bs-link`.
+{%- endcomment -%}
+
+{%- liquid
+  # No `| default:` here, deliberately. Liquid's default filter treats an
+  # EMPTY STRING as falsy, so `settings.ribbon_label | default: 'ראש השנה'`
+  # puts the label back the moment the owner clears the field — and clearing it is
+  # exactly how the schema says to switch the ribbon off after the holiday.
+  # Shopify already falls back to the schema defaults when a setting has never
+  # been saved, so the filter bought nothing and broke the off-switch.
+  assign ribbon_collection = settings.ribbon_collection
+  assign ribbon_label = settings.ribbon_label
+
+  assign show_ribbon = false
+  if ribbon_label != blank and ribbon_collection != blank
+    for c in product.collections
+      if c.handle == ribbon_collection
+        assign show_ribbon = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{%- if show_ribbon -%}
+  <span class="florista-ribbon">{{ ribbon_label }}</span>
+{%- endif -%}

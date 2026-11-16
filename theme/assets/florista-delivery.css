@@ -1,0 +1,250 @@
+/* Florista delivery scheduler — date field + time-slot pills inside the
+   product form. Mobile-first at 375px; desktop is the same control, wider.
+   Times are LTR runs inside an RTL page — every clock string sits in
+   .ltr-num (the isolation rule lives in florista-tokens.css). */
+
+.fd-scheduler {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-end: var(--space-5);
+}
+
+.fd-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+  margin-block-end: var(--space-2);
+  padding: 0;
+}
+
+/* The native date field, dressed to match the form.
+   Its value text is transparent on purpose — the UA prints the date in the
+   BROWSER's locale (08/30/2026 on an en-US browser) and no CSS reaches into
+   that shadow DOM. .fd-date-shown below paints DD/MM/YYYY over it instead.
+   The calendar picker icon is a background image, not currentColor, so it
+   survives and stays clickable. */
+.fd-date-wrap {
+  position: relative;
+}
+.fd-date {
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body-family);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* Two belts, because one is not enough. `color: transparent` hides the value
+   text, but NOT the segment the browser has selected — Chrome paints that in
+   its own selection colours (white on blue), which ignored the transparent
+   colour and leaked the US month digit straight through the overlay while the
+   field had focus. Found in QA, 2026-08-29. opacity on the datetime-edit takes
+   the whole subtree, selection highlight included; Firefox has no such
+   pseudo-element, so the transparent colour stays as its fallback. */
+.fd-date {
+  color: transparent;
+}
+.fd-date::-webkit-datetime-edit {
+  opacity: 0;
+}
+/* Move the calendar icon to the left, so it clears the right-aligned value.
+   `direction: rtl` on the input does NOT work: Chromium hard-resets direction
+   to ltr on temporal inputs and ignores even !important (verified in QA,
+   2026-08-29 — a fresh <input type=date> reports ltr, a type=text control
+   reports rtl). Positioning the picker indicator is the only handle Chrome
+   gives us. It stays a real indicator, so click-to-open-picker still works.
+   The containing block is .fd-date-wrap, which is position: relative. */
+.fd-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0;
+}
+.fd-date:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Sits exactly on top of the input, right-aligned to the inline-start like the
+   recipient inputs beside it — the date was the one stray LTR island in an RTL
+   form. `direction: ltr` stays so 04/09/2026 keeps its digit order; only the
+   box moves. pointer-events:none so every tap still reaches the field and its
+   picker. */
+.fd-date-shown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  direction: ltr;
+  /* the larger inline-start (left) padding clears the relocated icon */
+  padding-inline: var(--space-8) var(--space-4);
+  font-family: var(--font-body-family);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  pointer-events: none;
+}
+.fd-date-shown--empty {
+  color: var(--color-text-muted);
+}
+
+.fd-hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.fd-error {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-error);
+  margin: 0;
+}
+
+/* Slot pills — radios styled as tappable chips, 48px tall */
+.fd-slots {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+.fd-slots legend {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+  padding: 0;
+  margin-block-end: var(--space-2);
+}
+.fd-slot-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.fd-slot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 48px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+.fd-slot input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+.fd-slot:hover {
+  border-color: var(--color-action-buy);
+}
+/* Sage, not wine — the owner, 2026-08-29. Wine reads as the brand mark, not as a
+   thing you press; sage-700 is the buy/commit colour everywhere else and
+   carries white at 6.1:1. */
+.fd-slot:has(input:checked) {
+  background: var(--color-action-buy);
+  border-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+}
+.fd-slot:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+/* A slot that has already passed today */
+.fd-slot--off {
+  color: var(--color-text-muted);
+  background: var(--color-bg-subtle);
+  border-color: var(--color-border-subtle);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.fd-slot--off input { cursor: not-allowed; }
+
+/* Greeting card (ברכה) — opt-in, free, 200-character cap. 2026-08-22.
+   Lives in the cart-items section, right under the item rows (the owner moved it
+   there from the footer, same day). */
+.fd-greeting {
+  display: grid;
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+  margin-block-end: var(--space-5);
+  max-inline-size: 52rem;
+}
+
+/* The base theme's cart.js marks <cart-items> is-empty when the last item is removed
+   client-side; the greeting sits just after it in the section, so it has to
+   hide itself. */
+cart-items.is-empty + .fd-greeting-wrap {
+  display: none;
+}
+
+.fd-greeting__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 44px;
+  font-size: var(--text-md);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* input[type='checkbox'] in the base theme's base.css sets width:auto + margin-right at
+   0-1-1 specificity, which flattens a bare class selector -- match it from the
+   parent so the box keeps its drawn size. */
+.fd-greeting .fd-greeting__box {
+  inline-size: 20px;
+  block-size: 20px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--color-action);
+  cursor: pointer;
+}
+
+.fd-greeting__box:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fd-greeting__free {
+  font-weight: var(--weight-ui);
+  color: var(--color-sage-700);
+}
+
+.fd-greeting__text {
+  inline-size: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body-family);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  resize: vertical;
+}
+
+.fd-greeting__text:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fd-greeting__count {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}

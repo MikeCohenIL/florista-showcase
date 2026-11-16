@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "album": {
+      "type": "florista-bridal-album",
+      "settings": {}
+    }
+  },
+  "order": ["album"]
+}

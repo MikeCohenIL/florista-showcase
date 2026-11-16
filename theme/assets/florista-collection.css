@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Florista collection / catalog page — docs/design-log.md, 2026-08-22.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   Designed at 375px, verified at 320px, then grown.
+   ========================================================================== */
+
+.fc-section {
+  background-color: var(--color-bg);
+  padding-block: var(--space-8) var(--space-12);
+}
+
+.fc-inner {
+  padding-inline: max(
+    var(--page-inline-padding),
+    calc((100% - var(--container-max)) / 2)
+  );
+}
+
+/* ---------- head ---------- */
+
+.fc-head {
+  margin-block-end: var(--space-5);
+}
+
+.fc-title {
+  margin: 0;
+  font-size: var(--text-page-title);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+  color: var(--color-text);
+}
+
+.fc-desc {
+  margin-block-start: var(--space-2);
+  max-inline-size: var(--measure);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+.fc-desc > :first-child { margin-block-start: 0; }
+.fc-desc > :last-child { margin-block-end: 0; }
+
+/* ---------- toolbar: count + sort ---------- */
+
+/* Wraps rather than squeezing: at 320px the sort control is wider than the
+   space left beside the count, and an unwrapped row broke "מוצר אחד" over
+   two lines. Wrapped, the sort simply drops to its own line. */
+.fc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  margin-block-end: var(--space-5);
+}
+
+.fc-count {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.fc-sort {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.fc-sort-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Native appearance is kept on purpose: the browser draws the caret on the
+   correct side for RTL, which a background-image caret cannot do without a
+   physical background-position. */
+.fc-sort-select {
+  min-block-size: 44px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+
+.fc-sort-select:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fc-sort-go {
+  min-block-size: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  cursor: pointer;
+}
+
+/* ---------- grid ---------- */
+
+.fc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fc-card {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.fc-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.fc-link:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-lg);
+}
+
+.fc-media {
+  position: relative; /* anchors the seasonal ribbon */
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-subtle);
+}
+
+.fc-img,
+.fc-media-placeholder {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.fc-img {
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* Accessory packshots — bottles, balloons, chocolate boxes — are cutouts
+   standing on the ivory page ground, not photography that wants cropping.
+   They are already delivered at 4:5, so `cover` fits them exactly today;
+   `contain` on an ivory tile keeps that true if a future upload is not.
+   The `packshot` tag is set in the admin. See florista-product.css. */
+.fc-card.is-packshot .fc-media {
+  background-color: var(--color-bg);
+}
+
+.fc-card.is-packshot .fc-img {
+  object-fit: contain;
+}
+
+.fc-name {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+/* Ink, not wine — the card is quiet on purpose: no button, no accent,
+   the photograph does the selling. */
+.fc-price {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+}
+
+/* ---------- pagination + empty ---------- */
+
+.fc-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-block-start: var(--space-10);
+}
+
+.fc-pager-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-size: var(--text-md);
+  text-decoration: none;
+}
+
+.fc-pager-link:hover { border-color: var(--color-action); color: var(--color-action); }
+
+.fc-pager-link.is-disabled {
+  color: var(--color-text-muted);
+  border-color: var(--color-border-subtle);
+}
+
+.fc-pager-status {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.fc-empty {
+  margin: 0;
+  max-inline-size: var(--measure);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Tablet — three across
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 768px) {
+  .fc-section { padding-block: var(--space-12) var(--space-16); }
+  .fc-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-8) var(--space-6); }
+  .fc-head { margin-block-end: var(--space-6); }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop — four across, and the photo lifts on hover
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 1024px) {
+  .fc-grid { grid-template-columns: repeat(4, 1fr); }
+  .fc-card:hover .fc-img { transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-img { transition: none; }
+  .fc-card:hover .fc-img { transform: none; }
+}

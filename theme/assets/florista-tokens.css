@@ -1,0 +1,412 @@
+/* ==========================================================================
+   Florista design tokens
+   --------------------------------------------------------------------------
+   The single source of colour, type, spacing, radius and motion values.
+   Component CSS must reference these variables, never raw hex or px.
+
+   Values are taken from `.claude/skills/florista-commerce-ux/references/
+   visual-design.md`. If you need a value that isn't here, add it there first.
+
+   Governing principle: the flowers are the colour, the interface is not.
+   The brand accent is spent on interactive elements — never on large section
+   backgrounds behind product photography.
+
+   The Heebo @font-face rules are NOT here. A theme stylesheet is served from
+   the Shopify CDN, so a relative `url('/fonts/…')` does not resolve to the
+   theme's assets. They live in `layout/theme.liquid`, where `asset_url` can
+   build the real CDN path.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     Colour — primitives
+     Contrast ratios are against white and were measured, not estimated.
+     ------------------------------------------------------------------------ */
+
+  /* Primary — wine. The brand colour; it is the colour in the logo. */
+  --color-wine-900: #4c0023; /* 15.77:1 — text on a wine tint */
+  --color-wine-700: #6c0032; /* 12.47:1 — hover/active for primary actions */
+  --color-wine-500: #8a0040; /*  9.75:1 — THE brand colour: buttons, links */
+  --color-wine-100: #f3e6ec; /*           tinted section or card background */
+  --color-wine-050: #faf4f6; /*           lightest tint; selected rows */
+
+  /* Secondary — sage. Replaces pink as of 2026-08-20 (the owner's new palette). */
+  --color-sage-900: #454e3e; /*  8.4:1 — hover/active for sage actions */
+  --color-sage-700: #5a6552; /*  6.1:1 — derived dark variant: text-capable, links, small headings */
+  --color-sage-500: #828c7e; /*  3.5:1 — large headings, icons, borders ONLY, never body text */
+  --color-willow: #b4bdb1; /*   1.9:1 — subtle fills, selected rows */
+
+  /* Neutrals — carried over from the old site unchanged; this part was sound. */
+  --color-ink: #2f2e2e; /* 13.54:1 — body text */
+  --color-grey-600: #595858; /*  7.09:1 — secondary text; last step safe for small type */
+  --color-grey-500: #828181; /*  3.88:1 — icons and placeholders ONLY, never body text */
+  --color-grey-400: #acabab; /*  2.29:1 — borders, dividers, disabled controls */
+  --color-white: #fff;
+
+  /* Warm neutrals — new palette, 2026-08-20. Ivory is the page ground (replaces
+     pure white); sand is a tinted section/card surface (replaces grey-100). */
+  --color-ivory: #f9f6f0; /* ink 12.5:1 · wine-500 9.03:1 — page ground */
+  --color-sand: #dbcbbf; /* ink 8.6:1 · wine-500 6.2:1 — section/card tint */
+
+  /* Semantic — deliberately off the brand hue so an error never reads as a
+     button. Never encode state in colour alone; pair with an icon or a word. */
+  --color-success: #1f6b4a; /* 6.44:1 — in stock, delivery available */
+  --color-warning: #8a5a00; /* 5.93:1 — approaching cutoff, limited capacity */
+  --color-error: #c0271d; /* 5.92:1 — validation failures, unavailable dates */
+
+  /* Seasonal — honey. Rosh Hashana campaign accent (hero CTA), 2026-08-25.
+     Revised same day: The owner found the first dark gold (#96610A) not honey-like
+     enough and chose "liquid honey" — the colour of the jar itself. Light
+     enough that the text on it is INK, not white (ratios below are vs ink).
+     Amber family but deliberately NOT the warning value: a buy button must
+     never read as a cutoff warning, so the two stay distinct hexes. */
+  --color-honey-500: #e39b1f; /*  5.79:1 vs ink — festive CTA fill */
+  --color-honey-700: #d68e12; /*  4.99:1 vs ink — hover/active for festive actions */
+  /* Cinnamon — fall 2026 campaign CTA (2026-09-23). Rust-orange, the colour of the tea and
+     the orange roses in the fall hero photo, named for the קינמון bouquet in the collection.
+     Dark enough for a white label, unlike honey; clearly not wine (1.8:1 between them). */
+  --color-cinnamon-500: #b4471c; /*  5.44:1 vs white — fall CTA fill */
+  --color-cinnamon-700: #953a15; /*  7.4:1 vs white — hover/active for fall actions */
+
+  /* ------------------------------------------------------------------------
+     Colour — semantic aliases. Components use THESE, not the primitives.
+     ------------------------------------------------------------------------ */
+  --color-bg: var(--color-ivory);
+  --color-bg-subtle: var(--color-sand);
+  --color-bg-warm: var(--color-ivory);
+  --color-bg-brand-tint: var(--color-wine-050);
+
+  --color-text: var(--color-ink);
+  --color-text-secondary: var(--color-grey-600);
+  --color-text-muted: var(--color-grey-500); /* icons/placeholders only */
+  --color-text-on-brand: var(--color-white); /* 9.75:1 on wine-500 — AAA */
+
+  --color-border: var(--color-grey-400);
+  --color-border-subtle: var(--color-sand);
+
+  --color-action: var(--color-wine-500);
+  --color-action-hover: var(--color-wine-700);
+  --color-action-active: var(--color-wine-900);
+  /* Buy actions are SAGE as of 2026-08-23 (the owner: add-to-cart in "our greens")
+     so commerce buttons read apart from the wine brand/nav accents. */
+  --color-action-buy: var(--color-sage-700);
+  --color-action-buy-hover: var(--color-sage-900);
+  /* Festive actions are scoped to seasonal campaign surfaces (hero CTA).
+     Honey is light, so its text token is ink — unlike wine/sage actions. */
+  --color-action-festive: var(--color-honey-500);
+  --color-action-festive-hover: var(--color-honey-700);
+  --color-text-on-festive: var(--color-ink);
+  /* Fall skin, same scope as festive — the hero CTA when the season is set to סתיו. */
+  --color-action-fall: var(--color-cinnamon-500);
+  --color-action-fall-hover: var(--color-cinnamon-700);
+  --color-text-on-fall: var(--color-white);
+  --color-focus-ring: var(--color-wine-500);
+
+  /* ------------------------------------------------------------------------
+     Typography
+     Scale steps: 12 / 14 / 16 / 20 / 24 / 32 / 48. Use only these steps.
+     Body is 16px minimum — smaller Hebrew degrades badly on mobile.
+     ------------------------------------------------------------------------ */
+  --font-sans: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ------------------------------------------------------------------------
+     REM VALUES ARE ON A 10px ROOT, NOT 16px. Read this before editing one.
+
+     the base theme sets `html { font-size: calc(var(--font-body-scale) * 62.5%) }` in
+     layout/theme.liquid, so 1rem = 10px and every one of its 48 sections is
+     sized against that. This file loads after the base theme, so overriding the root
+     back to 100% would silently inflate all of the base theme by 1.6x — which is
+     exactly what it did until it was caught in the browser on 2026-08-20.
+
+     So the root is left alone and these values are expressed on the base theme's basis:
+     1.6rem = 16px. The comment after each line is the real pixel size, which
+     is the number that was actually designed. Everything stays in rem rather
+     than px so a reader who raises their browser font size still scales.
+     ------------------------------------------------------------------------ */
+  --text-xs: 1.2rem; /* 12 — legal microcopy, never running text */
+  --text-sm: 1.4rem; /* 14 — captions, badges, table secondaries */
+  --text-md: 1.6rem; /* 16 — body. The floor. */
+  --text-lg: 2rem; /* 20 — lead paragraphs, card titles */
+  --text-xl: 2.4rem; /* 24 — section headings */
+  --text-2xl: 3.2rem; /* 32 — page headings */
+  --text-3xl: 4.8rem; /* 48 — display only */
+
+  /* Display steps shrink on small screens; 48px overflows at 375px.
+     The vw term is viewport-relative and so is unaffected by the root change;
+     only the rem terms were rebased. */
+  --text-display: clamp(3.2rem, 2rem + 3.5vw, 4.8rem); /* 32 → 48 */
+  --text-page-title: clamp(2.4rem, 1.76rem + 1.9vw, 3.2rem); /* 24 → 32 */
+
+  /* Hebrew sits denser than Latin and wants more leading than a Latin
+     equivalent — 1.7 for body, tighter as the type gets larger. */
+  --leading-body: 1.7;
+  --leading-snug: 1.45;
+  --leading-heading: 1.25;
+
+  /* Weight split. The lighter end of the variable range is display-only and
+     unused below 32px. Hebrew has NO italic — emphasise with weight. */
+  --weight-body: 400;
+  --weight-ui: 500; /* labels, buttons, nav */
+  --weight-heading: 700;
+
+  /* Tight tracking damages Hebrew legibility faster than Latin. Default to
+     none; the display step gets a hair of negative tracking, nothing else. */
+  --tracking-normal: 0;
+  --tracking-display: -0.01em;
+
+  /* ------------------------------------------------------------------------
+     Spacing — 4px step. Every gap comes from this scale.
+     ------------------------------------------------------------------------ */
+  /* Also on the base theme's 10px root — see the note above the type scale. */
+  --space-1: 0.4rem; /*  4 */
+  --space-2: 0.8rem; /*  8 */
+  --space-3: 1.2rem; /* 12 */
+  --space-4: 1.6rem; /* 16 */
+  --space-5: 2rem; /* 20 */
+  --space-6: 2.4rem; /* 24 */
+  --space-8: 3.2rem; /* 32 */
+  --space-10: 4rem; /* 40 */
+  --space-12: 4.8rem; /* 48 */
+  --space-16: 6.4rem; /* 64 */
+  --space-20: 8rem; /* 80 */
+  --space-24: 9.6rem; /* 96 */
+
+  /* ------------------------------------------------------------------------
+     Radius — one value, plus a larger one for sheets and panels.
+     ------------------------------------------------------------------------ */
+  --radius: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 20px; /* large photography — category tiles, product cards. Soft, not corporate. */
+  --radius-pill: 999px;
+
+  /* ------------------------------------------------------------------------
+     Layout
+     Breakpoints cannot be custom properties in media queries — they are
+     recorded here so the numbers live in one place, and repeated literally
+     in @media rules. Mobile-first, designed at 375px, must not break at 320.
+       --bp-sm:  480px   large phone
+       --bp-md:  768px   tablet / two-column
+       --bp-lg: 1024px   desktop
+       --bp-xl: 1280px   wide desktop
+     ------------------------------------------------------------------------ */
+  --container-max: 1280px;
+  --measure: 68ch; /* ~60–75 Hebrew characters — comfortable line length */
+  --header-height: 72px;
+  --page-inline-padding: var(--space-4);
+
+  /* ------------------------------------------------------------------------
+     Motion — confirms actions, never entertains. 150–250ms, one easing.
+     ------------------------------------------------------------------------ */
+  /* `transform: translateX()` is physical and has no logical counterpart, so
+     anything that slides has to flip its sign by hand. Multiply the offset by
+     --flip-x rather than writing a separate [dir] rule per component. */
+  --flip-x: 1;
+
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[dir='rtl'] {
+  --flip-x: -1;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-inline-padding: var(--space-8);
+  }
+}
+
+/* ==========================================================================
+   the base theme interoperability
+   --------------------------------------------------------------------------
+   the base theme declares its own type and colour variables in `layout/theme.liquid`,
+   fed from the theme editor's settings. Every stock the base theme section reads those,
+   not ours. Rather than editing 48 sections, the the base theme variables are re-pointed
+   at the Florista tokens here — so unbuilt the base theme surfaces inherit Heebo and the
+   brand neutrals instead of the theme editor's defaults.
+
+   This is a bridge, not a design. Each surface still gets rebuilt as its own
+   brick; this only stops the in-between state looking like stock the base theme.
+   ========================================================================== */
+
+:root {
+  /* The base theme puts a `.gradient` class on <body> reading `background: var(--gradient-
+     background)`. That's a class selector (0-1-0) beating the plain `body`
+     element selector (0-0-1) our own background rule uses below — no amount of
+     reordering the stylesheets fixes a specificity loss. Found in the browser
+     2026-08-20: --color-bg resolved correctly on :root but body still painted
+     white, because this variable, not ours, was what `.gradient` actually read. */
+  --gradient-background: var(--color-bg);
+
+  --font-body-family: var(--font-sans);
+  --font-heading-family: var(--font-sans);
+  --font-body-style: normal;
+  --font-heading-style: normal;
+  --font-body-weight: var(--weight-body);
+  --font-body-weight-bold: var(--weight-heading);
+  --font-heading-weight: var(--weight-heading);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+html {
+  /* NO font-size here on purpose. The base theme owns the root
+     (`calc(var(--font-body-scale) * 62.5%)`, so 1rem = 10px) and this file
+     loads after it — setting 100% here silently scaled all 48 the base theme sections
+     up by 1.6x. The tokens above are expressed on the base theme's basis instead.
+     User font-size preference is still respected: 62.5% is a percentage of
+     whatever the reader's base size is, not a fixed 10px. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* The base theme's base.css sets `font-family: var(--font-body-family)` directly on
+     body. The Hydrogen build proved an own declaration beats anything
+     inherited from `html` — the whole site rendered in the system face with
+     Heebo downloaded and unused. Restating the family here is what actually
+     applies it, and the the base theme bridge above covers the same ground. */
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-body);
+  line-height: var(--leading-body);
+  /* The base theme puts `letter-spacing: 0.06rem` on body. Tracking is a Latin habit and
+     it damages Hebrew legibility — the type decision was explicitly zero. */
+  letter-spacing: var(--tracking-normal);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-normal);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-page-title);
+}
+
+h2 {
+  font-size: var(--text-xl);
+}
+
+h3 {
+  font-size: var(--text-lg);
+}
+
+h4 {
+  font-size: var(--text-md);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Numbers, prices and phone numbers are LTR runs inside RTL text. Without an
+   isolate the bidi algorithm drags adjacent punctuation to the wrong side —
+   "₪249." is the case that breaks first. */
+.ltr-num,
+bdi {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Focus must stay visible on every interactive element — the keyboard path
+   through the date picker and filters depends on it. */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Utilities the base theme used to supply
+   --------------------------------------------------------------------------
+   base.css no longer loads on the custom templates (see layout/theme.liquid,
+   2026-09-05). These are the only three rules those pages borrowed from it.
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+}
+
+/* ==========================================================================
+   Sale price — snippets/florista-price.liquid. Global because the same snippet
+   prints on the collection card, the product page, the best-sellers row and
+   the cross-sell, each with its own font size and colour on the wrapping <p>.
+   The sale price inherits those; only the struck "was" price is styled here:
+   smaller, grey, with the line through it. The owner, 2026-09-06.
+   ========================================================================== */
+
+.f-price--sale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+}
+
+.f-price--sale bdi {
+  unicode-bidi: isolate;
+}
+
+.f-price-was {
+  font-size: 0.85em;
+  font-weight: var(--weight-body);
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* The skip link is a .visually-hidden anchor that must become a real, readable
+   button the moment it takes keyboard focus. */
+.skip-to-content-link:focus {
+  position: fixed !important;
+  z-index: 9999;
+  inset-block-start: var(--space-4);
+  inset-inline-start: var(--space-4);
+  overflow: auto;
+  width: auto;
+  height: auto;
+  clip: auto;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--color-action);
+  color: var(--color-text-on-brand);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+}
+
+/* <main> carries tabindex="-1" so the skip link can land on it; it must not
+   draw a focus ring when it does. */
+.focus-none {
+  box-shadow: none !important;
+  outline: 0 !important;
+}

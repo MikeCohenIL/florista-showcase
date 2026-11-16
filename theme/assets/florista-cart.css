@@ -1,0 +1,430 @@
+/*
+  Florista — cart line row
+  Brick: the cart line row (photo-led). Decided 2026-08-22, see docs/design-log.md.
+
+  Restyles the base theme's cart table without touching its markup, so cart.js keeps working:
+  every class, id and custom element the base theme's JS looks for is left exactly where it was.
+  The <table> is turned into a grid on both breakpoints and the column headings are
+  visually hidden — the approved design has no header row, and the base theme's headings are
+  still untranslated English until he.json lands.
+
+  Logical properties only. No physical left/right anywhere in this file.
+*/
+
+/* ── the table shell ───────────────────────────────────────────────────────── */
+
+.cart-items,
+.cart-items thead,
+.cart-items tbody,
+.cart-items tr {
+  display: block;
+  width: 100%;
+  border-spacing: 0;
+}
+
+/* The approved row has no header strip, and once the table is a grid the column
+   headers carry no structure — leaving them would only add untranslated English
+   ("Product", "Quantity", "Total") to the accessibility tree. */
+.cart-items thead {
+  display: none;
+}
+
+/* ── the row ───────────────────────────────────────────────────────────────── */
+
+.cart-items .cart-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  grid-template-areas:
+    'media details details'
+    'media qty     price';
+  column-gap: var(--space-3);
+  row-gap: var(--space-3);
+  align-items: start;
+  margin: 0;
+  padding-block: var(--space-5);
+  border-block-end: 1px solid var(--color-border-subtle);
+}
+
+.cart-items .cart-item:first-child {
+  border-block-start: 1px solid var(--color-border-subtle);
+}
+
+/* ── photo ─────────────────────────────────────────────────────────────────── */
+
+.cart-items .cart-item__media {
+  grid-area: media;
+  width: 88px;
+  padding: 0;
+}
+
+.cart-item__image-container {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--color-white);
+}
+
+.cart-item .cart-item__image {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+}
+
+/* The flower photography is cropped to this square on purpose. A packshot
+   is not photography — it is a cutout standing on the ivory ground, and
+   cropping one square cuts the cork off a bottle. Contained on ivory, the
+   bars it leaves are the same colour as the packshot's own ground. */
+.cart-item__image-container.is-packshot {
+  background-color: var(--color-bg);
+}
+
+.cart-item__image-container.is-packshot .cart-item__image {
+  object-fit: contain;
+}
+
+/* ── title and options ─────────────────────────────────────────────────────── */
+
+.cart-items .cart-item__details {
+  grid-area: details;
+  width: auto;
+  padding: 0;
+  /* gutter the remove button sits in, so the title never runs underneath it */
+  padding-inline-end: 44px;
+}
+
+.cart-item .cart-item__name {
+  display: block;
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+  text-decoration: none;
+  /* grows the tap target to 44px without moving the text */
+  padding-block: 1.1rem;
+  margin-block: -1.1rem;
+}
+
+.cart-item .cart-item__name:hover,
+.cart-item .cart-item__name:focus-visible {
+  color: var(--color-action);
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+/* The base theme prints the unit price inside the details cell as well as the line total.
+   At quantity 1 that is the same number twice; the approved row shows one price. */
+.cart-item__details > div.product-option,
+.cart-item__details > .cart-item__discounted-prices {
+  display: none;
+}
+
+.cart-item__details dl {
+  margin-block: var(--space-1) 0;
+}
+
+.cart-item__details dl .product-option {
+  display: flex;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-text-secondary);
+  word-break: break-word;
+}
+
+.cart-item__details dl .product-option dt,
+.cart-item__details dl .product-option dd {
+  margin: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ── quantity stepper ──────────────────────────────────────────────────────── */
+
+.cart-items .cart-item__quantity {
+  grid-area: qty;
+  width: auto;
+  padding: 0;
+}
+
+.cart-item .cart-item__quantity-wrapper {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.cart-item .quantity.cart-quantity {
+  width: auto;
+  min-height: 44px;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-white);
+}
+
+.cart-item .quantity.cart-quantity::after {
+  display: none;
+}
+
+.cart-item .quantity.cart-quantity .quantity__button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  color: var(--color-text-secondary);
+}
+
+.cart-item .quantity.cart-quantity .quantity__button:hover:not([disabled]) {
+  color: var(--color-action);
+}
+
+.cart-item .quantity.cart-quantity .quantity__button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.cart-item .quantity.cart-quantity .quantity__input {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding-inline: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+}
+
+/* ── line price ────────────────────────────────────────────────────────────── */
+
+.cart-items .cart-item__totals {
+  grid-area: price;
+  width: auto;
+  padding: 0;
+  /* keeps the number level with the middle of the stepper */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: end;
+}
+
+.cart-item .cart-item__price-wrapper {
+  text-align: end;
+}
+
+/* The price is an LTR run inside an RTL page. The base theme's cart markup has no <bdi>
+   (unlike the Florista-authored product and bestseller prices), so the shekel
+   sign is separated from the digits by a space, resolves as a neutral, and the
+   bidi algorithm parks it on the wrong side — the customer reads "₪ 459.98"
+   instead of "459.98 ₪". Same isolation the `bdi` rule in florista-tokens.css
+   applies everywhere else. Scoped to the line price: the cart footer total has
+   the identical bug and belongs to the cart-summary brick. */
+.cart-item .cart-item__totals .price,
+.cart-item .cart-item__totals .cart-item__old-price {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.cart-item .cart-item__totals .price {
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+}
+
+.cart-item .cart-item__totals .cart-item__old-price {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-body);
+  color: var(--color-text-muted);
+}
+
+/* ── remove ────────────────────────────────────────────────────────────────── */
+
+/* The base theme makes <quantity-popover> position:relative, which would capture the
+   absolutely-positioned remove button and park it on top of the quantity number.
+   Neutralised so the row itself is the containing block. The base theme's own popover is
+   absolute too, and now anchors to the row, which is where it belongs anyway. */
+.cart-item quantity-popover {
+  position: static;
+}
+
+.cart-item cart-remove-button {
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-end: 0;
+  margin: 0;
+}
+
+.cart-item cart-remove-button .button,
+.cart-item cart-remove-button .button--tertiary {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--color-grey-500);
+  background: none;
+}
+
+.cart-item cart-remove-button .button:hover {
+  color: var(--color-action);
+  background-color: var(--color-wine-050);
+}
+
+.cart-item cart-remove-button .button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.cart-item cart-remove-button .svg-wrapper,
+.cart-item cart-remove-button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* ── below 375px: the price drops under the stepper ────────────────────────────
+   At 320px an 88px photo, a 136px stepper (three 44px targets) and the price
+   cannot share one line without either colliding or shrinking a tap target
+   below 44px. The price takes its own line instead; nothing else changes.      */
+
+@media screen and (max-width: 374px) {
+  .cart-items .cart-item {
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-areas:
+      'media details'
+      'media qty'
+      'media price';
+  }
+
+  .cart-items .cart-item__totals {
+    min-height: 0;
+  }
+}
+
+/* ── desktop: same row, wider ──────────────────────────────────────────────── */
+
+@media screen and (min-width: 750px) {
+  .cart-items .cart-item {
+    grid-template-columns: 120px minmax(0, 1fr) auto auto;
+    grid-template-areas: 'media details qty price';
+    column-gap: var(--space-6);
+    align-items: center;
+    padding-block: var(--space-6);
+    /* on one line the price occupies the inline-end, so the remove button needs
+       the gutter here rather than on the details area */
+    padding-inline-end: 44px;
+  }
+
+  .cart-items .cart-item__details {
+    padding-inline-end: 0;
+  }
+
+  .cart-items .cart-item__media {
+    width: 120px;
+  }
+
+  .cart-item__image-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cart-items .cart-item__details {
+    align-self: center;
+  }
+
+  .cart-item .cart-item__name {
+    font-size: var(--text-lg);
+  }
+
+  .cart-items .cart-item__totals {
+    min-width: 10rem;
+  }
+
+  .cart-item cart-remove-button {
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* ── keep the base theme's two totals cells mutually exclusive ───────────────────────────
+   the base theme renders the line total twice — one cell for small screens, one for large —
+   and hides the wrong one with utility classes. The rules above are more specific
+   than those utilities, so the hiding is re-asserted here at matching weight.     */
+
+@media screen and (max-width: 749px) {
+  .cart-items .cart-item__totals.small-hide {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .cart-items .cart-item__totals.medium-hide.large-up-hide {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Checkout CTA — the owner, 2026-08-22: not the base theme's black slab. The palette's
+   semantic green, pill-rounded like every Florista primary action.
+   the base theme draws its button border with a ::after box-shadow, so that layer
+   is rounded and silenced too. */
+.cart__ctas .cart__checkout-button {
+  background: var(--color-success);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-pill);
+  min-block-size: 52px;
+  font-family: var(--font-body-family);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.cart__ctas .cart__checkout-button::after {
+  border-radius: var(--radius-pill);
+  box-shadow: none;
+}
+.cart__ctas .cart__checkout-button:hover {
+  background: color-mix(in srgb, var(--color-success), black 14%);
+}
+.cart__ctas .cart__checkout-button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Terms-of-use consent row above the CTA */
+.fd-terms {
+  margin-block-end: var(--space-3);
+}
+.fd-terms__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  min-block-size: 44px;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: start;
+}
+/* The base theme's base.css sizes checkboxes with input[type='checkbox'] (0,1,1),
+   which out-specifies a lone class — match it and win on order. */
+.fd-terms input.fd-terms__box[type='checkbox'] {
+  inline-size: 22px;
+  block-size: 22px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--color-success);
+  cursor: pointer;
+}
+.fd-terms__box:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+.fd-terms__label a {
+  color: var(--color-action);
+  text-underline-offset: 2px;
+}
+.fd-terms__error {
+  margin-block-start: var(--space-2);
+}

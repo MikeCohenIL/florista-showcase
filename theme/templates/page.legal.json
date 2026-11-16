@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "florista-legal",
+      "settings": {
+        "updated_label": "עודכן לאחרונה: 23 באוגוסט 2026"
+      }
+    }
+  },
+  "order": ["main"]
+}

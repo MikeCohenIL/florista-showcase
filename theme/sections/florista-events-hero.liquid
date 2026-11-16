@@ -1,0 +1,76 @@
+{%- comment -%}
+  Events page hero — docs/design-log.md, 2026-08-23; video since 2026-08-24.
+
+  Built first as a photo crossfade; the next day the owner supplied real wedding
+  footage ("Hero vidoes for events/") and asked for it as the hero — exactly
+  the swap the crossfade design anticipated. The 16s clip (candle-lit
+  reception tables → bride with her bouquet) runs as a muted looping
+  background: WebM 1080p first (best quality, smaller than the 1080 MP4),
+  MP4 720p fallback for browsers without VP9, poster = the clip's real first
+  frame so nothing flashes a different scene. The video is decorative
+  (aria-hidden, no speech); florista-events.js pauses it for
+  prefers-reduced-motion users, leaving the poster-frame standing still.
+
+  The h1 is the query-bearing line (פרחים לחתונה בחיפה) styled small above
+  the big display line — heading rank is meaning, not size. Renamed from
+  פרחים לאירועים בחיפה on 2026-08-26, when the owner renamed the whole page
+  חתונות (/pages/weddings) — the page now owns the wedding-design query;
+  זר כלה stays with the bridal album (/pages/bridal since 2026-08-28).
+
+  CTA colours, the owner 2026-08-24: wine "doesn't feel like a good CTA" — CTAs
+  are sage (the add-to-cart family); over the footage a sage pill melted into
+  the greenery, so the hero instance is ivory with sage-900 text.
+{%- endcomment -%}
+
+{{ 'florista-events.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-events.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign kicker = section.settings.kicker | default: 'פרחים לחתונה בחיפה'
+  assign display_line = section.settings.display_line | default: 'בואו נתחיל משהו נפלא יחדיו'
+  assign cta_label = section.settings.cta_label | default: 'עצבו לי את החתונה'
+-%}
+
+<section class="fev-hero fev-page">
+  <div class="fev-hero-media" aria-hidden="true">
+    <video
+      class="fev-hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      poster="{{ 'events-hero-poster.jpg' | asset_url }}"
+      tabindex="-1"
+      disablepictureinpicture
+      disableremoteplayback
+    >
+      <source src="{{ 'events-hero.webm' | asset_url }}" type="video/webm">
+      <source src="{{ 'events-hero.mp4' | asset_url }}" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="fev-hero-scrim" aria-hidden="true"></div>
+
+  <div class="fev-hero-content">
+    <h1 class="fev-hero-kicker">{{ kicker }}</h1>
+    <p class="fev-hero-display">{{ display_line }}</p>
+    <a class="fev-cta" href="#leave-details">{{ cta_label }}</a>
+  </div>
+
+  <div class="fev-hero-hint" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Events hero",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "שורת הפתיחה (h1)", "default": "פרחים לחתונה בחיפה" },
+    { "type": "text", "id": "display_line", "label": "המשפט הגדול", "default": "בואו נתחיל משהו נפלא יחדיו" },
+    { "type": "text", "id": "cta_label", "label": "טקסט הכפתור", "default": "עצבו לי את החתונה" }
+  ],
+  "presets": [{ "name": "Events hero" }]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+{%- comment -%}
+  Florista announcement bar.
+
+  Replaces the base theme's stock one, which shipped the English "Welcome to our store" and was removed
+  when the header was rebuilt. This one is fully editable and can be switched off without
+  touching code — which is the point of it existing rather than being hardcoded copy.
+
+  It scrolls away. The header is sticky, this is not: a strip that permanently eats vertical
+  space on a phone costs more than it earns, and a one-line promise is a fact you read once.
+
+  The text is a rich-text setting (since 2026-09-06), not a plain string, so a word inside the
+  sentence can carry a link — the owner asked for "משלוחי פרחים בחיפה והסביבה" with "הסביבה"
+  pointing at /pages/delivery. Highlight a word in the editor and add the link there; nothing
+  in code decides which word it is. The earlier whole-bar "link" setting is gone: a link inside
+  a link is invalid HTML, and one way to link is enough.
+
+  NOTE: nothing here computes the time. A live "X hours left until the cutoff" indicator is its
+  own brick and needs real logic — Fridays, holiday eves and peak dates all change same-day
+  delivery. A static string dressed up as a live countdown becomes a lie the minute it passes.
+{%- endcomment -%}
+
+{%- if section.settings.text != blank -%}
+  {%- comment -%}
+  Inlined rather than linked since 2026-09-05: this is above-the-fold CSS on every page and a
+  linked stylesheet here blocked first paint for one extra round trip (Lighthouse
+  render-blocking-insight). The file stays in assets/ as the source; nothing else changes.
+{%- endcomment -%}
+<style>{{ 'florista-announcement.css' | inline_asset_content }}</style>
+
+  <div
+    class="fa-bar"
+    style="--fa-bg: {{ section.settings.background }}; --fa-fg: {{ section.settings.text_color }};"
+  >
+    <div class="fa-bar-text">{{ section.settings.text }}</div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "פס הודעה",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "מוצג בראש כל עמוד. השאירו את שדה הטקסט ריק כדי להסתיר אותו לגמרי."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "טקסט",
+      "info": "שורה אחת. אפשר לסמן מילה ולהוסיף לה קישור — למשל \"הסביבה\" לעמוד המשלוחים.",
+      "default": "<p>משלוחי פרחים בחיפה ו<a href=\"/pages/delivery\">הסביבה</a></p>"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "צבע רקע",
+      "default": "#8A0040"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "צבע טקסט",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [{ "name": "פס הודעה" }]
+}
+{% endschema %}

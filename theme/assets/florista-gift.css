@@ -1,0 +1,122 @@
+/* Florista gift block — "למי המשלוח?" pill pair + buyer fields, on the CART
+   page above the delivery scheduler. Mobile-first at 375px; desktop is the
+   same control, wider. Deliberately its own fd-gift-* namespace: it shares
+   NOTHING with .fd-slots/.fd-slot, which florista-delivery.js owns and
+   rewrites on every date change (that collision is what ate the date chips
+   — docs/design-log.md, 2026-08-23). */
+
+.fd-gift {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+  display: grid;
+  gap: var(--space-3);
+  margin-block-end: var(--space-5);
+}
+
+.fd-gift legend {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  color: var(--color-text);
+  padding: 0;
+  margin-block-end: var(--space-2);
+}
+
+.fd-gift__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Same look as the time-slot pills, own class so the scheduler JS never
+   touches them. Two equal halves — big thumb targets at 320px. */
+.fd-gift__pill {
+  position: relative;
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 48px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+.fd-gift__pill input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+.fd-gift__pill:hover {
+  border-color: var(--color-action-buy);
+}
+/* Sage, not wine — matches the time-slot pills (florista-delivery.css). */
+.fd-gift__pill:has(input:checked) {
+  background: var(--color-action-buy);
+  border-color: var(--color-action-buy);
+  color: var(--color-text-on-brand);
+}
+.fd-gift__pill:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.fd-gift__details {
+  display: grid;
+  gap: var(--space-4);
+}
+/* display:grid above beats the browser's own [hidden] rule — restate it */
+.fd-gift__details[hidden] {
+  display: none;
+}
+
+.fd-gift__input {
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body-family);
+  font-size: var(--text-md);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+.fd-gift__input:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Phone digits are an LTR run inside the RTL page */
+.fd-gift__input--tel {
+  direction: ltr;
+  text-align: end;
+}
+.fd-gift__input--tel::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* Mandatory recipient fields (the owner, 2026-09-04): a wine asterisk beside
+   the label, and a red ring on a field left empty or malformed. */
+.fd-required {
+  color: var(--color-error);
+  font-weight: var(--weight-ui);
+}
+.fd-gift__input--invalid {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.fd-gift__note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  margin-block-start: var(--space-1);
+}

@@ -1,0 +1,138 @@
+{%- comment -%}
+  Instagram / social gallery — site-structure.md §8.7: "#florista".
+  Reworked 2026-08-31 with the owner (design-log entry of the same date).
+
+  Was: six Unsplash placeholders hardcoded in a Liquid array — not editable,
+  not Florista's flowers, and linking nowhere (no confirmed handle existed).
+  The 2026-08-30 audit flagged that as a trust defect (A7 class).
+
+  Now: six theme-editor tiles. Each tile is a block with an image picker, so
+  swapping a photo is click-tile → pick image → save — the owner asked for exactly
+  that ("super easy to swap") because the seeded campaign shots are AI-made
+  and he may replace them with real Instagram photos. A tile with no image
+  chosen falls back, by position, to a bundled default: three campaign shots
+  he picked (home-insta-camp1..3) and three real catalog packshots
+  (paris / tehila / tropical). Deliberately a static grid, not a live feed:
+  Meta retired the simple feed API, feed apps cost money and tokens, their
+  JS drags mobile speed, and injected images carry no alt for search.
+
+  The handle is real and confirmed by the owner: instagram.com/floristahaifa —
+  tiles and the follow link go there (block link can point at a single post).
+{%- endcomment -%}
+
+{{ 'florista-instagram.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign profile_url = section.settings.profile_url | default: 'https://www.instagram.com/floristahaifa/'
+
+  # Positional fallbacks for tiles whose block has no image picked.
+  # Alt text is honest: campaign imagery says קמפיין, product shots name the product.
+  # Order alternates product / model — the owner, 2026-09-01 ("mix it out a lil bit"),
+  # who also swapped the vase bouquet (תהילה) for מנגינה קיצית.
+  assign default_assets = 'home-insta-paris,home-insta-camp1,home-insta-melody,home-insta-camp2,home-insta-tropical,home-insta-camp3' | split: ','
+  assign default_alts = 'סידור פריז — ורדים בגווני ורוד בקופסה של פלוריסטה;מתוך קמפיין פלוריסטה — זר ורדים בגווני יין עטוף בנייר קראפט;זר מנגינה קיצית — חמניות, בובנג ודלפיניום של פלוריסטה;מתוך קמפיין פלוריסטה — הידראנגאה ורודה על רקע סידורי פרחים;סידור קיץ טרופי — ורדים לבנים בקופסה של פלוריסטה;מתוך קמפיין פלוריסטה — זר פרחי שדה צבעוני ברחוב שטוף שמש' | split: ';'
+-%}
+
+<section class="ig-section">
+  <div class="ig-inner">
+    {%- comment -%}
+      dir="ltr" is load-bearing, same reasoning as the footer's copyright line: an RTL heading
+      reorders "#florista" into "florista#" because the brand name is the only strongly-
+      directional run.
+    {%- endcomment -%}
+    <h2 class="ig-heading" dir="ltr">{{ section.settings.heading | default: '#florista' }}</h2>
+
+    <ul class="ig-grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign tile_url = block.settings.link | default: profile_url
+          assign idx = forloop.index0
+        -%}
+        {%- if block.settings.image -%}
+          <li class="ig-tile" {{ block.shopify_attributes }}>
+            <a class="ig-link" href="{{ tile_url }}" target="_blank" rel="noopener">
+              {{
+                block.settings.image
+                | image_url: width: 700, height: 700, crop: 'center'
+                | image_tag:
+                  class: 'ig-img',
+                  loading: 'lazy',
+                  widths: '350, 700',
+                  alt: block.settings.image.alt
+              }}
+            </a>
+          </li>
+        {%- elsif idx < 6 -%}
+          <li class="ig-tile" {{ block.shopify_attributes }}>
+            <a class="ig-link" href="{{ tile_url }}" target="_blank" rel="noopener">
+              <picture>
+                <source type="image/webp" srcset="{{ default_assets[idx] | append: '.webp' | asset_url }}">
+                <img
+                  class="ig-img"
+                  src="{{ default_assets[idx] | append: '.jpg' | asset_url }}"
+                  alt="{{ default_alts[idx] }}"
+                  width="700"
+                  height="700"
+                  loading="lazy"
+                >
+              </picture>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    {%- comment -%}
+      Link text is the owner's, decided 2026-08-31: "עקבו אחרי האומנות שלנו" —
+      no "instagram" in the copy and no visible handle; the destination says it.
+    {%- endcomment -%}
+    <a class="ig-follow" href="{{ profile_url }}" target="_blank" rel="noopener">
+      עקבו אחרי האומנות שלנו
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista Instagram",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "להחלפת תמונה: לוחצים על אריח ברשימה משמאל ובוחרים תמונה חדשה. אריח בלי תמונה מציג את תמונת ברירת המחדל שלו."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "כותרת",
+      "default": "#florista"
+    },
+    {
+      "type": "url",
+      "id": "profile_url",
+      "label": "קישור לפרופיל האינסטגרם",
+      "info": "אם נשאר ריק: https://www.instagram.com/floristahaifa/"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "תמונה",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "תמונה (ריבועית)" },
+        { "type": "url", "id": "link", "label": "קישור (אם ריק — לפרופיל)" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Florista Instagram",
+      "blocks": [
+        { "type": "tile" }, { "type": "tile" }, { "type": "tile" },
+        { "type": "tile" }, { "type": "tile" }, { "type": "tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}

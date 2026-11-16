@@ -1,0 +1,26 @@
+{%- comment -%}
+  Brand mission — site-structure.md §8.6: "המשימה שלנו", theme "ליצור חיבורים"
+  (to create connections). Built 2026-08-20. Editorial pull-quote treatment —
+  large type, generous whitespace, no photo — so it reads as a considered
+  statement rather than another photo section right after the category tiles
+  and best sellers. No invented differentiators (years in business, counts,
+  awards) per seo-geo-haifa's honesty rule — this is a statement of purpose,
+  not a factual claim that needs sourcing.
+{%- endcomment -%}
+
+{{ 'florista-mission.css' | asset_url | stylesheet_tag }}
+
+<section class="ms-section">
+  <div class="ms-inner">
+    <p class="ms-eyebrow">המשימה שלנו</p>
+    <p class="ms-quote">פרחים הם דרך ליצור חיבור: בין אנשים, בין רגעים, בין מה שקשה לומר</p>
+    <p class="ms-quote ms-quote--accent">למה שקל להרגיש.</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista mission",
+  "presets": [{ "name": "Florista mission" }]
+}
+{% endschema %}

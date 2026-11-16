@@ -1,0 +1,184 @@
+/* ==========================================================================
+   Florista legal document — privacy policy, terms, accessibility statement.
+   docs/design-log.md, 2026-08-21.
+
+   One job: make a long Hebrew legal document readable on a phone. No hero,
+   no photography, no brand colour behind text. The only decoration is the
+   rule above each numbered section and the tinted contents card.
+
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.fl-legal {
+  background-color: var(--color-bg);
+  padding-block: var(--space-10) var(--space-16);
+}
+
+.fl-legal-inner {
+  /* --measure is ~68ch. A legal document is read line by line and nothing
+     else shares the row, so the measure IS the container here. */
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--page-inline-padding);
+}
+
+/* --------------------------------------------------------------------------
+   Head
+   -------------------------------------------------------------------------- */
+
+.fl-legal-title {
+  margin: 0;
+  font-size: var(--text-page-title);
+}
+
+.fl-legal-updated {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.fl-legal-intro {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Body — the rich text pasted into the page in the admin.
+   Every rule below is scoped to .fl-legal-body so it cannot leak into the base theme's
+   own .rte elsewhere on the site.
+   -------------------------------------------------------------------------- */
+
+.fl-legal-body {
+  margin-block-start: var(--space-10);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+}
+
+.fl-legal-body > :first-child {
+  margin-block-start: 0;
+}
+
+.fl-legal-body p {
+  margin-block: 0 var(--space-4);
+}
+
+.fl-legal-body h2 {
+  /* The rule is what separates one clause from the next when the reader is
+     scanning for "who do you give my details to". Section numbers live in
+     the content, not in a CSS counter, so a merchant editing the page in the
+     admin can see them. */
+  margin-block: var(--space-12) var(--space-4);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-border-subtle);
+  /* 20px on mobile, not 24px. --text-page-title bottoms out at 24px below ~375px, so an h2 at
+     --text-xl renders the same size as the h1 and the document title stops outranking its own
+     clauses — caught in the browser at 320px on 2026-08-21. It steps up to 24px at 768px, where
+     the h1 has reached 32px and there is room for the gap again. */
+  font-size: var(--text-lg);
+  /* Anchor jumps from the contents list must not land under the sticky header. */
+  scroll-margin-block-start: calc(var(--header-height) + var(--space-4));
+}
+
+.fl-legal-body h3 {
+  margin-block: var(--space-6) var(--space-2);
+  font-size: var(--text-md);
+  color: var(--color-wine-900);
+}
+
+.fl-legal-body ul,
+.fl-legal-body ol {
+  margin-block: 0 var(--space-4);
+  padding-inline-start: var(--space-6);
+}
+
+.fl-legal-body li {
+  margin-block-end: var(--space-2);
+}
+
+.fl-legal-body li::marker {
+  color: var(--color-sage-700);
+}
+
+.fl-legal-body a {
+  color: var(--color-action);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.fl-legal-body a:hover {
+  color: var(--color-action-hover);
+}
+
+/* Hebrew has no italic — emphasis is weight. See florista-tokens.css. */
+.fl-legal-body strong,
+.fl-legal-body b {
+  font-weight: var(--weight-heading);
+}
+
+.fl-legal-body em,
+.fl-legal-body i {
+  font-style: normal;
+  font-weight: var(--weight-ui);
+}
+
+/* --------------------------------------------------------------------------
+   Contents — an <ol class="fl-legal-toc"> authored inside the page content.
+   -------------------------------------------------------------------------- */
+
+.fl-legal-body .fl-legal-toc {
+  margin-block: 0 var(--space-8);
+  padding: var(--space-5) var(--space-6);
+  padding-inline-start: calc(var(--space-6) + var(--space-5));
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-brand-tint);
+  font-size: var(--text-sm);
+}
+
+.fl-legal-body .fl-legal-toc li {
+  margin-block-end: var(--space-1);
+}
+
+.fl-legal-body .fl-legal-toc a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.fl-legal-body .fl-legal-toc a:hover {
+  color: var(--color-action);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Contact block — a <div class="fl-legal-contact"> closing the document.
+   -------------------------------------------------------------------------- */
+
+.fl-legal-body .fl-legal-contact {
+  margin-block-start: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-subtle);
+}
+
+.fl-legal-body .fl-legal-contact p {
+  margin-block-end: var(--space-2);
+}
+
+.fl-legal-body .fl-legal-contact p:last-child {
+  margin-block-end: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .fl-legal {
+    padding-block: var(--space-12) var(--space-20);
+  }
+
+  /* No .fl-legal-title rule here on purpose — --text-page-title already clamps to 32px by this
+     width, and restating it would just duplicate the token. */
+
+  .fl-legal-body h2 {
+    font-size: var(--text-xl);
+  }
+}

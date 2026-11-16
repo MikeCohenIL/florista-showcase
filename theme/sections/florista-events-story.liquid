@@ -1,0 +1,84 @@
+{%- comment -%}
+  Events page — "מי אנחנו?" + Ludmila block. docs/design-log.md, 2026-08-23.
+
+  The copy is the old Wix /אירועים page, kept verbatim per the owner, with one
+  correction: the old site's "מתפקד על מפתן דלתכם" is a typo for "מתדפק"
+  (an event knocking at your door) and was fixed rather than reproduced.
+  Ludmila's circular photo is the old site's, bundled at its source size
+  (396×396 — displayed at 180px, comfortably sharp at 2x).
+
+  All copy is editable in the theme editor; the coded defaults carry the
+  real text so a fresh install renders complete.
+{%- endcomment -%}
+
+{{ 'florista-events.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'florista-events.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign heading = section.settings.heading | default: 'מי אנחנו?'
+  assign para_1 = section.settings.para_1 | default: 'חברת פלוריסטה היא גן עדן לאוהבי הפרחים, מעניקה מזה 25 שנים, שירותי שזירה ועיצוב סידורי פרחים מיוחדים ויפהפיים לכל מצב ואירוע.'
+  assign para_2 = section.settings.para_2 | default: 'לודמילה קיפרושקין, בעלת המותג הפרחוני, עוד כילדה נחלה בחיבה מיוחדת לאוצרות הטבע הפורחים וכשעלתה לארץ, הגשימה את חלומה ופתחה את חנות הפרחים – פלוריסטה.'
+  assign para_3 = section.settings.para_3 | default: 'פלוריסטה מעניקה שירותי עיצוב פרחים לאירועים, הכולל הן סידורי פרחים והן עיצוב עם כלים ואגרטלים ממגוון רחב, מתוך אהבה אמיתית למקצוע ורצון להעמיד סטנדרט שירות גבוה בעולם הפרחים ועיצוב האירועים. הקו המנחה את צוות השוזרות הוא מקוריות, מקצועיות ודיוק – פרחים טריים, הקשבה לצרכי הלקוח ועמידה בזמנים, הם רק חלק מהערכים המלווים את צוות פלוריסטה.'
+  assign luda_name = section.settings.luda_name | default: 'לודמילה קיפרושקין'
+  assign luda_para_1 = section.settings.luda_para_1 | default: 'אני מקבלת את בקשות הלקוחות באהבה, נהנית ליצור עבורם יצירות מפתיעות, להתאים פרח לפרח, לשלב צבעוניות מרשימה ולראות את החיוך על פניהם כשהם חוזים בתוצר הסופי.'
+  assign luda_para_2 = section.settings.luda_para_2 | default: 'אם אירוע חגיגי מתדפק על מפתן דלתכם ואתם שואפים להכניס לו צבע ורעננות – הגעתם למקום הנכון.'
+-%}
+
+<section class="fev-section fev-page">
+  <div class="fev-inner">
+    <div class="fev-measure" data-reveal>
+      <h2 class="fev-heading">{{ heading }}</h2>
+      <div class="fev-body">
+        <p>{{ para_1 }}</p>
+        <p>{{ para_2 }}</p>
+        <p>{{ para_3 }}</p>
+      </div>
+    </div>
+
+    <div class="fev-luda" data-reveal>
+      {%- if section.settings.luda_image -%}
+        {{
+          section.settings.luda_image
+          | image_url: width: 396
+          | image_tag:
+            class: 'fev-luda-photo',
+            widths: '396',
+            alt: section.settings.luda_image.alt | default: luda_name
+        }}
+      {%- else -%}
+        <picture>
+          <source type="image/webp" srcset="{{ 'events-luda.webp' | asset_url }}">
+          <img
+            class="fev-luda-photo"
+            src="{{ 'events-luda.jpg' | asset_url }}"
+            width="396" height="396"
+            loading="lazy"
+            alt="{{ luda_name }}, בעלת פלוריסטה, בחנות הפרחים">
+        </picture>
+      {%- endif -%}
+      <h3 class="fev-luda-name">{{ luda_name }}</h3>
+      <div class="fev-body fev-measure">
+        <p>{{ luda_para_1 }}</p>
+        <p>{{ luda_para_2 }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Events — who we are",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "כותרת", "default": "מי אנחנו?" },
+    { "type": "textarea", "id": "para_1", "label": "פסקה 1" },
+    { "type": "textarea", "id": "para_2", "label": "פסקה 2" },
+    { "type": "textarea", "id": "para_3", "label": "פסקה 3" },
+    { "type": "image_picker", "id": "luda_image", "label": "תמונת לודמילה (ברירת מחדל: התמונה מהאתר הישן)" },
+    { "type": "text", "id": "luda_name", "label": "שם", "default": "לודמילה קיפרושקין" },
+    { "type": "textarea", "id": "luda_para_1", "label": "לודמילה — פסקה 1" },
+    { "type": "textarea", "id": "luda_para_2", "label": "לודמילה — פסקה 2" }
+  ],
+  "presets": [{ "name": "Events — who we are" }]
+}
+{% endschema %}

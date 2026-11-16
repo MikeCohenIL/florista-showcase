@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Florista mission — docs/design-log.md, 2026-08-20.
+   NO PHYSICAL PROPERTIES — inline-start/end and block-start/end only.
+   ========================================================================== */
+
+.ms-section {
+  background-color: var(--color-bg-warm);
+  padding-block: var(--space-16);
+}
+
+.ms-inner {
+  max-inline-size: 26ch;
+  margin-inline: auto;
+  padding-inline: var(--page-inline-padding);
+  text-align: center;
+}
+
+.ms-eyebrow {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.ms-quote {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  font-weight: var(--weight-heading);
+  color: var(--color-text);
+}
+
+.ms-quote--accent {
+  color: var(--color-action);
+}
+
+@media screen and (min-width: 768px) {
+  .ms-inner {
+    max-inline-size: 48ch;
+  }
+
+  .ms-quote {
+    font-size: var(--text-2xl);
+  }
+}

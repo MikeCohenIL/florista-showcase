@@ -1,0 +1,185 @@
+{%- comment -%}
+  Florista homepage hero — restyled 2026-08-20 as part of the boho-boutique homepage pass.
+
+  The blurred glass panel from the first build is gone. The owner called the site's look generic —
+  "very AI" — and a floating frosted-glass card over a photo is exactly the kind of default the
+  frontend-design skill names as a templated AI tell. This version puts the title and CTA
+  straight on the photo, editorial-style (reference: examples/ screenshots, an UrbanStems hero —
+  large serif-scale type directly on a lifestyle photo, a bottom gradient, no card). Heebo has no
+  serif cut and stays the only typeface per CLAUDE.md (Hebrew glyph coverage is an engineering
+  constraint, not a style choice available to revisit here) — the editorial feel comes from scale,
+  weight and a tracked micro-label instead, not a family swap.
+
+  Full-bleed, full-screen (min-block-size: 100svh below the sticky header). Content sits on the
+  physical right — inline-START on this permanently-RTL site — in logical properties throughout.
+
+  Source photo swapped 2026-08-21 (`iimages to use/Beach picnic.jpg`, 2752×1536): golden-hour
+  beach, wine and grapes on a blanket beside an oversized bouquet — picked because it directly
+  parallels the urbanstems.com reference the owner gave (their own hero is beach + wine + flowers), and
+  because it's native landscape so it needs far less crop distortion than the portrait "woman on a
+  street" alternative did. No people in frame, unlike that alternative — sidesteps any likeness
+  question for a stock/AI-sourced photo entirely. Derivatives: `hero-beach-{640,960,1280,1920}.
+  {jpg,webp}`.
+
+  Second pass, same day, the owner's direct feedback: the eyebrow label is gone (was "חיפה · נווה שאנן"
+  — that address-level detail already lives in the footer and the SEO section; the hero doesn't
+  need to repeat it), content moved from bottom-anchored to vertical-center (was glued to the
+  very bottom edge, which read as an afterthought), and the CTA is now solid wine fill instead of
+  a white pill — the white pill's problem wasn't the treatment in the abstract, it was contrast:
+  against this photo's light sand it nearly disappeared, where a saturated wine pill holds up
+  against sand, water and photo alike. The scrim was widened to match — content sitting at the
+  vertical center needs coverage well past the old 62%-up cutoff, not just the bottom sliver.
+
+  Third pass, same day: The owner asked for the eyebrow gone (the pass above had already removed it in
+  the shared checkout, but not in the branch his preview was serving) and for the copy to lean
+  summer. The headline the second pass landed on — "קיץ פורח" — was summery, but it stripped the
+  page's only h1 of both flowers and Haifa, and per CLAUDE.md the homepage *is* the Haifa page.
+  So the season stays and the place comes back: "קיץ פורח בחיפה". `פורח` carries the פרח root, so
+  the h1 signals bloom, season and city in three short words without reading as a keyword list,
+  and the h2 in florista-seo-copy still holds the literal "פרחים בחיפה" query.
+
+  A supporting line was added under it rather than lengthening the h1 further. It carries the two
+  things the photo cannot say — that these are summer flowers, and that they arrive today — and it
+  lets the h1 stay short enough to hold display scale at 320px. Both strings are section settings
+  with the coded copy as the fallback, per the standing editable-content split.
+
+  Rosh Hashana 2026 skin, 2026-08-25, designed with the owner. Photo swapped to his
+  `Hero_RoshHasanda_2026.jpg` (source preserved as `docs/brand/photography/hero-rosh-hashana-2026.
+  jpg`, 5504×3072): a holiday table — bouquet, pomegranates and a honey jar in focus, family
+  blurred behind, calm warm wall on the physical right. Same geometry as the beach photo (subject
+  left, quiet space right), so the existing crop biases carry over. Headline is the classic
+  "שנה טובה ומתוקה" (his longer greeting wrapped to three display lines at 375px, so it moved to
+  the supporting line, corrected from ולמשפחתם to ולמשפחתכם — second person). CTA goes honey-gold
+  via the `festive` setting — the owner asked for a חגיגי colour; honey echoes the jar in frame and
+  the שנה מתוקה wish, and stays distinct from the warning amber (see tokens). CTA target is
+  `/collections/rosh-hashana` — the collection is being created separately; the link 404s until
+  it exists, acceptable only while the store is password-protected.
+
+  Photo swapped again 2026-08-26 to the owner's `Hero_Rosh_Hasana New.png` (source preserved as
+  `docs/brand/photography/hero-rosh-hashana-2026-v2.png`, 1088×608): a livelier take on the same
+  table — three generations laughing, round challah, kiddush cup, pomegranates and honey, bouquet
+  sharp front-left, same quiet wall on the physical right, so both crop biases carry over again.
+  The source was native 1088px wide; on 2026-08-26 it was upscaled 4× with Real-ESRGAN
+  (realesrgan-x4plus) at the owner's request and the ladder regenerated from that master —
+  `hero-rosh2-{640,960,1280,1920,2560}.{jpg,webp}`, 4K master archived as
+  `docs/brand/photography/hero-rosh-hashana-2026-v2-4k.jpg` (3840×2146). Faces are slightly
+  painterly at 100% crop but sit in the photo's own soft-focus zone. Previous derivatives
+  `hero-rosh-*` stay in assets for revert.
+
+  2026-09-12: the <picture> moved out to snippets/florista-hero-image.liquid so the layout can
+  preload the same image in <head> (Lighthouse mobile: LCP 3.4 s, 70% of it discovery delay).
+  The image is now a theme setting with the committed seasonal ladder as fallback — weekly
+  promotion swaps happen in the editor, not in this file.
+
+  Fall 2026 skin, 2026-09-23, from the owner's reference (eyebrow / headline / one line / button,
+  "well adjusted to Hebrew"). Fallback ladder is now hero-fall-* (bouquet, floral vase and a
+  steaming tea on a wooden table — subject left, calm wall right, so both crop biases carry
+  over again). Two schema changes: an optional eyebrow label above the headline, hidden when
+  blank; and the `festive` checkbox became a `cta_skin` select — wine / honey (חגים) / cinnamon
+  (סתיו) — because a checkbox cannot hold a third colour. CTA points at /collections/fall, a
+  collection that is being created next; the link 404s until it exists. That target lives in
+  the Liquid `default:` and in index.json only: Shopify rejects a `url` setting whose schema
+  default is a store-specific path ("default must be a string or datasource access path" —
+  the upload fails and the dev server serves 500), so the schema default stays /collections/all.
+{%- endcomment -%}
+
+{{ 'florista-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign title = section.settings.title | default: 'סתיו פורח בפלוריסטה'
+  assign subtitle = section.settings.subtitle | default: 'זרים חדשים בגוונים החמים של העונה'
+  assign cta_label = section.settings.cta_label | default: 'לזרי הסתיו'
+  assign cta_url = section.settings.cta_url | default: '/collections/fall'
+  assign cta_skin = section.settings.cta_skin | default: 'fall'
+-%}
+
+<section class="hero-full">
+  {%- comment -%}
+    The photo, its srcset ladder and its alt live in snippets/florista-hero-image.liquid and
+    are chosen in theme settings ("פלוריסטה — באנר ראשי"), not here: the same snippet emits a
+    <link rel="preload"> for this exact image in <head>, which a section cannot reach. Changing
+    the image anywhere but there silently breaks the preload. 2026-09-12.
+  {%- endcomment -%}
+  {%- render 'florista-hero-image', mode: 'picture' -%}
+
+  {%- comment -%}
+    No scrim since 2026-09-23. The owner, comparing the page with his original: "i hate the fact
+    you make it darker". The photo shows at full brightness; legibility comes from WHERE the
+    text sits (over the bright empty wall) and from ink-coloured type, not from shading.
+  {%- endcomment -%}
+
+  <div class="hero-content">
+    {%- comment -%}
+      h2, not h1: the hero headline is seasonal/editable, while the homepage's
+      one h1 is the head term in the SEO copy section (seo-geo-haifa — the
+      homepage owns פרחים בחיפה, and the crawlable heading must not rotate
+      away with a campaign). Styling is class-based, so the tag carries no
+      visual change at all.
+    {%- endcomment -%}
+    {%- if eyebrow != blank -%}
+      <p class="hero-eyebrow">{{ eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="hero-title">{{ title }}</h2>
+    {%- if subtitle != blank -%}
+      <p class="hero-subtitle">{{ subtitle }}</p>
+    {%- endif -%}
+    <a class="hero-cta{% if cta_skin == 'festive' %} hero-cta--festive{% elsif cta_skin == 'fall' %} hero-cta--fall{% endif %}" href="{{ cta_url }}">{{ cta_label }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista hero",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "התמונה נבחרת בהגדרות ערכת העיצוב ← «פלוריסטה — באנר ראשי», כדי שהדפדפן יטען אותה ראשונה."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "תווית קטנה מעל הכותרת",
+      "info": "שורה קצרה, למשל שם הקמפיין. ריק = בלי תווית.",
+      "default": "קולקציית סתיו חדשה"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "כותרת",
+      "default": "סתיו פורח בפלוריסטה"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "כותרת משנה",
+      "default": "זרים חדשים בגוונים החמים של העונה"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "טקסט הכפתור",
+      "default": "לזרי הסתיו"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "קישור הכפתור",
+      "default": "/collections/all"
+    },
+    {
+      "type": "select",
+      "id": "cta_skin",
+      "label": "צבע הכפתור",
+      "info": "צבע עונתי לכפתור. יין הוא צבע המותג הרגיל.",
+      "options": [
+        { "value": "default", "label": "יין (רגיל)" },
+        { "value": "festive", "label": "זהב־דבש (חגים)" },
+        { "value": "fall", "label": "קינמון (סתיו)" }
+      ],
+      "default": "fall"
+    }
+  ],
+  "presets": [{ "name": "Florista hero" }]
+}
+{% endschema %}

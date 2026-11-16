@@ -1,0 +1,236 @@
+{%- comment -%}
+  Florista footer — decided with the owner on 2026-08-20, see docs/design-log.md.
+  Revised 2026-08-21: logo moved to the foot of the footer and centred, newsletter sign-up added,
+  and the delivery-areas column removed — all three asked for by the owner directly. The seven cities
+  are still edited in theme settings (`delivery_areas`); the /pages/delivery link in the shop
+  column is now the only footer route to them.
+
+  Contact-first flat stack, chosen over a nav-first order and an accordion: flowers are an
+  urgency purchase, so "can I reach you, are you open" has to be readable without a tap. Order,
+  mobile:
+
+    1. Contact + hours       — phone (tap-to-call), email, address, two FIXED hour lines.
+                                Never "open now": the Friday/erev-chag close is a moving target
+                                and a computed line would be wrong the moment it drifts, same
+                                reasoning as the announcement bar's cutoff text.
+    2. Shop links            — the header's five categories, PLUS the four info links
+                                (delivery/about/blog/privacy) that live in the header's mobile
+                                drawer only. That drawer disappears at 768px, so above that width
+                                this is currently the ONLY path to those pages — not decoration.
+    3. Newsletter            — one email field and one button. Last of the three blocks because
+                                it is the only one asking the customer for something rather than
+                                giving them something.
+    4. Wordmark + tagline    — the header carries the mark only; the wordmark lives here. It sat
+                                at the top of the stack until 2026-08-21; it now closes the
+                                footer, centred and full-width, so the page signs off with the
+                                brand instead of opening a utility block with it.
+    5. Bottom bar            — copyright, centred under the centred wordmark.
+
+  Desktop: the three utility blocks become one row of columns — contact · links · newsletter —
+  with the wordmark spanning the full width beneath them. No accordion, nothing hidden.
+
+  Background is the subtle surface token, not wine. "The flowers are the colour, the interface
+  is not" (florista-tokens.css) — a full-bleed brand-colour footer is exactly the large-background
+  use the token file rules out; wine stays reserved for the links, icons and the sign-up button.
+
+  Top edge (added 2026-08-25, from a reference the owner brought): the hard border became an organic
+  two-layer "hills" divider. The front layer is the footer's own sand, so the shape flows into
+  the body with no seam; the back layer is the same sand at partial opacity, which over the
+  ivory page ground reads as a paler dune behind it. The sky between the hills is transparent —
+  whatever section sits above shows through, so the divider works on any page.
+{%- endcomment -%}
+
+{{ 'florista-footer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # Same menu + same five-collection fallback as the header, so the two surfaces cannot drift
+  # apart. See florista-header.liquid for why the fallback exists at all.
+  assign menu = linklists[section.settings.menu]
+  assign titles = ''
+  assign urls = ''
+
+  if menu.links.size > 0
+    for link in menu.links
+      # Dropdown groups (a parent whose link is '#', e.g. «מוצרים נלווים») stay out of the
+      # footer: The owner's call, 2026-08-29 — the footer lists pages, not the nav's fold-out
+      # structure, and a '#' link here would go nowhere.
+      if link.url == '#'
+        continue
+      endif
+      assign titles = titles | append: link.title | append: '|'
+      assign urls = urls | append: link.url | append: '|'
+    endfor
+  else
+    assign titles = 'זרי פרחים|סידורים בקופסה|סידורים בסלסלה|צמחים|זרי כלה|חתונות|'
+    assign urls = '/collections/bouquets|/collections/box-arrangements|/collections/basket-arrangements|/collections/plants|/pages/bridal|/pages/weddings|'
+  endif
+
+  # The info pages the header's mobile drawer carries but desktop cannot reach at all.
+  # Fixed, not menu-driven — see the comment block above. The privacy policy joins them last
+  # (added 2026-08-22, asked for by the owner): it is the one link here nobody browses to, so it sits
+  # at the end of the list where a reader looks for it rather than competing with the shop links.
+  # Since 2026-09-05 it points at Shopify's own policy slot, /policies/privacy-policy — the owner
+  # wants ONE policy page on the site, and that is the one checkout and the cookie banner link
+  # to. The theme page /pages/privacy-policy is deleted and redirects there.
+  # The terms of use (2026-09-10) live in the same slot, /policies/terms-of-service, for the same
+  # reason: checkout links the terms from there, and the owner wants each policy in exactly one place.
+  # The cancellations-and-returns policy (2026-09-12) sits between them: /policies/refund-policy
+  # existed since 2026-09-10 but nothing on the site linked it, and Google's listing rules want
+  # the return policy reachable from the store. Its display name is the owner's, not Shopify's fixed
+  # "מדיניות החזרים כספיים" — theme.liquid retitles that page to match.
+  assign titles = titles | append: 'משלוחים|אודותינו|בלוג|תנאי שימוש|מדיניות הביטולים וההחזרות|מדיניות פרטיות'
+  assign urls = urls | append: '/pages/delivery|/pages/about|/blogs/flora|/policies/terms-of-service|/policies/refund-policy|/policies/privacy-policy'
+
+  assign titles = titles | split: '|'
+  assign urls = urls | split: '|'
+
+  assign phone_display = settings.phone_display | default: '054-2270287'
+  assign phone_e164 = settings.phone_e164 | default: '+972542270287'
+  assign email = settings.email | default: 'floristahaifa@gmail.com'
+  assign address = settings.address | default: 'חניתה 34, נווה שאנן, חיפה'
+  assign hours_weekday = settings.hours_weekday | default: 'ראשון–חמישי: 08:00–20:00'
+  assign hours_friday = settings.hours_friday | default: 'שישי וערבי חג: 08:00 עד 30 דק׳ לפני כניסת השבת'
+  assign news_placeholder = section.settings.newsletter_placeholder | default: 'הירשמו לניוזלטר שלנו לקבלת מבצעים'
+  assign news_button = section.settings.newsletter_button | default: 'הרשמה'
+  assign news_success = section.settings.newsletter_success | default: 'תודה! נרשמתם לניוזלטר.'
+  assign news_id = 'ff-newsletter-' | append: section.id
+-%}
+
+<footer class="ff-footer">
+  <div class="ff-ground">
+  <div class="ff-inner">
+    <div class="ff-contact">
+      <a class="ff-contact-line ff-contact-link" href="tel:{{ phone_e164 }}">
+        {%- render 'icon-phone' -%}
+        <span dir="ltr">{{ phone_display }}</span>
+      </a>
+      <a class="ff-contact-line ff-contact-link" href="mailto:{{ email }}">
+        {%- render 'icon-mail' -%}
+        <span dir="ltr">{{ email }}</span>
+      </a>
+      <p class="ff-contact-line">
+        {%- render 'icon-pin' -%}
+        <span>{{ address }}</span>
+      </p>
+      <p class="ff-contact-line ff-hours">
+        {%- render 'icon-clock' -%}
+        <span>{{ hours_weekday }}<br>{{ hours_friday }}</span>
+      </p>
+    </div>
+
+    <nav class="ff-links" aria-label="ניווט בפוטר">
+      <ul class="ff-links-list">
+        {%- for url in urls -%}
+          <li>
+            <a class="ff-links-link" href="{{ url }}"{% if request.path == url %} aria-current="page"{% endif %}>
+              {{ titles[forloop.index0] }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="ff-newsletter">
+      {%- comment -%}
+        Shopify's own customer form: an accepted submission creates a customer tagged
+        `newsletter`, which is what every email app on the store reads. No third-party embed,
+        no JS — the field works with the tab key and with scripting off.
+
+        The placeholder is the only visible prompt, so the <label> is real and visually hidden
+        rather than dropped: a placeholder disappears the moment the field is typed into, and a
+        screen reader gets nothing from it at all.
+      {%- endcomment -%}
+      {%- form 'customer', class: 'ff-newsletter-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label class="ff-sr-only" for="{{ news_id }}">{{ news_placeholder }}</label>
+
+        <div class="ff-newsletter-field">
+          <input
+            id="{{ news_id }}"
+            class="ff-newsletter-input"
+            type="email"
+            name="contact[email]"
+            placeholder="{{ news_placeholder }}"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="{{ news_id }}-error"
+            {% endif %}
+          >
+          <button class="ff-newsletter-submit" type="submit" name="commit">{{ news_button }}</button>
+        </div>
+
+        {%- if form.errors -%}
+          <p class="ff-newsletter-message ff-newsletter-error" id="{{ news_id }}-error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+          </p>
+        {%- elsif form.posted_successfully? -%}
+          <p class="ff-newsletter-message ff-newsletter-success" role="status">{{ news_success }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+
+  <div class="ff-brand">
+    <img
+      class="ff-logo"
+      src="{{ 'florista-logo-horizontal-rtl.svg' | asset_url }}"
+      alt="פלוריסטה"
+      width="160"
+      height="55"
+      loading="lazy"
+    >
+    <p class="ff-tagline">חנות פרחים בחיפה</p>
+  </div>
+
+  <div class="ff-bottom">
+    {%- comment -%}
+      dir="ltr" is load-bearing, same reasoning as the header's phone number: an RTL paragraph
+      reorders "© 2026 florista" into "florista 2026 ©" because the brand name is the only
+      strongly-directional run in the line.
+    {%- endcomment -%}
+    <p dir="ltr">© {{ 'now' | date: '%Y' }} florista</p>
+  </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Florista footer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "תפריט קטגוריות",
+      "default": "main-menu",
+      "info": "אותו תפריט כמו בכותרת. אם ריק, יוצגו חמש הקטגוריות כברירת מחדל. ארבעת קישורי המידע (משלוחים/אודותינו/בלוג/מדיניות פרטיות) קבועים ומתווספים תמיד."
+    },
+    {
+      "type": "header",
+      "content": "ניוזלטר"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "טקסט מציין מקום בשדה המייל",
+      "default": "הירשמו לניוזלטר שלנו לקבלת מבצעים"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "טקסט הכפתור",
+      "default": "הרשמה"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "הודעה לאחר הרשמה מוצלחת",
+      "default": "תודה! נרשמתם לניוזלטר."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,2560 @@
+{
+ "source": "hebcal.com (Israel mode) + fixed retail dates; see docs/tools/gen-holidays.py",
+ "verified_by": "docs/tools/check-holidays.py — independent re-derivation, run it after regenerating",
+ "range": {
+  "from": 2026,
+  "to": 2036
+ },
+ "kinds": {
+  "yomtov": "חג (שבתון)",
+  "erev": "ערב חג",
+  "cholhamoed": "חול המועד",
+  "memorial": "יום זיכרון",
+  "atzmaut": "יום העצמאות",
+  "retail": "יום שיא מכירות",
+  "review": "לא מסווג — לבדוק"
+ },
+ "days": [
+  {
+   "date": "2026-02-02",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2026-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2026-02-17",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-03-03",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2026-04-01",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2026-04-02",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2026-04-03",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2026-04-04",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2026-04-05",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2026-04-06",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2026-04-07",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-04-08",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2026-04-14",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-04-21",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-04-22",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2026-05-21",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2026-05-22",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2026-07-29",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2026-09-11",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2026-09-12",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5787",
+   "name_en": "Rosh Hashana 5787",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2026-09-13",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2026-09-20",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2026-09-21",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2026-09-25",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2026-09-26",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2026-09-27",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2026-09-28",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2026-09-29",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2026-09-30",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2026-10-01",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2026-10-02",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2026-10-03",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2027-01-23",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2027-02-07",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2027-03-23",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2027-04-21",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2027-04-22",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2027-04-23",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2027-04-24",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2027-04-25",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-04-26",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2027-04-27",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2027-04-28",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2027-05-04",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2027-05-11",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2027-05-12",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2027-06-10",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2027-06-11",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2027-08-18",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2027-10-01",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2027-10-02",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5788",
+   "name_en": "Rosh Hashana 5788",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2027-10-03",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-10-10",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-10-11",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2027-10-15",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2027-10-16",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2027-10-17",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2027-10-18",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2027-10-19",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2027-10-20",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2027-10-21",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2027-10-22",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2027-10-23",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2028-02-12",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2028-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-02-27",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2028-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-03-12",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2028-04-10",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-04-11",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2028-04-12",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-04-13",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2028-04-14",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2028-04-15",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2028-04-16",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2028-04-17",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-04-24",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-05-01",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-05-02",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2028-05-30",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2028-05-31",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-08-07",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-09-20",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-09-21",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5789",
+   "name_en": "Rosh Hashana 5789",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2028-09-22",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2028-09-29",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2028-09-30",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2028-10-04",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-10-05",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2028-10-06",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2028-10-07",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2028-10-08",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2028-10-09",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2028-10-10",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2028-10-11",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2028-10-12",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-01-31",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-02-15",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-03-01",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-03-30",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2029-03-31",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2029-04-01",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2029-04-02",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2029-04-03",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2029-04-04",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-04-05",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-04-06",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2029-04-12",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-04-18",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-04-19",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-05-19",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2029-05-20",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2029-07-27",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2029-09-09",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2029-09-10",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5790",
+   "name_en": "Rosh Hashana 5790",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2029-09-11",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2029-09-18",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2029-09-19",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-09-23",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2029-09-24",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2029-09-25",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2029-09-26",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2029-09-27",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2029-09-28",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2029-09-29",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2029-09-30",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2029-10-01",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2030-01-19",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2030-02-03",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2030-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2030-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-03-19",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2030-04-17",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2030-04-18",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2030-04-19",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-04-20",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2030-04-21",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2030-04-22",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2030-04-23",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2030-04-24",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2030-04-30",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2030-05-07",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2030-05-08",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2030-06-06",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2030-06-07",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-08-14",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2030-09-27",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-09-28",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5791",
+   "name_en": "Rosh Hashana 5791",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2030-09-29",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2030-10-06",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2030-10-07",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2030-10-11",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-10-12",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2030-10-13",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2030-10-14",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2030-10-15",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2030-10-16",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2030-10-17",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2030-10-18",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2030-10-19",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-02-08",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2031-02-23",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2031-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-03-09",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2031-04-07",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-04-08",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2031-04-09",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2031-04-10",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2031-04-11",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2031-04-12",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-04-13",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2031-04-14",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-04-21",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-04-28",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-04-29",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2031-05-27",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2031-05-28",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2031-08-04",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-09-17",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2031-09-18",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5792",
+   "name_en": "Rosh Hashana 5792",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2031-09-19",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2031-09-26",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2031-09-27",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-10-01",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2031-10-02",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2031-10-03",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2031-10-04",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2031-10-05",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2031-10-06",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2031-10-07",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2031-10-08",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2031-10-09",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-01-28",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2032-02-12",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2032-02-26",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2032-03-26",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2032-03-27",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2032-03-28",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2032-03-29",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2032-03-30",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2032-03-31",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2032-04-01",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-04-02",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2032-04-08",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-04-14",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2032-04-15",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-05-15",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2032-05-16",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2032-07-23",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2032-09-05",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2032-09-06",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5793",
+   "name_en": "Rosh Hashana 5793",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2032-09-07",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2032-09-14",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2032-09-15",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2032-09-19",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2032-09-20",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2032-09-21",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2032-09-22",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2032-09-23",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2032-09-24",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2032-09-25",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2032-09-26",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2032-09-27",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2033-01-15",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2033-01-30",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2033-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2033-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-03-15",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-04-13",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2033-04-14",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2033-04-15",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2033-04-16",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2033-04-17",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2033-04-18",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2033-04-19",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-04-20",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2033-04-26",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-05-03",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-05-04",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2033-06-02",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2033-06-03",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2033-08-10",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2033-09-23",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2033-09-24",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5794",
+   "name_en": "Rosh Hashana 5794",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2033-09-25",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2033-10-02",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2033-10-03",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2033-10-07",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2033-10-08",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2033-10-09",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2033-10-10",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2033-10-11",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2033-10-12",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2033-10-13",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2033-10-14",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2033-10-15",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2034-02-04",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2034-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2034-02-19",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2034-03-05",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2034-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-04-03",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-04-04",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2034-04-05",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-04-06",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2034-04-07",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2034-04-08",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2034-04-09",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2034-04-10",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-04-17",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-04-24",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-04-25",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2034-05-23",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2034-05-24",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-07-31",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-09-13",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-09-14",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5795",
+   "name_en": "Rosh Hashana 5795",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2034-09-15",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2034-09-22",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2034-09-23",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2034-09-27",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-09-28",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2034-09-29",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2034-09-30",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2034-10-01",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2034-10-02",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2034-10-03",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2034-10-04",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2034-10-05",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-01-25",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-02-09",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2035-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-03-25",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2035-04-23",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-04-24",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2035-04-25",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-04-26",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-04-27",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2035-04-28",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2035-04-29",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2035-04-30",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-05-07",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-05-14",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-05-15",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2035-06-12",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2035-06-13",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-08-20",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-10-03",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-10-04",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5796",
+   "name_en": "Rosh Hashana 5796",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-10-05",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2035-10-12",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2035-10-13",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2035-10-17",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-10-18",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2035-10-19",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2035-10-20",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2035-10-21",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2035-10-22",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2035-10-23",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2035-10-24",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2035-10-25",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-02-13",
+   "kind": "retail",
+   "name_he": "ט״ו בשבט",
+   "name_en": "Tu BiShvat",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2036-02-14",
+   "name_he": "ולנטיין",
+   "name_en": "Valentine's Day",
+   "kind": "retail",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-02-28",
+   "kind": "retail",
+   "name_he": "יום המשפחה",
+   "name_en": "Family Day",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-03-08",
+   "name_he": "יום האישה",
+   "name_en": "International Women's Day",
+   "kind": "retail",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2036-03-13",
+   "kind": "retail",
+   "name_he": "פורים",
+   "name_en": "Purim",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-04-11",
+   "kind": "erev",
+   "name_he": "ערב פסח",
+   "name_en": "Erev Pesach",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2036-04-12",
+   "kind": "yomtov",
+   "name_he": "פסח א׳",
+   "name_en": "Pesach I",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2036-04-13",
+   "kind": "cholhamoed",
+   "name_he": "פסח ב׳ (חוה״מ)",
+   "name_en": "Pesach II (CH’’M)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2036-04-14",
+   "kind": "cholhamoed",
+   "name_he": "פסח ג׳ (חוה״מ)",
+   "name_en": "Pesach III (CH’’M)",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2036-04-15",
+   "kind": "cholhamoed",
+   "name_he": "פסח ד׳ (חוה״מ)",
+   "name_en": "Pesach IV (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2036-04-16",
+   "kind": "cholhamoed",
+   "name_he": "פסח ה׳ (חוה״מ)",
+   "name_en": "Pesach V (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2036-04-17",
+   "kind": "cholhamoed",
+   "name_he": "פסח ו׳ (חוה״מ)",
+   "name_en": "Pesach VI (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-04-18",
+   "kind": "yomtov",
+   "name_he": "פסח ז׳",
+   "name_en": "Pesach VII",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2036-04-24",
+   "kind": "memorial",
+   "name_he": "יום השואה",
+   "name_en": "Yom HaShoah",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-04-30",
+   "kind": "memorial",
+   "name_he": "יום הזכרון",
+   "name_en": "Yom HaZikaron",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2036-05-01",
+   "kind": "atzmaut",
+   "name_he": "יום העצמאות",
+   "name_en": "Yom HaAtzma’ut",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-05-31",
+   "kind": "erev",
+   "name_he": "ערב שבועות",
+   "name_en": "Erev Shavuot",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2036-06-01",
+   "kind": "yomtov",
+   "name_he": "שבועות",
+   "name_en": "Shavuot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2036-08-08",
+   "kind": "retail",
+   "name_he": "ט״ו באב",
+   "name_en": "Tu B’Av",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2036-09-21",
+   "kind": "erev",
+   "name_he": "ערב ראש השנה",
+   "name_en": "Erev Rosh Hashana",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2036-09-22",
+   "kind": "yomtov",
+   "name_he": "ראש השנה 5797",
+   "name_en": "Rosh Hashana 5797",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2036-09-23",
+   "kind": "yomtov",
+   "name_he": "ראש השנה ב׳",
+   "name_en": "Rosh Hashana II",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2036-09-30",
+   "kind": "erev",
+   "name_he": "ערב יום כיפור",
+   "name_en": "Erev Yom Kippur",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2036-10-01",
+   "kind": "yomtov",
+   "name_he": "יום כיפור",
+   "name_en": "Yom Kippur",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2036-10-05",
+   "kind": "erev",
+   "name_he": "ערב סוכות",
+   "name_en": "Erev Sukkot",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2036-10-06",
+   "kind": "yomtov",
+   "name_he": "סוכות א׳",
+   "name_en": "Sukkot I",
+   "weekday_he": "שני"
+  },
+  {
+   "date": "2036-10-07",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ב׳ (חוה״מ)",
+   "name_en": "Sukkot II (CH’’M)",
+   "weekday_he": "שלישי"
+  },
+  {
+   "date": "2036-10-08",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ג׳ (חוה״מ)",
+   "name_en": "Sukkot III (CH’’M)",
+   "weekday_he": "רביעי"
+  },
+  {
+   "date": "2036-10-09",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ד׳ (חוה״מ)",
+   "name_en": "Sukkot IV (CH’’M)",
+   "weekday_he": "חמישי"
+  },
+  {
+   "date": "2036-10-10",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ה׳ (חוה״מ)",
+   "name_en": "Sukkot V (CH’’M)",
+   "weekday_he": "שישי"
+  },
+  {
+   "date": "2036-10-11",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ו׳ (חוה״מ)",
+   "name_en": "Sukkot VI (CH’’M)",
+   "weekday_he": "שבת"
+  },
+  {
+   "date": "2036-10-12",
+   "kind": "cholhamoed",
+   "name_he": "סוכות ז׳ (הושענא רבה)",
+   "name_en": "Sukkot VII (Hoshana Raba)",
+   "weekday_he": "ראשון"
+  },
+  {
+   "date": "2036-10-13",
+   "kind": "yomtov",
+   "name_he": "שמיני עצרת",
+   "name_en": "Shmini Atzeret",
+   "weekday_he": "שני"
+  }
+ ]
+}

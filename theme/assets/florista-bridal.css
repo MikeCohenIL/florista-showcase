@@ -1,0 +1,350 @@
+/* florista-bridal.css — זרי כלה album chapters (fba-).
+   Stacking model: every .fba-chapter is a 230svh wrapper whose panel pins
+   below the sticky header for ~130svh of scroll; the -100svh end margin makes
+   the NEXT chapter enter during the pin, sliding over it like an album page.
+   z-index per chapter is inline in the section (1…12, all below the header's
+   20). The reveal-hidden state is gated on .fba-js so no-JS renders visible. */
+
+.fba-album {
+  background: var(--color-bg);
+}
+
+.fba-chapter {
+  position: relative;
+  height: 230vh;
+  height: 230svh;
+  margin-block-end: -100vh;
+  margin-block-end: -100svh;
+}
+
+.fba-panel {
+  position: sticky;
+  top: var(--header-height, 72px);
+  height: calc(100vh - var(--header-height, 72px));
+  height: calc(100svh - var(--header-height, 72px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding-inline: var(--space-6);
+  overflow: hidden;
+  text-align: center;
+  background: var(--color-bg);
+  /* the page-turn edge: a soft shadow above the incoming panel */
+  box-shadow: 0 -24px 48px rgb(0 0 0 / 0.08);
+}
+
+/* ---- hero chapter ---- */
+
+.fba-kicker {
+  margin: 0;
+  color: var(--color-sage-700);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-ui);
+  letter-spacing: 0.08em;
+}
+
+.fba-title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-display);
+  font-weight: var(--weight-heading);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-heading);
+}
+
+.fba-lead {
+  margin: 0;
+  max-inline-size: 36ch;
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+/* scroll cue: a chevron that breathes downward */
+.fba-cue {
+  display: block;
+  inline-size: 14px;
+  block-size: 14px;
+  margin-block-start: var(--space-6);
+  /* inline-START is the right edge in RTL; right+bottom borders rotated 45°
+     point down. (inline-end made it point left — caught in QA.) */
+  border-inline-start: 2px solid var(--color-sage-500);
+  border-block-end: 2px solid var(--color-sage-500);
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fba-cue {
+    animation: fba-cue 1.8s ease-in-out infinite;
+  }
+
+  @keyframes fba-cue {
+    0%,
+    100% {
+      transform: rotate(45deg) translate(0, 0);
+      opacity: 1;
+    }
+    50% {
+      transform: rotate(45deg) translate(6px, 6px);
+      opacity: 0.4;
+    }
+  }
+}
+
+/* ---- bouquet chapters ---- */
+
+.fba-figure {
+  margin: 0;
+  inline-size: min(88vw, 52vh);
+  inline-size: min(88vw, 52svh);
+}
+
+.fba-figure img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-xl);
+}
+
+.fba-count {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.fba-name {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+}
+
+/* the thin sage rule under the name — draws in with the reveal */
+.fba-name::after {
+  content: '';
+  display: block;
+  inline-size: 4rem;
+  block-size: 2px;
+  margin-block-start: var(--space-3);
+  margin-inline: auto;
+  background: var(--color-sage-500);
+}
+
+.fba-line {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+/* ---- reveal (JS adds .fba-js on the album, .is-in on pinned panels) ---- */
+
+.fba-js .fba-text > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fba-js .fba-text > *:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.fba-js .fba-text > *:nth-child(3) {
+  transition-delay: 0.24s;
+}
+
+.fba-js .fba-name::after {
+  transform: scaleX(0);
+  transition: transform 0.5s ease 0.35s;
+}
+
+.fba-js .fba-panel.is-in .fba-text > * {
+  opacity: 1;
+  transform: none;
+}
+
+.fba-js .fba-panel.is-in .fba-name::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fba-js .fba-text > *,
+  .fba-js .fba-name::after {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- the covered page recedes slightly (scroll-driven, enhancement only) ---- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fba-chapter {
+      view-timeline: --fba-ch block;
+    }
+
+    .fba-panel {
+      animation: fba-recede linear both;
+      animation-timeline: --fba-ch;
+      animation-range: exit-crossing 10% exit-crossing 90%;
+    }
+
+    @keyframes fba-recede {
+      to {
+        transform: scale(0.95);
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+/* ---- closing consultation panel ---- */
+
+.fba-cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* full 100svh, not minus the header: the panel must consume the whole
+     -100svh overlap of the last chapter, or its pinned ivory panel shows
+     as a pale strip above the footer (visible once the wave was cut) */
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--space-16) var(--space-6);
+  background: var(--color-bg-subtle);
+  box-shadow: 0 -24px 48px rgb(0 0 0 / 0.08);
+  text-align: center;
+}
+
+.fba-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-inline-size: 52rem;
+}
+
+.fba-cta-heading {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-page-title);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-heading);
+}
+
+.fba-cta-sub {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+}
+
+.fba-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-2);
+}
+
+.fba-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-md);
+  font-weight: var(--weight-ui);
+  text-decoration: none;
+}
+
+.fba-btn--solid {
+  background: var(--color-action-buy);
+  color: var(--color-white);
+}
+
+.fba-btn--solid:hover {
+  background: var(--color-action-buy-hover);
+}
+
+.fba-btn--ghost {
+  border: 1px solid var(--color-sage-700);
+  color: var(--color-sage-700);
+  background: transparent;
+}
+
+.fba-btn--ghost:hover {
+  background: var(--color-ivory);
+}
+
+/* the wedding hand-off: an ivory card that pops on the sand panel */
+.fba-wed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-8);
+  padding: var(--space-6);
+  inline-size: 100%;
+  border-radius: var(--radius-xl);
+  background: var(--color-ivory);
+}
+
+.fba-wed-kicker {
+  margin: 0;
+  color: var(--color-wine-500);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-heading);
+}
+
+.fba-wed-line {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+.fba-wed-btn {
+  margin-block-start: var(--space-2);
+  min-inline-size: 16rem; /* the short «לחצי כאן» still reads as a real button */
+  text-align: center;
+  text-wrap: balance; /* if a longer editor-set label wraps, break evenly */
+}
+
+.fba-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---- desktop: name sits beside the photo (text on the reading side) ---- */
+
+@media (min-width: 1024px) {
+  .fba-panel--split {
+    flex-direction: row;
+    gap: var(--space-16);
+    text-align: start;
+  }
+
+  .fba-panel--split .fba-text {
+    order: -1; /* inline-start in RTL = the right, where reading begins */
+  }
+
+  .fba-figure {
+    inline-size: min(44vw, 68vh);
+    inline-size: min(44vw, 68svh);
+  }
+
+  .fba-name {
+    font-size: var(--text-3xl);
+  }
+
+  .fba-name::after {
+    margin-inline: 0;
+  }
+}

@@ -1,0 +1,86 @@
+{%- comment -%}
+  SEO copy block — site-structure.md §8.5: "פרחים בחיפה / משלוחי פרחים בחיפה
+  והסביבה". The paragraph is the owner's own wording (2026-09-12, proofread by the
+  mayan-copy-writer agent): shop type, street address, what the shop sells,
+  delivery areas. Deliberately no hours, cutoffs or weekday names here; those
+  live on /pages/delivery and in the cart scheduler. Each head term appears
+  once, in prose, per seo-geo-haifa.
+
+  `פרחים בחיפה` appears here and only here — CLAUDE.md settles the homepage
+  as the page that owns that term, so no collection or content page should
+  repeat it as their own heading.
+
+  Photo added 2026-08-21, swapped the same day for the owner's pick (`iimages to
+  use/Haifa view.jpg`, 1856×2304 portrait): a Florista bouquet on a Carmel
+  balcony over Haifa bay and the port. It beats the German Colony shot it
+  replaced because the flowers and the city are in one frame — the section
+  claims "we are a Haifa flower shop", and this photo shows both halves of
+  that claim rather than a landmark alone.
+
+  Re-cropped 1:1 the same day, on the owner's note that the first pass cut too
+  much: `-crop 1856x1856+0+448`, anchored to the bottom of the frame so the
+  whole laid table reads — the linen cloth, the wine bottle in the ice bucket,
+  and the vase down to its base. A 3:2 crop cannot hold both the table and the
+  sea; 5:4 keeps the table but loses the bay entirely, which would strip the
+  Haifa half of the claim out of the photo. Square keeps both, and squares up
+  the desktop two-column row instead of towering over the four-line text
+  block the way the full 4:5 frame would. Derivatives:
+  `haifa-view-{480,768,1024,1536}.{jpg,webp}`.
+{%- endcomment -%}
+
+{{ 'florista-seo-copy.css' | asset_url | stylesheet_tag }}
+
+<section class="seo-section">
+  <div class="seo-inner">
+    <div class="seo-media">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="
+            {{ 'haifa-view-480.webp' | asset_url }} 480w,
+            {{ 'haifa-view-768.webp' | asset_url }} 768w,
+            {{ 'haifa-view-1024.webp' | asset_url }} 1024w,
+            {{ 'haifa-view-1536.webp' | asset_url }} 1536w
+          "
+          sizes="(min-width: 768px) 40vw, 100vw"
+        >
+        <img
+          src="{{ 'haifa-view-1024.jpg' | asset_url }}"
+          srcset="
+            {{ 'haifa-view-480.jpg' | asset_url }} 480w,
+            {{ 'haifa-view-768.jpg' | asset_url }} 768w,
+            {{ 'haifa-view-1024.jpg' | asset_url }} 1024w,
+            {{ 'haifa-view-1536.jpg' | asset_url }} 1536w
+          "
+          sizes="(min-width: 768px) 40vw, 100vw"
+          alt="זר פרחים של פלוריסטה על מרפסת בהר הכרמל, ונוף למפרץ חיפה ולנמל"
+          width="1856"
+          height="1856"
+          loading="lazy"
+        >
+      </picture>
+    </div>
+    <div class="seo-text">
+      {%- comment -%}
+        This is the homepage's single h1 (the header logo and the hero title
+        deliberately are not): the homepage owns פרחים בחיפה, and the delivery
+        term rides as the h2 subheading until /delivery exists and owns
+        משלוחי פרחים בחיפה outright.
+      {%- endcomment -%}
+      <h1 class="seo-heading">פרחים בחיפה</h1>
+      <h2 class="seo-lede">משלוחי פרחים בחיפה והסביבה</h2>
+      <p class="seo-body">
+        פלוריסטה היא בוטיק פרחים בחיפה. חנות הפרחים שלנו ממוקמת ברחוב חניתה 34 בשכונת נווה שאנן.
+        בחנות הפרחים שלנו תוכלו לרכוש זרי פרחים בהתאמה אישית, שוקולדים איכותיים ויין נהדר.
+        אנחנו עושים משלוחי פרחים בחיפה, נשר, קריות, טירת הכרמל ועתלית.
+      </p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Florista SEO copy",
+  "presets": [{ "name": "Florista SEO copy" }]
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+{%- comment -%}
+  Microsoft Clarity, loaded only after the visitor accepts analytics in Shopify's cookie banner.
+
+  Why this exists instead of the Clarity app embed: the app embed (still installed, switched
+  off in settings_data.json) injected the Clarity tag on every page load and then passed the
+  banner's answer to Clarity with `consentv2`. Clarity uses that signal only to decide whether
+  it may set cookies; it keeps recording the session either way (Microsoft's own verification
+  steps for a declined visitor say "Ensure Clarity is executing (check for the /collect
+  calls)"). Measured on the live store 2026-09-18 with fresh browser contexts: after "סירוב"
+  the tag still loaded, still sent to *.clarity.ms/collect, and Microsoft's bing.com /
+  clarity.ms cookies were set before the visitor had chosen anything. The banner promises
+  "לא נשתמש בקובצי Cookie או בטכנולוגיות אחרות … אלא אם תסכים לכך", so the tag must not load
+  until the answer is yes.
+
+  Behaviour:
+  - No choice yet, or "סירוב": nothing from Microsoft is requested. No tag, no cookies.
+  - "אישור" (on this page or a later one): the tag loads, told that analytics is granted and
+    ad storage follows the marketing answer.
+  - Consent withdrawn later in the same session: Clarity is told both are denied so it drops
+    its cookies; the tag is simply not loaded on the next page.
+
+  The project ID is a theme setting (פרטי החנות → Clarity) so it can change without a deploy.
+  Empty setting = Clarity off. Clarity's own web pixel (installed by the app, runs in Shopify's
+  sandbox, no DOM or cookies) is outside this file's reach; it is declared by Microsoft with no
+  privacy purpose, so Shopify runs it regardless of the banner.
+{%- endcomment -%}
+{%- liquid
+  assign clarity_id = settings.clarity_project_id | strip
+-%}
+{%- if clarity_id != blank and request.design_mode == false -%}
+  <script>
+    (function (w, d, id) {
+      var loaded = false;
+      function tell(analytics, marketing) {
+        w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
+        w.clarity('consentv2', {
+          ad_Storage: marketing ? 'granted' : 'denied',
+          analytics_Storage: analytics ? 'granted' : 'denied',
+          source: 101
+        });
+      }
+      function start(marketing) {
+        if (loaded) return;
+        loaded = true;
+        tell(true, marketing);
+        var s = d.createElement('script');
+        s.async = true;
+        s.src = 'https://www.clarity.ms/tag/' + id + '?ref=shopify';
+        d.head.appendChild(s);
+      }
+      d.addEventListener('visitorConsentCollected', function (e) {
+        if (e.detail.analyticsAllowed) start(e.detail.marketingAllowed);
+        else if (loaded) tell(false, false);
+      });
+      if (!w.Shopify || !w.Shopify.loadFeatures) return;
+      w.Shopify.loadFeatures([{ name: 'consent-tracking-api', version: '0.1' }], function (err) {
+        if (err || !w.Shopify.customerPrivacy) return;
+        var cp = w.Shopify.customerPrivacy;
+        if (cp.analyticsProcessingAllowed()) start(cp.marketingAllowed());
+      });
+    })(window, document, {{ clarity_id | json }});
+  </script>
+{%- endif -%}

@@ -1,0 +1,234 @@
+{%- comment -%}
+  Florista delivery page — /pages/delivery, built 2026-08-28. See docs/design-log.md.
+
+  The one page that replaced the four cut Wix city pages (site-structure.md §3.3): every area
+  served, with its real fee, plus the same-day rule. Shape chosen by the owner from three options —
+  fee table + how-it-works, not area cards and not a FAQ hybrid.
+
+  Content/design split, per the standing rule:
+    - The DESIGN is here and in florista-delivery-page.css.
+    - The FEES are section blocks (one per area) and the copy is section settings, so the owner can
+      change a price or an area from the theme editor without a deploy.
+    - The FALLBACK table below renders the five areas as decided on 2026-08-28, for the case
+      where the section has no blocks yet. Fees on this page must match the shipping rates at
+      checkout — that cross-check is a Phase 6 item in docs/status.md.
+
+  Areas and fees decided with the owner 2026-08-28, from the live checkout rates: חיפה 30, נשר 35,
+  קריות 50 (כולל קרית חיים — excluded from the Haifa zone), טירת הכרמל 50, עתלית 65.
+  עכו and נהריה are NOT served — dropped from the business-rule list the same day.
+
+  The phone number is the site-wide theme setting the header and footer already read, so this
+  page can never show a different number than the rest of the site.
+{%- endcomment -%}
+
+{{ 'florista-delivery-page.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign phone_display = settings.phone_display | default: '054-2270287'
+  assign phone_e164 = settings.phone_e164 | default: '+972542270287'
+
+  assign intro = section.settings.intro | default: 'אנחנו שולחים זרים טריים מהחנות שלנו בחיפה — לרוב עוד באותו היום. לאחר ההזמנה נתאם איתכם טלפונית את מסירת המשלוח.'
+  assign sameday_heading = section.settings.sameday_heading | default: 'משלוח באותו היום'
+  assign sameday_text = section.settings.sameday_text | default: 'הזמנה שנקלטת עד 17:00 יוצאת אליכם עוד באותו היום, בימים א׳–ה׳. בימי שישי וערבי חג המשלוחים מסתיימים לפני כניסת השבת, ובתאריכי שיא ייתכנו שינויים.'
+  assign outside_text = section.settings.outside_text | default: 'גרים מחוץ לאזורים האלה? חייגו אלינו ונבדוק יחד —'
+  assign cta_label = section.settings.cta_label | default: 'להזמנת פרחים'
+  assign cta_url = section.settings.cta_url | default: routes.all_products_collection_url
+-%}
+
+<section class="fdp">
+  <div class="fdp-inner">
+    <h1 class="fdp-title">
+      {%- if page.title != blank -%}{{ page.title | escape }}{%- else -%}משלוחי פרחים בחיפה והסביבה{%- endif -%}
+    </h1>
+
+    <p class="fdp-intro">{{ intro | escape }}</p>
+
+    <h2 class="fdp-table-heading">{{ section.settings.table_heading | default: 'אזורי המשלוח והמחירים' | escape }}</h2>
+
+    <table class="fdp-table">
+      <thead>
+        <tr>
+          <th scope="col">אזור</th>
+          <th scope="col">דמי משלוח</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.area | escape }}</th>
+              <td class="fdp-fee"><bdi>{{ block.settings.fee | escape }}&nbsp;₪</bdi></td>
+            </tr>
+          {%- endfor -%}
+        {%- else -%}
+          <tr><th scope="row">חיפה</th><td class="fdp-fee"><bdi>30&nbsp;₪</bdi></td></tr>
+          <tr><th scope="row">נשר</th><td class="fdp-fee"><bdi>35&nbsp;₪</bdi></td></tr>
+          <tr><th scope="row">קריות (כולל קרית חיים)</th><td class="fdp-fee"><bdi>50&nbsp;₪</bdi></td></tr>
+          <tr><th scope="row">טירת הכרמל</th><td class="fdp-fee"><bdi>50&nbsp;₪</bdi></td></tr>
+          <tr><th scope="row">עתלית</th><td class="fdp-fee"><bdi>65&nbsp;₪</bdi></td></tr>
+        {%- endif -%}
+      </tbody>
+    </table>
+
+    <div class="fdp-sameday">
+      <svg class="fdp-sameday-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 7v5l3 3"></path>
+      </svg>
+      <div class="fdp-sameday-text">
+        <h2 class="fdp-sameday-heading">{{ sameday_heading | escape }}</h2>
+        <p>{{ sameday_text | escape }}</p>
+      </div>
+    </div>
+
+    <p class="fdp-outside">
+      {{ outside_text | escape }}
+      <a class="fdp-phone" href="tel:{{ phone_e164 }}"><bdi>{{ phone_display }}</bdi></a>
+    </p>
+
+    <div class="fdp-cta-row">
+      <a class="fdp-cta" href="{{ cta_url }}">{{ cta_label | escape }}</a>
+    </div>
+  </div>
+</section>
+
+{%- comment -%}
+  areaServed — added 2026-08-30 from the Google-conformance audit.
+
+  It was missing everywhere: `settings_schema.json` has held the correct five zones under
+  `delivery_areas` since the page was built, and nothing referenced it. So the structured data
+  said nothing about where we deliver, on the one page that does.
+
+  Two deliberate choices:
+
+  1. **It lives here, not in theme.liquid.** The structured-data policies say not to mark up
+     content that is not visible to readers of the page. This is the only page where the areas
+     are on screen, so it is the only page where the claim is backed by what a visitor sees.
+
+  2. **It is built from the same source as the visible table**, blocks first and the same
+     five-area fallback second — not from `settings.delivery_areas`, which can drift from the
+     table without anyone noticing. Schema and screen cannot disagree here by construction.
+
+  The node carries only `@id` and `areaServed`: the `@id` matches the `Florist` node in
+  theme.liquid, so consumers merge the two rather than seeing a second business. NAP is not
+  repeated. עכו and נהריה are absent because they are absent from the table.
+
+  ⚠️ Since 2026-09-07 `theme.liquid`'s `Florist` node emits `areaServed` too, on every page —
+  the delivery areas were invisible to a crawler reading any other page. Because both nodes
+  share one `@id` they merge, so the fallback list below and the hard-coded list there must
+  stay character-identical: a differently-spelled area does not override, it adds. If you edit
+  an area name in a fee row, update `theme.liquid` to match, or the two will disagree on this
+  page only. The proper fix — one shared theme setting both read — is not built yet.
+{%- endcomment -%}
+{%- capture area_served -%}
+  {%- assign sep = '' -%}
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.settings.area != blank -%}
+        {{ sep }}{"@type":"City","name":{{ block.settings.area | strip | json }}}
+        {%- assign sep = ',' -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- assign fallback_areas = 'חיפה,נשר,קריות (כולל קרית חיים),טירת הכרמל,עתלית' | split: ',' -%}
+    {%- for area in fallback_areas -%}
+      {{ sep }}{"@type":"City","name":{{ area | json }}}
+      {%- assign sep = ',' -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if area_served != blank -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Florist",
+      "@id": {{ request.origin | append: '/#business' | json }},
+      "areaServed": [{{ area_served | strip_newlines | strip }}]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Florista משלוחים",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "משפט פתיחה",
+      "default": "אנחנו שולחים זרים טריים מהחנות שלנו בחיפה — לרוב עוד באותו היום. לאחר ההזמנה נתאם איתכם טלפונית את מסירת המשלוח."
+    },
+    {
+      "type": "text",
+      "id": "table_heading",
+      "label": "כותרת טבלת המחירים",
+      "default": "אזורי המשלוח והמחירים"
+    },
+    {
+      "type": "text",
+      "id": "sameday_heading",
+      "label": "כותרת — משלוח באותו היום",
+      "default": "משלוח באותו היום"
+    },
+    {
+      "type": "textarea",
+      "id": "sameday_text",
+      "label": "טקסט — משלוח באותו היום",
+      "default": "הזמנה שנקלטת עד 17:00 יוצאת אליכם עוד באותו היום, בימים א׳–ה׳. בימי שישי וערבי חג המשלוחים מסתיימים לפני כניסת השבת, ובתאריכי שיא ייתכנו שינויים."
+    },
+    {
+      "type": "text",
+      "id": "outside_text",
+      "label": "שורת אזור אחר",
+      "default": "גרים מחוץ לאזורים האלה? חייגו אלינו ונבדוק יחד —",
+      "info": "מספר הטלפון נלקח אוטומטית מהגדרות ערכת העיצוב — אותו מספר כמו בכותרת ובפוטר."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "כפתור — טקסט",
+      "default": "להזמנת פרחים"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "כפתור — קישור"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "area",
+      "name": "אזור משלוח",
+      "settings": [
+        {
+          "type": "text",
+          "id": "area",
+          "label": "שם האזור",
+          "default": "חיפה"
+        },
+        {
+          "type": "text",
+          "id": "fee",
+          "label": "דמי משלוח בש\"ח",
+          "default": "30",
+          "info": "מספר בלבד — סימן ה־₪ מוצג אוטומטית. חייב להתאים לתעריף בצ'קאאוט."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Florista משלוחים",
+      "blocks": [
+        { "type": "area", "settings": { "area": "חיפה", "fee": "30" } },
+        { "type": "area", "settings": { "area": "נשר", "fee": "35" } },
+        { "type": "area", "settings": { "area": "קריות (כולל קרית חיים)", "fee": "50" } },
+        { "type": "area", "settings": { "area": "טירת הכרמל", "fee": "50" } },
+        { "type": "area", "settings": { "area": "עתלית", "fee": "65" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
